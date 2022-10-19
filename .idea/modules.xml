@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="ProjectModuleManager">
-    <modules>
-      <module fileurl="file://$PROJECT_DIR$/hcx-integrator-sdk/hcx-integrator-sdk.iml" filepath="$PROJECT_DIR$/hcx-integrator-sdk/hcx-integrator-sdk.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/integration-sdks.iml" filepath="$PROJECT_DIR$/.idea/integration-sdks.iml" />
-    </modules>
-  </component>
-</project>
