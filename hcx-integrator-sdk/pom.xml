@@ -10,10 +10,6 @@
     <description>
         The SDK for HCX Participant System to help in integrating with HCX Gateway easily.
     </description>
-    <properties>
-        <sonar.organization>swasth-digital-health-foundation</sonar.organization>
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    </properties>
 
     <dependencies>
         <dependency>
