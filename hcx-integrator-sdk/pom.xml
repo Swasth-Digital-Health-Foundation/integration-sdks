@@ -123,7 +123,7 @@
                 <version>3.4.1</version>
                 <configuration>
                     <show>public</show>
-                    <excludePackageNames>io.hcxprotocol.exception:io.hcxprotocol.dto:io.hcxprotocol.helper:io.hcxprotocol.utils</excludePackageNames>
+                    <excludePackageNames>io.hcxprotocol.exception:io.hcxprotocol.dto:io.hcxprotocol.helper:io.hcxprotocol.utils:io.hcxprotocol.createresource:io.hcxprotocol.jwe:io.hcxprotocol.lib:io.hcxprotocol.key:io.hcxprotocol.validator</excludePackageNames>
                 </configuration>
             </plugin>
             <plugin>
