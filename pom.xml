@@ -6,7 +6,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.hcxprotocol</groupId>
-    <artifactId>hcx-integrator-sdk</artifactId>
+    <artifactId>integration-sdks</artifactId>
     <version>1.0.0</version>
     <packaging>pom</packaging>
 
