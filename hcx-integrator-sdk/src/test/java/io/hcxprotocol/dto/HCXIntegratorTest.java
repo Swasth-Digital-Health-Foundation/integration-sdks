@@ -1,6 +1,7 @@
 package io.hcxprotocol.dto;
 
 import io.hcxprotocol.init.HCXIntegrator;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -54,8 +55,5 @@ public class HCXIntegratorTest {
         assertEquals("http://localhost:8090", hcxIntegrator.getIGUrl());
     }
 
-    @Test(expected = Exception.class)
-    public void testWithoutConfigVariablesInitialization() throws Exception {
-        HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance();
-    }
+
 }
