@@ -8,16 +8,17 @@ import ca.uhn.fhir.validation.ValidationResult;
 import io.hcxprotocol.validator.HCXFHIRValidator;
 import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HCXInsurancePlanTest {
 
-    @Test public void validateInsurancePlanObject() throws Exception {
+    @Test
+    public void validateInsurancePlanObject() throws Exception {
         FhirValidator validator = HCXFHIRValidator.getValidator();
 
         HCXInsurancePlan ip = createInsurancePlan();

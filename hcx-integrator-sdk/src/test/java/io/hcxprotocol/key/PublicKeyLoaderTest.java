@@ -1,4 +1,4 @@
-package key;
+package io.hcxprotocol.key;
 
 import io.hcxprotocol.key.PublicKeyLoader;
 import org.junit.jupiter.api.BeforeAll;

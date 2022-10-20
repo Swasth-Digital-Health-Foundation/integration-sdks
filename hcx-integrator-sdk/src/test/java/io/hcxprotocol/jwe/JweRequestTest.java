@@ -1,7 +1,6 @@
-package jwe;
+package io.hcxprotocol.jwe;
 
 import com.nimbusds.jose.JOSEException;
-import io.hcxprotocol.jwe.JweRequest;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.junit.jupiter.api.BeforeAll;
@@ -26,6 +25,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+
 class JweRequestTest {
 
     RSAPublicKey rsaPublicKey;
@@ -72,7 +72,7 @@ class JweRequestTest {
         headers.put("headerKey", "headerValue");
 
         payload = new HashMap<>();
-        payload.put("key", "value");
+        payload.put("io/hcxprotocol/key", "value");
     }
 
     @Test

@@ -1,6 +1,5 @@
-package key;
+package io.hcxprotocol.key;
 
-import io.hcxprotocol.key.PrivateKeyLoader;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
