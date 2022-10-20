@@ -6,7 +6,6 @@ import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,10 +44,4 @@ public class HCXIncomingRequestTest {
         hcxIncomingRequest.process(JSONUtils.serialize(payload), Operations.COVERAGE_ELIGIBILITY_CHECK, output);
         System.out.println(output);
     }
-     
-
-
-
-
-
 }
