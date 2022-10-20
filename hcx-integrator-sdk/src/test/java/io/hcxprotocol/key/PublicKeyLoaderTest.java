@@ -34,7 +34,6 @@ class PublicKeyLoaderTest {
         System.out.println(rsaPublicKey);
     }
 
-    @Disabled
     @Test
     void testLoadPublicKeyFromX509CertificateUrl() throws IOException, CertificateException {
         URL url = new URL("https://raw.githubusercontent.com/rushang7-eGov/jwe-helper/master/src/test/resources/x509-self-signed-certificate.pem");
