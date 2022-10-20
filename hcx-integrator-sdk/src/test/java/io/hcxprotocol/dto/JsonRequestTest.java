@@ -16,9 +16,4 @@ class JsonRequestTest {
         JSONRequest jsonRequest = new JSONRequest(payload);
         assertEquals(payload,jsonRequest.getPayload());
     }
-   @Test
-    void validateRedirectTest(){
-
-   }
-
 }
