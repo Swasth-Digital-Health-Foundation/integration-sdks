@@ -8,7 +8,7 @@ public class HttpResponseTest {
 
 
     @Test
-    public void HttpResponseTest() throws Exception {
+    void HttpResponseTest() throws Exception {
 
         HttpResponse httpResponse = new HttpResponse(200,"body");
         assertEquals(200,httpResponse.getStatus());

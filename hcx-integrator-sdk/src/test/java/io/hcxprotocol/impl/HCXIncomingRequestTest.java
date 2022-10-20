@@ -13,7 +13,7 @@ import java.util.Map;
 public class HCXIncomingRequestTest {
 
     @Test
-    public void HCXIncomingRequestTest() throws Exception {
+    void HCXIncomingRequestTest() throws Exception {
         Map<String,Object> configMap = new HashMap<>();
         configMap.put("protocolBasePath", "http://dev-hcx.swasth.app/api/v0.7");
         configMap.put("participantCode", "testprovider1.apollo@swasth-hcx-dev");

@@ -15,10 +15,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HCXInsurancePlanTest {
+ class HCXInsurancePlanTest {
 
     @Test
-    public void validateInsurancePlanObject() throws Exception {
+       void validateInsurancePlanObject() throws Exception {
         FhirValidator validator = HCXFHIRValidator.getValidator();
 
         HCXInsurancePlan ip = createInsurancePlan();
