@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
        void validateInsurancePlanObject() throws Exception {
         FhirValidator validator = HCXFHIRValidator.getValidator();
 
+
         HCXInsurancePlan ip = createInsurancePlan();
         printFHIRObject(ip);
 

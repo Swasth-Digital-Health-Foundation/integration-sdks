@@ -1,6 +1,5 @@
 package io.hcxprotocol.helper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
 import org.junit.jupiter.api.Test;
@@ -26,16 +25,23 @@ class ValidateHelperTest {
         boolean isValid = ValidateHelper.getInstance().validateRequest(JSONUtils.serialize(getRequestBody()), Operations.COVERAGE_ELIGIBILITY_CHECK,new HashMap<>());
         assertEquals(true, isValid);
     }
-
-
     @Test
     void testOnActionJWEPayloadSuccess() throws Exception {
         boolean isValid = ValidateHelper.getInstance().validateRequest(JSONUtils.serialize(getOnRequestBody()), Operations.COVERAGE_ELIGIBILITY_ON_CHECK,new HashMap<>());
         assertEquals(true, isValid);
     }
-   @Test
+    @Test
     void testActionJWEPayloadSuccessFail() {
-        boolean isValid = ValidateHelper.getInstance().validateRequest(null,Operations.COVERAGE_ELIGIBILITY_ON_CHECK,new HashMap<>());
+        boolean isValid = ValidateHelper.getInstance().validateRequest(null,Operations.COVERAGE_ELIGIBILITY_CHECK,new HashMap<>());
         assertEquals(false, isValid);
     }
+    @Test
+    void testOnActionJWEPayloadFail() {
+        boolean isValid = ValidateHelper.getInstance().validateRequest(null, Operations.COVERAGE_ELIGIBILITY_CHECK, new HashMap<>());
+        assertEquals(false, isValid);
+    }
+
+
+
+
 }
