@@ -23,7 +23,7 @@ import static io.hcxprotocol.utils.ResponseMessage.*;
 public class BaseRequest {
 
     public Map<String, Object> protocolHeaders;
-    public static  Map<String, Object> payload;
+    public Map<String, Object> payload;
 
     public BaseRequest(Map<String, Object> payload) throws Exception {
         this.payload = payload;

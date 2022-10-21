@@ -74,6 +74,11 @@ class ValidateHelperTest {
         boolean isValid = ValidateHelper.getInstance().validateRequest(payload, Operations.COVERAGE_ELIGIBILITY_ON_CHECK, new HashMap<>());
         assertEquals(false, isValid);
     }
+    @Test
+    void validRequestTestFail(){
+        boolean isValid = ValidateHelper.getInstance().validateRequest("{}",Operations.COVERAGE_ELIGIBILITY_ON_CHECK,new HashMap<>());
+        assertEquals(true ,isValid);
+    }
 
 
 }
