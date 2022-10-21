@@ -93,7 +93,7 @@ public class BaseRequest {
         return ((String) getPayload().get(PAYLOAD)).split("\\.");
     }
 
-    public boolean validateHeadersData(List<String> mandatoryHeaders, Operations operation, Map<String, Object> error) throws Exception {
+    public boolean validateHeadersData(List<String> mandatoryHeaders, Operations operation, Map<String, Object> error) {
         List<String> missingHeaders = mandatoryHeaders.stream().filter(key -> !protocolHeaders.containsKey(key)).collect(Collectors.toList());
         if (!missingHeaders.isEmpty()) {
             error.put(ErrorCodes.ERR_MANDATORY_HEADER_MISSING.toString(), MessageFormat.format(INVALID_MANDATORY_ERR_MSG, missingHeaders));
