@@ -23,11 +23,14 @@ import static io.hcxprotocol.utils.ResponseMessage.*;
 public class BaseRequest {
 
     public Map<String, Object> protocolHeaders;
-    private final Map<String, Object> payload;
+    public Map<String, Object> payload;
 
     public BaseRequest(Map<String, Object> payload) throws Exception {
         this.payload = payload;
-        this.protocolHeaders = JSONUtils.decodeBase64String(getPayloadValues()[0], Map.class);
+        if(payload.containsKey(PAYLOAD))
+            this.protocolHeaders = JSONUtils.decodeBase64String(getPayloadValues()[0], Map.class);
+        else
+            this.protocolHeaders = payload;
     }
 
     public String getWorkflowId() {

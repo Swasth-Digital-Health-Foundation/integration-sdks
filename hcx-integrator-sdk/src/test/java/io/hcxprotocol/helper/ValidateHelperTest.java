@@ -52,11 +52,10 @@ class ValidateHelperTest {
                "    \"x-hcx-redirect_to\": \"1-74f6cb29-4116-42d0-9fbb-adb65e6a64ac\"\n" +
                "}";
         boolean isValid = ValidateHelper.getInstance().validateRequest(payload, Operations.COVERAGE_ELIGIBILITY_CHECK, new HashMap<>());
-        assertEquals(false, isValid);
+        assertEquals(false , isValid);
     }
-
     @Test
-    void testActionJWEPayloadFail() {
+    void validRequestTest(){
         String payload = "{\n" +
                 "    \"x-hcx-recipient_code\": \"1-3a3bd68a-848a-4d52-9ec2-07a92d765fb4\",\n" +
                 "    \"x-hcx-timestamp\": \"2021-10-27T20:35:52.636+0530\",\n" +
@@ -66,10 +65,9 @@ class ValidateHelperTest {
                 "    \"x-hcx-status\": \"response.redirect\",\n" +
                 "    \"x-hcx-redirect_to\": \"1-74f6cb29-4116-42d0-9fbb-adb65e6a64ac\"\n" +
                 "}";
+
         boolean isValid = ValidateHelper.getInstance().validateRequest(payload, Operations.COVERAGE_ELIGIBILITY_ON_CHECK, new HashMap<>());
-        assertEquals(false, isValid);
+        assertEquals(false , isValid);
     }
-
-
 
 }
