@@ -12,10 +12,10 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class HCXIncomingRequestTest {
+class HCXIncomingOutgoingRequestTest {
 
     @Test
-    void HCXIncomingRequestTest() throws Exception {
+    void HCXIncomingOutgoingRequestTest() throws Exception {
         Map<String, Object> configMap = new HashMap<>();
         configMap.put("protocolBasePath", "http://dev-hcx.swasth.app/api/v0.7");
         configMap.put("participantCode", "testprovider1.apollo@swasth-hcx-dev");
