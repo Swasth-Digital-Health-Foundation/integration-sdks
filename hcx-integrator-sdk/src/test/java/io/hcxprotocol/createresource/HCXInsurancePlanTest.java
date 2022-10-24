@@ -15,10 +15,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
- class HCXInsurancePlanTest {
+class HCXInsurancePlanTest {
 
     @Test
-       void validateInsurancePlanObject() throws Exception {
+    void validateInsurancePlanObject() throws Exception {
         FhirValidator validator = HCXFHIRValidator.getValidator();
 
 
@@ -41,22 +41,43 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
     private HCXInsurancePlan createInsurancePlan() {
         //creating a new HCXInsurancePlan object and validating it against the HCX SD
-        HCXInsurancePlan ip =  new HCXInsurancePlan("AB_GUJ_Plan1", Enumerations.PublicationStatus.ACTIVE, "PMJAY-Mukhyamantri Amrutam & Mukhyamantri Vatsalya");
+        HCXInsurancePlan ip = new HCXInsurancePlan("AB_GUJ_Plan1", Enumerations.PublicationStatus.ACTIVE, "PMJAY-Mukhyamantri Amrutam & Mukhyamantri Vatsalya");
 
         //Creating the Identification Extension Object
         HCXInsurancePlan.IdentificationExtension idExt = new HCXInsurancePlan.IdentificationExtension();
-        idExt.setProofOfIdDocumentCode("12345","Aadhar Card");
+        idExt.setProofOfIdDocumentCode("12345", "Aadhar Card");
         idExt.setClinicalDiagnosticDocumentClaimUse("preauthorization");
+        idExt.getProofOfIdDocumentCode();
+        idExt.getProofOfIdentificationDocumentMimeType();
+        idExt.setProofOfIdentificationDocumentMimeType(new CodeType());
+        idExt.getProofOfIdDocumentCode();
+        idExt.isProofOfIdentificationDocumentRequiredFlag();
+        idExt.setProofOfIdentificationDocumentRequiredFlag(new BooleanType());
+        idExt.getClinicalDiagnosticDocumentClaimUse();
+        idExt.getDocumentationUrl();
+
+
+
+
 
         //Creating Presence Extension Object
         HCXInsurancePlan.PresenceExtension preExt = new HCXInsurancePlan.PresenceExtension();
-        preExt.setProofOfPresenceDocumentCode("12345","Aadhar Verification XML");
+        preExt.setProofOfPresenceDocumentCode("12345", "Aadhar Verification XML");
         preExt.setClinicalDiagnosticDocumentClaimUse("preauthorization");
+        preExt.getProofOfPresenceDocumentCode();
+        preExt.isProofOfPresenceDocumentRequiredFlag();
+        preExt.setProofOfPresenceDocumentRequiredFlag(new BooleanType());
+        preExt.getProofOfPresenceDocumentMimeType();
+         preExt.setProofOfPresenceDocumentMimeType(new CodeType());
+         preExt.getClinicalDiagnosticDocumentClaimUse();
+         preExt.getDocumentationUrl();
+
 
         //Adding the above extensions to Insurance Plan Object
         HCXInsurancePlan.InsurancePlanPlanComponent plan = new HCXInsurancePlan.InsurancePlanPlanComponent();
         plan.setIdentificationExtension(idExt);
         plan.setPresenceExtension(preExt);
+        plan.getIdentificationExtension();
         plan.setType("PMJAY_GUJ_GOLD_CARD");
 
         //specific cost
@@ -66,29 +87,52 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         //specific cost benefit component
         HCXInsurancePlan.PlanBenefitComponent pbf = new HCXInsurancePlan.PlanBenefitComponent();
         pbf.setType(new CodeableConcept().setCoding(Collections.singletonList(new Coding().setCode("HBP_PACKAGE_00003").setSystem("http://terminologyServer/ValueSets/packages"))));
+        pbf.getQuestionnairesExtension();
+
 
         //adding extensions to benefit component
-        HCXInsurancePlan.DiagnosticDocumentsExtension dde =  new HCXInsurancePlan.DiagnosticDocumentsExtension();
+        HCXInsurancePlan.DiagnosticDocumentsExtension dde = new HCXInsurancePlan.DiagnosticDocumentsExtension();
         dde.setClinicalDiagnosticDocumentCode(new CodeableConcept(new Coding().setSystem("https://hcx-valuesets/proofOfIdentificationDocumentCodes").setCode("MAND0001").setVersion("1.0.0").setDisplay("Post Treatment clinical photograph")));
         dde.setDocumentationUrl(new UrlType("http://documentation-url"));
         dde.setClinicalDiagnosticDocumentClaimUse(new CodeType("claim"));
+         dde.getClinicalDiagnosticDocumentCode();
+         dde.getClinicalDiagnosticDocumentRequiredFlag();
+         dde.setClinicalDiagnosticDocumentRequiredFlag(new BooleanType());
+         dde.setClinicalDiagnosticDocumentMimeType(new CodeType());
+         dde.setClinicalDiagnosticDocumentMimeType(new CodeType());
+         dde.getClinicalDiagnosticDocumentMimeType();
+         dde.getClinicalDiagnosticDocumentClaimUse();
+         dde.getDocumentationUrl();
 
-        HCXInsurancePlan.InformationalMessagesExtension ime =  new HCXInsurancePlan.InformationalMessagesExtension();
+
+        HCXInsurancePlan.InformationalMessagesExtension ime = new HCXInsurancePlan.InformationalMessagesExtension();
         ime.setInformationalMessagesCode(new CodeableConcept(new Coding().setSystem("https://hcx-valuesets/InformationalMessagesCodes").setCode("12343").setVersion("1.0.0").setDisplay("Information Message 1")));
         ime.setDocumentationUrl(new UrlType("http://documntation-url"));
         ime.setInformationalMessageClaimUse(new CodeType("claim"));
+        ime.getDocumentationUrl();
+        ime.getInformationalMessageCode();
+        ime.setInformationalMessageCode(new BooleanType());
+        ime.getInformationalMessageClaimUse();
+        ime.getInformationalMessageCode();
+
 
         HCXInsurancePlan.QuestionnairesExtension qe = new HCXInsurancePlan.QuestionnairesExtension();
         qe.setQuestionnaire(new Reference("Questionnnaire/1"));
         qe.setDocumentationUrl(new UrlType("http://documentation-url"));
         qe.setQuestionnaireClaimUse(new CodeType("claim"));
+         qe.getQuestionnaire();
+         qe.getQuestionnaireRequiredFlag();
+         qe.getQuestionnaireClaimUse();
+         qe.setQuestionnaireRequiredFlag(new BooleanType());
+         qe.getDocumentationUrl();
+
 
         pbf.setDiagnosticDocumentsExtension(dde);
         pbf.setInformationalMessagesExtension(ime);
         pbf.setQuestionnairesExtension(qe);
 
 
-        InsurancePlan.PlanBenefitCostComponent pbc =  new InsurancePlan.PlanBenefitCostComponent();
+        InsurancePlan.PlanBenefitCostComponent pbc = new InsurancePlan.PlanBenefitCostComponent();
         pbc.setType(new CodeableConcept().setCoding(Collections.singletonList(new Coding().setCode("hospitalization").setSystem("http://terminologyServer/ValueSets/pacakgeCostTypes"))));
 
         pbf.addCost(pbc);
@@ -99,3 +143,4 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
         return ip;
     }
 }
+
