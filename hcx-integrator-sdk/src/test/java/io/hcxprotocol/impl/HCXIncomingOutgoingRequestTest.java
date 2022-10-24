@@ -45,8 +45,8 @@ class HCXIncomingOutgoingRequestTest {
         Map<String, Object> payload = new HashMap<>();
         payload.put(Constants.PAYLOAD, output.get(Constants.PAYLOAD));
         hcxIncomingRequest.process(JSONUtils.serialize(payload), Operations.COVERAGE_ELIGIBILITY_CHECK, output);
-        hcxIncomingRequest.process("invalid payload", Operations.COVERAGE_ELIGIBILITY_CHECK, output);
-        hcxIncomingRequest.decryptPayload(null, output);
+        hcxIncomingRequest.process(null,Operations.COVERAGE_ELIGIBILITY_CHECK,output);
+
         System.out.println(output);
     }
 
