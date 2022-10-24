@@ -10,9 +10,12 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HCXInsurancePlanTest {
@@ -57,9 +60,6 @@ class HCXInsurancePlanTest {
         idExt.getDocumentationUrl();
 
 
-
-
-
         //Creating Presence Extension Object
         HCXInsurancePlan.PresenceExtension preExt = new HCXInsurancePlan.PresenceExtension();
         preExt.setProofOfPresenceDocumentCode("12345", "Aadhar Verification XML");
@@ -68,9 +68,9 @@ class HCXInsurancePlanTest {
         preExt.isProofOfPresenceDocumentRequiredFlag();
         preExt.setProofOfPresenceDocumentRequiredFlag(new BooleanType());
         preExt.getProofOfPresenceDocumentMimeType();
-         preExt.setProofOfPresenceDocumentMimeType(new CodeType());
-         preExt.getClinicalDiagnosticDocumentClaimUse();
-         preExt.getDocumentationUrl();
+        preExt.setProofOfPresenceDocumentMimeType(new CodeType());
+        preExt.getClinicalDiagnosticDocumentClaimUse();
+        preExt.getDocumentationUrl();
 
 
         //Adding the above extensions to Insurance Plan Object
@@ -78,6 +78,7 @@ class HCXInsurancePlanTest {
         plan.setIdentificationExtension(idExt);
         plan.setPresenceExtension(preExt);
         plan.getIdentificationExtension();
+        plan.getPresenceExtension();
         plan.setType("PMJAY_GUJ_GOLD_CARD");
 
         //specific cost
@@ -87,6 +88,8 @@ class HCXInsurancePlanTest {
         //specific cost benefit component
         HCXInsurancePlan.PlanBenefitComponent pbf = new HCXInsurancePlan.PlanBenefitComponent();
         pbf.setType(new CodeableConcept().setCoding(Collections.singletonList(new Coding().setCode("HBP_PACKAGE_00003").setSystem("http://terminologyServer/ValueSets/packages"))));
+        pbf.getDiagnosticDocumentsExtension();
+        pbf.getInformationalMessagesExtension();
         pbf.getQuestionnairesExtension();
 
 
@@ -95,14 +98,14 @@ class HCXInsurancePlanTest {
         dde.setClinicalDiagnosticDocumentCode(new CodeableConcept(new Coding().setSystem("https://hcx-valuesets/proofOfIdentificationDocumentCodes").setCode("MAND0001").setVersion("1.0.0").setDisplay("Post Treatment clinical photograph")));
         dde.setDocumentationUrl(new UrlType("http://documentation-url"));
         dde.setClinicalDiagnosticDocumentClaimUse(new CodeType("claim"));
-         dde.getClinicalDiagnosticDocumentCode();
-         dde.getClinicalDiagnosticDocumentRequiredFlag();
-         dde.setClinicalDiagnosticDocumentRequiredFlag(new BooleanType());
-         dde.setClinicalDiagnosticDocumentMimeType(new CodeType());
-         dde.setClinicalDiagnosticDocumentMimeType(new CodeType());
-         dde.getClinicalDiagnosticDocumentMimeType();
-         dde.getClinicalDiagnosticDocumentClaimUse();
-         dde.getDocumentationUrl();
+        dde.getClinicalDiagnosticDocumentCode();
+        dde.getClinicalDiagnosticDocumentRequiredFlag();
+        dde.setClinicalDiagnosticDocumentRequiredFlag(new BooleanType());
+        dde.setClinicalDiagnosticDocumentMimeType(new CodeType());
+        dde.setClinicalDiagnosticDocumentMimeType(new CodeType());
+        dde.getClinicalDiagnosticDocumentMimeType();
+        dde.getClinicalDiagnosticDocumentClaimUse();
+        dde.getDocumentationUrl();
 
 
         HCXInsurancePlan.InformationalMessagesExtension ime = new HCXInsurancePlan.InformationalMessagesExtension();
@@ -114,17 +117,18 @@ class HCXInsurancePlanTest {
         ime.setInformationalMessageCode(new BooleanType());
         ime.getInformationalMessageClaimUse();
         ime.getInformationalMessageCode();
+        ime.getInformationalMessagesCode();
 
 
         HCXInsurancePlan.QuestionnairesExtension qe = new HCXInsurancePlan.QuestionnairesExtension();
         qe.setQuestionnaire(new Reference("Questionnnaire/1"));
         qe.setDocumentationUrl(new UrlType("http://documentation-url"));
         qe.setQuestionnaireClaimUse(new CodeType("claim"));
-         qe.getQuestionnaire();
-         qe.getQuestionnaireRequiredFlag();
-         qe.getQuestionnaireClaimUse();
-         qe.setQuestionnaireRequiredFlag(new BooleanType());
-         qe.getDocumentationUrl();
+        qe.getQuestionnaire();
+        qe.getQuestionnaireRequiredFlag();
+        qe.getQuestionnaireClaimUse();
+        qe.setQuestionnaireRequiredFlag(new BooleanType());
+        qe.getDocumentationUrl();
 
 
         pbf.setDiagnosticDocumentsExtension(dde);
@@ -142,5 +146,62 @@ class HCXInsurancePlanTest {
         ip.addPlan(plan);
         return ip;
     }
+
+    @Test
+    void insurancePlanPlanComponsentTest() {
+        HCXInsurancePlan.InsurancePlanPlanComponent plan = new HCXInsurancePlan.InsurancePlanPlanComponent();
+        boolean isValid = plan.isEmpty();
+        assertEquals(false, isValid);
+    }
+
+    @Test
+    void identificationExtensionTest() {
+        HCXInsurancePlan.IdentificationExtension idExt = new HCXInsurancePlan.IdentificationExtension();
+        boolean isValid = idExt.isEmpty();
+        assertEquals(false, isValid);
+
+    }
+
+    @Test
+    void presenceExtensionTest() {
+        HCXInsurancePlan.PresenceExtension preExt = new HCXInsurancePlan.PresenceExtension();
+        boolean isValid = preExt.isEmpty();
+        assertEquals(false, isValid);
+
+    }
+
+    @Test
+    void planBenefitComponent() {
+        HCXInsurancePlan.PlanBenefitComponent pbf = new HCXInsurancePlan.PlanBenefitComponent();
+        boolean isValid = pbf.isEmpty();
+        assertEquals(true, isValid);
+
+    }
+
+    @Test
+    void diagnosticDocumentsExtension() {
+        HCXInsurancePlan.DiagnosticDocumentsExtension dde = new HCXInsurancePlan.DiagnosticDocumentsExtension();
+        boolean isValid = dde.isEmpty();
+        assertEquals(true, isValid);
+
+    }
+
+    @Test
+    void informationalMessagesExtension() {
+        HCXInsurancePlan.InformationalMessagesExtension ime = new HCXInsurancePlan.InformationalMessagesExtension();
+        boolean isValid = ime.isEmpty();
+        assertEquals(true, isValid);
+
+    }
+
+    @Test
+    void questionnairesExtension() {
+        HCXInsurancePlan.QuestionnairesExtension qe = new HCXInsurancePlan.QuestionnairesExtension();
+        boolean isValid = qe.isEmpty();
+        assertEquals(true, isValid);
+
+    }
+
+
 }
 
