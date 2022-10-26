@@ -2,6 +2,7 @@ package io.hcxprotocol.utils;
 
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
+import lombok.experimental.UtilityClass;
 
 import java.util.Map;
 
@@ -9,6 +10,7 @@ import java.util.Map;
  * The REST API Util using Unirest library.
  */
 
+@UtilityClass
 public class HttpUtils {
 
 

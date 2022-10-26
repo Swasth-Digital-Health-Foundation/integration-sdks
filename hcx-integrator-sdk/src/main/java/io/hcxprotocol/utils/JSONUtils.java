@@ -2,6 +2,7 @@ package io.hcxprotocol.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.experimental.UtilityClass;
 
 import java.util.Base64;
 
@@ -9,6 +10,7 @@ import java.util.Base64;
  * The JSON Utils to convert a Java object to JSON string and vise versa.
  */
 
+@UtilityClass
 public class JSONUtils {
 
     private static final ObjectMapper mapper = new ObjectMapper();

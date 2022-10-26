@@ -1,10 +1,12 @@
 package io.hcxprotocol.utils;
 
+import lombok.experimental.UtilityClass;
 import org.joda.time.DateTime;
 
 /**
  * The Date time Util to validate timestamp.
  */
+@UtilityClass
 public class DateTimeUtils {
 
     public static boolean validTimestamp(String timestamp) {

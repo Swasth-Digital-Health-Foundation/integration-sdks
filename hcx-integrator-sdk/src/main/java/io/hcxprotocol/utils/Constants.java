@@ -1,11 +1,14 @@
 package io.hcxprotocol.utils;
 
+import lombok.experimental.UtilityClass;
+
 import java.util.Arrays;
 import java.util.List;
 
 /**
  * All the constant variables used in HCX Integrator SDK.
  */
+@UtilityClass
 public class Constants {
 
     public static final String HCX_SENDER_CODE = "x-hcx-sender_code";
