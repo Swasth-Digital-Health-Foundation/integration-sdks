@@ -10,12 +10,10 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HCXInsurancePlanTest {
@@ -157,48 +155,53 @@ class HCXInsurancePlanTest {
     @Test
     void identificationExtensionTest() {
         HCXInsurancePlan.IdentificationExtension idExt = new HCXInsurancePlan.IdentificationExtension();
+        HCXInsurancePlan.IdentificationExtension copyIdeExt = idExt.copy();
         boolean isValid = idExt.isEmpty();
         assertEquals(false, isValid);
+        assertTrue(idExt.toString() != copyIdeExt.toString());
 
     }
 
     @Test
     void presenceExtensionTest() {
         HCXInsurancePlan.PresenceExtension preExt = new HCXInsurancePlan.PresenceExtension();
+        HCXInsurancePlan.PresenceExtension copyPreExt = preExt.copy();
         boolean isValid = preExt.isEmpty();
         assertEquals(false, isValid);
+        assertTrue(preExt.toString() != copyPreExt.toString());
 
-    }
-
-    @Test
-    void planBenefitComponent() {
-        HCXInsurancePlan.PlanBenefitComponent pbf = new HCXInsurancePlan.PlanBenefitComponent();
-        boolean isValid = pbf.isEmpty();
-        assertEquals(true, isValid);
 
     }
 
     @Test
     void diagnosticDocumentsExtension() {
         HCXInsurancePlan.DiagnosticDocumentsExtension dde = new HCXInsurancePlan.DiagnosticDocumentsExtension();
+        HCXInsurancePlan.DiagnosticDocumentsExtension copyDde = dde.copy();
         boolean isValid = dde.isEmpty();
         assertEquals(true, isValid);
+        assertTrue(dde.toString() != copyDde.toString());
+
 
     }
 
     @Test
     void informationalMessagesExtension() {
         HCXInsurancePlan.InformationalMessagesExtension ime = new HCXInsurancePlan.InformationalMessagesExtension();
+        HCXInsurancePlan.InformationalMessagesExtension copyIme = ime.copy();
         boolean isValid = ime.isEmpty();
         assertEquals(true, isValid);
+        assertTrue(ime.toString() != ime.toString());
+
 
     }
 
     @Test
     void questionnairesExtension() {
         HCXInsurancePlan.QuestionnairesExtension qe = new HCXInsurancePlan.QuestionnairesExtension();
+        HCXInsurancePlan.QuestionnairesExtension copyQe = qe.copy();
         boolean isValid = qe.isEmpty();
         assertEquals(true, isValid);
+        assertTrue(qe.toString() != copyQe.toString());
 
     }
 
