@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
- class HttpResponseTest {
+class HttpResponseTest {
 
 
     @Test
-    void HttpResponseTest() throws Exception {
+    void HttpResponseTest() {
 
         HttpResponse httpResponse = new HttpResponse(200, "body");
         assertEquals(200, httpResponse.getStatus());

@@ -1,14 +1,10 @@
 package io.hcxprotocol.dto;
-
-import org.hl7.fhir.r4b.model.BiologicallyDerivedProduct;
 import org.junit.jupiter.api.Test;
-import org.xmlunit.diff.ByNameAndTextRecSelector;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JsonRequestTest {
 
@@ -19,8 +15,6 @@ class JsonRequestTest {
         JSONRequest jsonRequest = new JSONRequest(payload);
         assertEquals(payload, jsonRequest.getPayload());
     }
-
-
 
 
 }

@@ -158,7 +158,7 @@ class HCXInsurancePlanTest {
         HCXInsurancePlan.IdentificationExtension copyIdeExt = idExt.copy();
         boolean isValid = idExt.isEmpty();
         assertFalse(isValid);
-        assert(idExt.toString() != copyIdeExt.toString());
+        assert (idExt.toString() != copyIdeExt.toString());
 
     }
 
@@ -169,7 +169,7 @@ class HCXInsurancePlanTest {
         HCXInsurancePlan.PresenceExtension copyPreExt = preExt.copy();
         boolean isValid = preExt.isEmpty();
         assertFalse(isValid);
-        assert(preExt.toString() != copyPreExt.toString());
+        assert (preExt.toString() != copyPreExt.toString());
 
 
     }
@@ -181,7 +181,7 @@ class HCXInsurancePlanTest {
         HCXInsurancePlan.DiagnosticDocumentsExtension copyDde = dde.copy();
         boolean isValid = dde.isEmpty();
         assertTrue(isValid);
-        assert(dde.toString() != copyDde.toString());
+        assert (dde.toString() != copyDde.toString());
 
 
     }
@@ -193,7 +193,7 @@ class HCXInsurancePlanTest {
         HCXInsurancePlan.InformationalMessagesExtension copyIme = ime.copy();
         boolean isValid = ime.isEmpty();
         assertTrue(isValid);
-        assert(ime.toString() != ime.toString());
+        assert (ime.toString() != ime.toString());
 
 
     }
@@ -205,7 +205,7 @@ class HCXInsurancePlanTest {
         HCXInsurancePlan.QuestionnairesExtension copyQe = qe.copy();
         boolean isValid = qe.isEmpty();
         assertTrue(isValid);
-        assert(qe.toString() != copyQe.toString());
+        assert (qe.toString() != copyQe.toString());
 
     }
 

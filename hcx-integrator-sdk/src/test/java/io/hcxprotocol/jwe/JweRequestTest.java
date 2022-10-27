@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-
 class JweRequestTest {
 
     RSAPublicKey rsaPublicKey;
