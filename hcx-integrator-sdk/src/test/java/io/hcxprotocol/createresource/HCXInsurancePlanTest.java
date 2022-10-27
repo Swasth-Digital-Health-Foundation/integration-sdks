@@ -13,8 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class HCXInsurancePlanTest {
 
@@ -149,7 +148,7 @@ class HCXInsurancePlanTest {
     void insurancePlanPlanComponsentTest() {
         HCXInsurancePlan.InsurancePlanPlanComponent plan = new HCXInsurancePlan.InsurancePlanPlanComponent();
         boolean isValid = plan.isEmpty();
-        assertEquals(false, isValid);
+        assertFalse(isValid);
     }
 
     @Test
@@ -158,8 +157,8 @@ class HCXInsurancePlanTest {
         // copy method
         HCXInsurancePlan.IdentificationExtension copyIdeExt = idExt.copy();
         boolean isValid = idExt.isEmpty();
-        assertEquals(false, isValid);
-        assertTrue(idExt.toString() != copyIdeExt.toString());
+        assertFalse(isValid);
+        assert(idExt.toString() != copyIdeExt.toString());
 
     }
 
@@ -169,8 +168,8 @@ class HCXInsurancePlanTest {
         // copy method
         HCXInsurancePlan.PresenceExtension copyPreExt = preExt.copy();
         boolean isValid = preExt.isEmpty();
-        assertEquals(false, isValid);
-        assertTrue(preExt.toString() != copyPreExt.toString());
+        assertFalse(isValid);
+        assert(preExt.toString() != copyPreExt.toString());
 
 
     }
@@ -181,8 +180,8 @@ class HCXInsurancePlanTest {
         // copy method
         HCXInsurancePlan.DiagnosticDocumentsExtension copyDde = dde.copy();
         boolean isValid = dde.isEmpty();
-        assertEquals(true, isValid);
-        assertTrue(dde.toString() != copyDde.toString());
+        assertTrue(isValid);
+        assert(dde.toString() != copyDde.toString());
 
 
     }
@@ -193,8 +192,8 @@ class HCXInsurancePlanTest {
         // copy method
         HCXInsurancePlan.InformationalMessagesExtension copyIme = ime.copy();
         boolean isValid = ime.isEmpty();
-        assertEquals(true, isValid);
-        assertTrue(ime.toString() != ime.toString());
+        assertTrue(isValid);
+        assert(ime.toString() != ime.toString());
 
 
     }
@@ -205,8 +204,8 @@ class HCXInsurancePlanTest {
         // copy method
         HCXInsurancePlan.QuestionnairesExtension copyQe = qe.copy();
         boolean isValid = qe.isEmpty();
-        assertEquals(true, isValid);
-        assertTrue(qe.toString() != copyQe.toString());
+        assertTrue(isValid);
+        assert(qe.toString() != copyQe.toString());
 
     }
 

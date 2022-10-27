@@ -20,13 +20,7 @@ class JsonRequestTest {
         assertEquals(payload, jsonRequest.getPayload());
     }
 
-    @Test
-    void setHeaderMap() throws Exception {
-        Map<String, Object> payload = new HashMap<>();
-        BaseRequest baseRequest = new BaseRequest(payload);
-        baseRequest.getErrorDetails();
 
-    }
 
 
 }
