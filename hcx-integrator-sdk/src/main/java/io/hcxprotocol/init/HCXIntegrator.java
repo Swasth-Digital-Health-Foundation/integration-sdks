@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class HCXIntegrator {
 
-    private static HCXIntegrator hcxIntegrator = null;
+    public static HCXIntegrator hcxIntegrator = null;
 
     private static Config config = null;
 

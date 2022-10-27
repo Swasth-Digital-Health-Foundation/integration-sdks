@@ -155,6 +155,7 @@ class HCXInsurancePlanTest {
     @Test
     void identificationExtensionTest() {
         HCXInsurancePlan.IdentificationExtension idExt = new HCXInsurancePlan.IdentificationExtension();
+        // copy method
         HCXInsurancePlan.IdentificationExtension copyIdeExt = idExt.copy();
         boolean isValid = idExt.isEmpty();
         assertEquals(false, isValid);
@@ -165,6 +166,7 @@ class HCXInsurancePlanTest {
     @Test
     void presenceExtensionTest() {
         HCXInsurancePlan.PresenceExtension preExt = new HCXInsurancePlan.PresenceExtension();
+        // copy method
         HCXInsurancePlan.PresenceExtension copyPreExt = preExt.copy();
         boolean isValid = preExt.isEmpty();
         assertEquals(false, isValid);
@@ -176,6 +178,7 @@ class HCXInsurancePlanTest {
     @Test
     void diagnosticDocumentsExtension() {
         HCXInsurancePlan.DiagnosticDocumentsExtension dde = new HCXInsurancePlan.DiagnosticDocumentsExtension();
+        // copy method
         HCXInsurancePlan.DiagnosticDocumentsExtension copyDde = dde.copy();
         boolean isValid = dde.isEmpty();
         assertEquals(true, isValid);
@@ -187,6 +190,7 @@ class HCXInsurancePlanTest {
     @Test
     void informationalMessagesExtension() {
         HCXInsurancePlan.InformationalMessagesExtension ime = new HCXInsurancePlan.InformationalMessagesExtension();
+        // copy method
         HCXInsurancePlan.InformationalMessagesExtension copyIme = ime.copy();
         boolean isValid = ime.isEmpty();
         assertEquals(true, isValid);
@@ -198,6 +202,7 @@ class HCXInsurancePlanTest {
     @Test
     void questionnairesExtension() {
         HCXInsurancePlan.QuestionnairesExtension qe = new HCXInsurancePlan.QuestionnairesExtension();
+        // copy method
         HCXInsurancePlan.QuestionnairesExtension copyQe = qe.copy();
         boolean isValid = qe.isEmpty();
         assertEquals(true, isValid);
