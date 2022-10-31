@@ -108,11 +108,10 @@ public class BaseRequest {
             return true;
         if (validateCondition(protocolHeaders.containsKey(WORKFLOW_ID) && !UUIDUtils.isUUID(getWorkflowId()), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.toString(), INVALID_WORKFLOW_ID_ERR_MSG))
             return true;
+        //validating option headers
         validateOptionalHeaders(error);
+        // validating onAction headers
         validateOnAction(operation,error);
-         //validating optional headers
-      //  if(validateOptionalHeaders(error) || validateOnAction(operation,error))
-        //    return true;
         return false;
 
     }
@@ -170,8 +169,7 @@ public class BaseRequest {
 
         }
         if (protocolHeaders.containsKey(DEBUG_DETAILS)) {
-            if (validateDetails(getDebugDetails(), error, ErrorCodes.ERR_INVALID_DEBUG_DETAILS.toString(), INVALID_DEBUG_DETAILS_ERR_MSG, ERROR_DETAILS_VALUES, MessageFormat.format(INVALID_DEBUG_DETAILS_RANGE_ERR_MSG, ERROR_DETAILS_VALUES)))
-                return true;
+            return validateDetails(getDebugDetails(), error, ErrorCodes.ERR_INVALID_DEBUG_DETAILS.toString(), INVALID_DEBUG_DETAILS_ERR_MSG, ERROR_DETAILS_VALUES, MessageFormat.format(INVALID_DEBUG_DETAILS_RANGE_ERR_MSG, ERROR_DETAILS_VALUES));
         }
         return false;
     }
@@ -180,13 +178,11 @@ public class BaseRequest {
         if (operation.getOperation().contains("on_")) {
             if (validateCondition(!protocolHeaders.containsKey(STATUS), error, ErrorCodes.ERR_INVALID_STATUS.toString(), MessageFormat.format(INVALID_MANDATORY_ERR_MSG, STATUS)))
                 return true;
-            if (validateValues(getStatus(), error, ErrorCodes.ERR_INVALID_STATUS.toString(), INVALID_STATUS_ERR_MSG, RESPONSE_STATUS_VALUES, MessageFormat.format(INVALID_STATUS_ON_ACTION_RANGE_ERR_MSG, RESPONSE_STATUS_VALUES)))
-                return true;
+            return validateValues(getStatus(), error, ErrorCodes.ERR_INVALID_STATUS.toString(), INVALID_STATUS_ERR_MSG, RESPONSE_STATUS_VALUES, MessageFormat.format(INVALID_STATUS_ON_ACTION_RANGE_ERR_MSG, RESPONSE_STATUS_VALUES));
         }
         else {
             if (protocolHeaders.containsKey(STATUS)) {
-                    if (validateValues(getStatus(), error, ErrorCodes.ERR_INVALID_STATUS.toString(), INVALID_STATUS_ERR_MSG, REQUEST_STATUS_VALUES, MessageFormat.format(INVALID_STATUS_ACTION_RANGE_ERR_MSG, REQUEST_STATUS_VALUES)))
-                        return true;
+                return validateValues(getStatus(), error, ErrorCodes.ERR_INVALID_STATUS.toString(), INVALID_STATUS_ERR_MSG, REQUEST_STATUS_VALUES, MessageFormat.format(INVALID_STATUS_ACTION_RANGE_ERR_MSG, REQUEST_STATUS_VALUES));
                 }
         }
         return false;
