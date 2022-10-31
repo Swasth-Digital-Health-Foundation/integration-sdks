@@ -36,7 +36,6 @@ class HCXInsurancePlanTest {
     private void printFHIRObject(IBaseResource ip) {
         IParser p = FhirContext.forR4().newJsonParser().setPrettyPrint(true);
         String message = p.encodeResourceToString(ip);
-        System.out.println(message);
     }
 
     private HCXInsurancePlan createInsurancePlan() {

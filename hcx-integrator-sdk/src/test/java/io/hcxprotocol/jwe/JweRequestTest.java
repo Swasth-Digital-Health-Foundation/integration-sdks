@@ -24,6 +24,9 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class JweRequestTest {
 
@@ -69,31 +72,24 @@ class JweRequestTest {
     private void initContent() {
         headers = new HashMap<>();
         headers.put("headerKey", "headerValue");
-
         payload = new HashMap<>();
         payload.put("io/hcxprotocol/key", "value");
     }
 
     @Test
-    public void testEncrypt() throws JOSEException, ParseException {
-        System.out.println("Provided Header: " + headers);
-        System.out.println("Provided Payload: " + payload);
-
+    public void testEncrypt() throws JOSEException {
         JweRequest jweRequest = new JweRequest(headers, payload);
         jweRequest.encryptRequest(rsaPublicKey);
         encryptedObject = jweRequest.getEncryptedObject();
-        System.out.println("Encrypted Object: " + encryptedObject.toString());
+        assertFalse(encryptedObject.isEmpty());
     }
 
     @Test
     public void testDecrypt() throws ParseException, JOSEException {
         JweRequest jweRequest = new JweRequest(encryptedObject);
         jweRequest.decryptRequest(rsaPrivateKey);
-        Map<String, Object> retrievedHeader = jweRequest.getHeaders();
-        Map<String, Object> retrievedPayload = jweRequest.getPayload();
-
-        System.out.println("Retrieved Header: " + retrievedHeader);
-        System.out.println("Retrieved Payload:  " + retrievedPayload);
+        Map<String, Object> getHeaders = jweRequest.getHeaders();
+        assertFalse(getHeaders.isEmpty());
     }
 
 }
