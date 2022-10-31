@@ -108,9 +108,11 @@ public class BaseRequest {
             return true;
         if (validateCondition(protocolHeaders.containsKey(WORKFLOW_ID) && !UUIDUtils.isUUID(getWorkflowId()), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.toString(), INVALID_WORKFLOW_ID_ERR_MSG))
             return true;
+        validateOptionalHeaders(error);
+        validateOnAction(operation,error);
          //validating optional headers
-        if(validateOptionalHeaders(error) || validateOnAction(operation,error))
-            return true;
+      //  if(validateOptionalHeaders(error) || validateOnAction(operation,error))
+        //    return true;
         return false;
 
     }
