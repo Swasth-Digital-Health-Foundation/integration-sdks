@@ -157,10 +157,8 @@ public class BaseRequest {
     }
 
     public boolean validateOptionalHeaders(Map<String, Object> error) {
-        if (protocolHeaders.containsKey(DEBUG_FLAG)) {
-            if (validateValues(getDebugFlag(), error, ErrorCodes.ERR_INVALID_DEBUG_FLAG.toString(), INVALID_DEBUG_FLAG_ERR_MSG, DEBUG_FLAG_VALUES, MessageFormat.format(INVALID_DEBUG_FLAG_RANGE_ERR_MSG, DEBUG_FLAG_VALUES)))
+        if (protocolHeaders.containsKey(DEBUG_FLAG) && validateValues(getDebugFlag(), error, ErrorCodes.ERR_INVALID_DEBUG_FLAG.toString(), INVALID_DEBUG_FLAG_ERR_MSG, DEBUG_FLAG_VALUES, MessageFormat.format(INVALID_DEBUG_FLAG_RANGE_ERR_MSG, DEBUG_FLAG_VALUES)))
                 return true;
-        }
         if (protocolHeaders.containsKey(ERROR_DETAILS)) {
             if (validateDetails(getErrorDetails(), error, ErrorCodes.ERR_INVALID_ERROR_DETAILS.toString(), INVALID_ERROR_DETAILS_ERR_MSG, ERROR_DETAILS_VALUES, MessageFormat.format(INVALID_ERROR_DETAILS_RANGE_ERR_MSG, ERROR_DETAILS_VALUES)))
                 return true;
