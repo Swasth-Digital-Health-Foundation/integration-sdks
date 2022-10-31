@@ -77,7 +77,7 @@ class JweRequestTest {
     }
 
     @Test
-    public void testEncrypt() throws JOSEException {
+     void testEncrypt() throws JOSEException {
         JweRequest jweRequest = new JweRequest(headers, payload);
         jweRequest.encryptRequest(rsaPublicKey);
         encryptedObject = jweRequest.getEncryptedObject();

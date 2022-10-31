@@ -24,6 +24,8 @@ class ValidateHelperTest {
     @Test
     void testActionJWEPayloadSuccess() throws Exception {
         boolean isValid = ValidateHelper.getInstance().validateRequest(JSONUtils.serialize(getRequestBody()), Operations.COVERAGE_ELIGIBILITY_CHECK, new HashMap<>());
+        System.out.println("------------------------------uh00----------------------------");
+        System.out.println(isValid);
         assertTrue(isValid);
     }
 
@@ -36,13 +38,13 @@ class ValidateHelperTest {
     @Test
     void testActionJWEPayloadFail() {
         boolean isValid = ValidateHelper.getInstance().validateRequest(null, Operations.COVERAGE_ELIGIBILITY_CHECK, new HashMap<>());
-        assertEquals(false, isValid);
+        assertFalse(isValid);
     }
 
     @Test
     void testOnActionJWEPayloadFail() {
         boolean isValid = ValidateHelper.getInstance().validateRequest(null, Operations.COVERAGE_ELIGIBILITY_CHECK, new HashMap<>());
-        assertEquals(false, isValid);
+        assertFalse(isValid);
     }
 
     @Test
@@ -77,7 +79,7 @@ class ValidateHelperTest {
     void validHeaderDataInvalidApiCallId() {
         String payload = "{\n" + "    \"x-hcx-recipient_code\": \"1-3a3bd68a-848a-4d52-9ec2-07a92d765fb4\",\n" + "    \"x-hcx-timestamp\": \"2021-10-27T20:35:52.636+0530\",\n" + "    \"x-hcx-sender_code\": \"1-2ff1f493-c4d4-4fc7-8d41-aaabb997af23\",\n" + "    \"x-hcx-correlation_id\": \"5e934f90-111d-4f0b-b016-c22d820674e1\",\n" + "    \"x-hcx-api_call_id\": \"##\",\n" + "    \"x-hcx-status\": \"response.redirect\",\n" + "    \"x-hcx-redirect_to\": \"1-74f6cb29-4116-42d0-9fbb-adb65e6a64ac\"\n" + "}";
         boolean isValid = ValidateHelper.getInstance().validateRequest(payload, Operations.COVERAGE_ELIGIBILITY_ON_CHECK, new HashMap<>());
-        assertEquals(true, isValid);
+        assertTrue(isValid);
     }
 
     @Test
