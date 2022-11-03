@@ -20,9 +20,9 @@ public class JSONRequest extends BaseRequest {
     }
 
     public boolean validateRedirect(Map<String, Object> error) {
-        if (!validateCondition(StringUtils.isEmpty(getRedirectTo()), error, ErrorCodes.ERR_INVALID_REDIRECT_TO.toString(), MessageFormat.format(INVALID_REDIRECT_ERR_MSG, REDIRECT_TO)))
+        if (validateCondition(StringUtils.isEmpty(getRedirectTo()), error, ErrorCodes.ERR_INVALID_REDIRECT_TO.toString(), MessageFormat.format(INVALID_REDIRECT_ERR_MSG, REDIRECT_TO)))
             return true;
-        if (!validateCondition(getHcxSenderCode().equalsIgnoreCase(getRedirectTo()), error, ErrorCodes.ERR_INVALID_REDIRECT_TO.toString(), INVALID_REDIRECT_SELF_ERR_MSG))
+        if (validateCondition(getHcxSenderCode().equalsIgnoreCase(getRedirectTo()), error, ErrorCodes.ERR_INVALID_REDIRECT_TO.toString(), INVALID_REDIRECT_SELF_ERR_MSG))
             return true;
         return false;
     }

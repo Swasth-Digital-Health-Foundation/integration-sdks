@@ -152,11 +152,11 @@ public class HCXInsurancePlan extends InsurancePlan {
         @Override
         public IdentificationExtension copy() {
             IdentificationExtension copy = new IdentificationExtension();
-            copy().clinicalDiagnosticDocumentClaimUse =  clinicalDiagnosticDocumentClaimUse;
-            copy().proofOfIdentificationDocumentMimeType = proofOfIdentificationDocumentMimeType;
-            copy().proofOfIdentificationDocumentRequiredFlag = proofOfIdentificationDocumentRequiredFlag;
-            copy().proofOfIdDocumentCode = proofOfIdDocumentCode;
-            copy().documentationUrl = documentationUrl;
+            copy.clinicalDiagnosticDocumentClaimUse =  clinicalDiagnosticDocumentClaimUse;
+            copy.proofOfIdentificationDocumentMimeType = proofOfIdentificationDocumentMimeType;
+            copy.proofOfIdentificationDocumentRequiredFlag = proofOfIdentificationDocumentRequiredFlag;
+            copy.proofOfIdDocumentCode = proofOfIdDocumentCode;
+            copy.documentationUrl = documentationUrl;
             return copy;
         }
 
@@ -246,11 +246,11 @@ public class HCXInsurancePlan extends InsurancePlan {
         @Override
         public PresenceExtension copy() {
             PresenceExtension copy = new PresenceExtension();
-            copy().clinicalDiagnosticDocumentClaimUse =  clinicalDiagnosticDocumentClaimUse;
-            copy().proofOfPresenceDocumentCode =  proofOfPresenceDocumentCode;
-            copy().proofOfPresenceDocumentMimeType = proofOfPresenceDocumentMimeType;
-            copy().proofOfPresenceDocumentRequiredFlag = proofOfPresenceDocumentRequiredFlag;
-            copy().documentationUrl = documentationUrl;
+            copy.clinicalDiagnosticDocumentClaimUse =  clinicalDiagnosticDocumentClaimUse;
+            copy.proofOfPresenceDocumentCode =  proofOfPresenceDocumentCode;
+            copy.proofOfPresenceDocumentMimeType = proofOfPresenceDocumentMimeType;
+            copy.proofOfPresenceDocumentRequiredFlag = proofOfPresenceDocumentRequiredFlag;
+            copy.documentationUrl = documentationUrl;
             return copy;
         }
         @Override
@@ -379,11 +379,11 @@ public class HCXInsurancePlan extends InsurancePlan {
         @Override
         public DiagnosticDocumentsExtension  copy() {
             DiagnosticDocumentsExtension copy = new DiagnosticDocumentsExtension();
-            copy().clinicalDiagnosticDocumentCode = clinicalDiagnosticDocumentCode;
-            copy().clinicalDiagnosticDocumentRequiredFlag =clinicalDiagnosticDocumentRequiredFlag;
-            copy().clinicalDiagnosticDocumentMimeType = clinicalDiagnosticDocumentMimeType;
-            copy().clinicalDiagnosticDocumentClaimUse =  clinicalDiagnosticDocumentClaimUse;
-            copy().documentationUrl = documentationUrl;
+            copy.clinicalDiagnosticDocumentCode = clinicalDiagnosticDocumentCode;
+            copy.clinicalDiagnosticDocumentRequiredFlag =clinicalDiagnosticDocumentRequiredFlag;
+            copy.clinicalDiagnosticDocumentMimeType = clinicalDiagnosticDocumentMimeType;
+            copy.clinicalDiagnosticDocumentClaimUse =  clinicalDiagnosticDocumentClaimUse;
+            copy.documentationUrl = documentationUrl;
             return copy;
         }
         @Override
@@ -451,10 +451,10 @@ public class HCXInsurancePlan extends InsurancePlan {
         @Override
         public InformationalMessagesExtension  copy() {
             InformationalMessagesExtension copy = new InformationalMessagesExtension();
-            copy().documentationUrl = documentationUrl;
-            copy().informationalMessageClaimUse = informationalMessageClaimUse;
-            copy().informationalMessagesCode = informationalMessagesCode;
-            copy().informationalMessageCode = informationalMessageCode;
+            copy.documentationUrl = documentationUrl;
+            copy.informationalMessageClaimUse = informationalMessageClaimUse;
+            copy.informationalMessagesCode = informationalMessagesCode;
+            copy.informationalMessageCode = informationalMessageCode;
             return copy;
         }
         @Override
@@ -522,10 +522,10 @@ public class HCXInsurancePlan extends InsurancePlan {
         @Override
         public QuestionnairesExtension  copy() {
             QuestionnairesExtension copy = new QuestionnairesExtension();
-            copy().documentationUrl = documentationUrl;
-            copy().questionnaire = questionnaire;
-            copy().questionnaireClaimUse = questionnaireClaimUse;
-            copy().questionnaireRequiredFlag = questionnaireRequiredFlag;
+            copy.documentationUrl = documentationUrl;
+            copy.questionnaire = questionnaire;
+            copy.questionnaireClaimUse = questionnaireClaimUse;
+            copy.questionnaireRequiredFlag = questionnaireRequiredFlag;
             return copy;
         }
         @Override

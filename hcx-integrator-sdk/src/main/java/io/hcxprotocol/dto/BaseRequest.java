@@ -23,11 +23,14 @@ import static io.hcxprotocol.utils.ResponseMessage.*;
 public class BaseRequest {
 
     public Map<String, Object> protocolHeaders;
-    private final Map<String, Object> payload;
+    Map<String, Object> payload;
 
     public BaseRequest(Map<String, Object> payload) throws Exception {
         this.payload = payload;
-        this.protocolHeaders = JSONUtils.decodeBase64String(getPayloadValues()[0], Map.class);
+        if (payload.containsKey(PAYLOAD))
+            this.protocolHeaders = JSONUtils.decodeBase64String(getPayloadValues()[0], Map.class);
+        else
+            this.protocolHeaders = payload;
     }
 
     public String getWorkflowId() {
@@ -90,52 +93,28 @@ public class BaseRequest {
         return ((String) getPayload().get(PAYLOAD)).split("\\.");
     }
 
-    public boolean validateHeadersData(List<String> mandatoryHeaders, Operations operation, Map<String, Object> error) throws Exception {
+    public boolean validateHeadersData(List<String> mandatoryHeaders, Operations operation, Map<String, Object> error) {
         List<String> missingHeaders = mandatoryHeaders.stream().filter(key -> !protocolHeaders.containsKey(key)).collect(Collectors.toList());
         if (!missingHeaders.isEmpty()) {
             error.put(ErrorCodes.ERR_MANDATORY_HEADER_MISSING.toString(), MessageFormat.format(INVALID_MANDATORY_ERR_MSG, missingHeaders));
             return true;
         }
         // Validate Header values
-        if (!validateCondition(!UUIDUtils.isUUID(getApiCallId()), error, ErrorCodes.ERR_INVALID_API_CALL_ID.toString(), INVALID_API_CALL_ID_ERR_MSG))
+        if (validateCondition(!UUIDUtils.isUUID(getApiCallId()), error, ErrorCodes.ERR_INVALID_API_CALL_ID.toString(), INVALID_API_CALL_ID_ERR_MSG))
             return true;
-        if (!validateCondition(!UUIDUtils.isUUID(getCorrelationId()), error, ErrorCodes.ERR_INVALID_CORRELATION_ID.toString(), INVALID_CORRELATION_ID_ERR_MSG))
+        if (validateCondition(!UUIDUtils.isUUID(getCorrelationId()), error, ErrorCodes.ERR_INVALID_CORRELATION_ID.toString(), INVALID_CORRELATION_ID_ERR_MSG))
             return true;
-        if (!validateCondition(!DateTimeUtils.validTimestamp(getTimestamp()), error, ErrorCodes.ERR_INVALID_TIMESTAMP.toString(), INVALID_TIMESTAMP_ERR_MSG))
+        if (validateCondition(!DateTimeUtils.validTimestamp(getTimestamp()), error, ErrorCodes.ERR_INVALID_TIMESTAMP.toString(), INVALID_TIMESTAMP_ERR_MSG))
             return true;
-        if (!validateCondition(protocolHeaders.containsKey(WORKFLOW_ID) && !UUIDUtils.isUUID(getWorkflowId()), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.toString(), INVALID_WORKFLOW_ID_ERR_MSG))
+        if (validateCondition(protocolHeaders.containsKey(WORKFLOW_ID) && !UUIDUtils.isUUID(getWorkflowId()), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.toString(), INVALID_WORKFLOW_ID_ERR_MSG))
             return true;
-
-        if (protocolHeaders.containsKey(DEBUG_FLAG)) {
-            if (!validateValues(getDebugFlag(), error, ErrorCodes.ERR_INVALID_DEBUG_FLAG.toString(), INVALID_DEBUG_FLAG_ERR_MSG, DEBUG_FLAG_VALUES, MessageFormat.format(INVALID_DEBUG_FLAG_RANGE_ERR_MSG, DEBUG_FLAG_VALUES)))
-                return true;
-        }
-
-        if (protocolHeaders.containsKey(ERROR_DETAILS)) {
-            if (!validateDetails(getErrorDetails(), error, ErrorCodes.ERR_INVALID_ERROR_DETAILS.toString(), INVALID_ERROR_DETAILS_ERR_MSG, ERROR_DETAILS_VALUES, MessageFormat.format(INVALID_ERROR_DETAILS_RANGE_ERR_MSG, ERROR_DETAILS_VALUES)))
-                return true;
-            if (!validateCondition(!RECIPIENT_ERROR_VALUES.contains(((Map<String, Object>) protocolHeaders.get(ERROR_DETAILS)).get(CODE)), error, ErrorCodes.ERR_INVALID_ERROR_DETAILS.toString(), INVALID_ERROR_DETAILS_CODE_ERR_MSG))
-                return true;
-        }
-        if (protocolHeaders.containsKey(DEBUG_DETAILS)) {
-            if (!validateDetails(getDebugDetails(), error, ErrorCodes.ERR_INVALID_DEBUG_DETAILS.toString(), INVALID_DEBUG_DETAILS_ERR_MSG, ERROR_DETAILS_VALUES, MessageFormat.format(INVALID_DEBUG_DETAILS_RANGE_ERR_MSG, ERROR_DETAILS_VALUES)))
-                return true;
-        }
-
-        if (operation.getOperation().contains("on_")) {
-            if (!validateCondition(!protocolHeaders.containsKey(STATUS), error, ErrorCodes.ERR_INVALID_STATUS.toString(), MessageFormat.format(INVALID_MANDATORY_ERR_MSG, STATUS)))
-                return true;
-            if (!validateValues(getStatus(), error, ErrorCodes.ERR_INVALID_STATUS.toString(), INVALID_STATUS_ERR_MSG, RESPONSE_STATUS_VALUES, MessageFormat.format(INVALID_STATUS_ON_ACTION_RANGE_ERR_MSG, RESPONSE_STATUS_VALUES)))
-                return true;
-        } else {
-            if (protocolHeaders.containsKey(STATUS)) {
-                if (!validateValues(getStatus(), error, ErrorCodes.ERR_INVALID_STATUS.toString(), INVALID_STATUS_ERR_MSG, REQUEST_STATUS_VALUES, MessageFormat.format(INVALID_STATUS_ACTION_RANGE_ERR_MSG, REQUEST_STATUS_VALUES)))
-                    return true;
-            }
-        }
+        //validating option headers
+        validateOptionalHeaders(error);
+        // validating onAction headers
+        validateOnAction(operation,error);
         return false;
-    }
 
+    }
     public boolean validateJwePayload(Map<String, Object> error, String[] payloadArr) {
         if (payloadArr != null && payloadArr.length != PROTOCOL_PAYLOAD_LENGTH) {
             error.put(ErrorCodes.ERR_INVALID_PAYLOAD.toString(), INVALID_PAYLOAD_LENGTH_ERR_MSG);
@@ -155,36 +134,69 @@ public class BaseRequest {
     public boolean validateCondition(Boolean condition, Map<String, Object> error, String key, String msg) {
         if (condition) {
             error.put(key, msg);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
 
     public boolean validateDetails(Map<String, Object> inputMap, Map<String, Object> error, String errorKey, String msg, List<String> rangeValues, String rangeMsg) {
         if (MapUtils.isEmpty(inputMap)) {
             error.put(errorKey, msg);
-            return false;
+            return true;
         } else if (!inputMap.containsKey(CODE) || !inputMap.containsKey(MESSAGE)) {
             error.put(errorKey, msg);
-            return false;
+            return true;
         }
         for (String key : inputMap.keySet()) {
             if (!rangeValues.contains(key)) {
                 error.put(key, rangeMsg);
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
+
+    public boolean validateOptionalHeaders(Map<String, Object> error) {
+        if (protocolHeaders.containsKey(DEBUG_FLAG) && validateValues(getDebugFlag(), error, ErrorCodes.ERR_INVALID_DEBUG_FLAG.toString(), INVALID_DEBUG_FLAG_ERR_MSG, DEBUG_FLAG_VALUES, MessageFormat.format(INVALID_DEBUG_FLAG_RANGE_ERR_MSG, DEBUG_FLAG_VALUES)))
+                return true;
+        if (protocolHeaders.containsKey(ERROR_DETAILS)) {
+            if (validateDetails(getErrorDetails(), error, ErrorCodes.ERR_INVALID_ERROR_DETAILS.toString(), INVALID_ERROR_DETAILS_ERR_MSG, ERROR_DETAILS_VALUES, MessageFormat.format(INVALID_ERROR_DETAILS_RANGE_ERR_MSG, ERROR_DETAILS_VALUES)))
+                return true;
+            if (validateCondition(!RECIPIENT_ERROR_VALUES.contains(((Map<String, Object>) protocolHeaders.get(ERROR_DETAILS)).get(CODE)), error, ErrorCodes.ERR_INVALID_ERROR_DETAILS.toString(), INVALID_ERROR_DETAILS_CODE_ERR_MSG))
+                return true;
+
+        }
+        if (protocolHeaders.containsKey(DEBUG_DETAILS)) {
+            return validateDetails(getDebugDetails(), error, ErrorCodes.ERR_INVALID_DEBUG_DETAILS.toString(), INVALID_DEBUG_DETAILS_ERR_MSG, ERROR_DETAILS_VALUES, MessageFormat.format(INVALID_DEBUG_DETAILS_RANGE_ERR_MSG, ERROR_DETAILS_VALUES));
+        }
+        return false;
+    }
+
+    public boolean validateOnAction(Operations operation, Map<String,Object> error){
+        if (operation.getOperation().contains("on_")) {
+            if (validateCondition(!protocolHeaders.containsKey(STATUS), error, ErrorCodes.ERR_INVALID_STATUS.toString(), MessageFormat.format(INVALID_MANDATORY_ERR_MSG, STATUS)))
+                return true;
+            return validateValues(getStatus(), error, ErrorCodes.ERR_INVALID_STATUS.toString(), INVALID_STATUS_ERR_MSG, RESPONSE_STATUS_VALUES, MessageFormat.format(INVALID_STATUS_ON_ACTION_RANGE_ERR_MSG, RESPONSE_STATUS_VALUES));
+        }
+        else {
+            if (protocolHeaders.containsKey(STATUS)) {
+                return validateValues(getStatus(), error, ErrorCodes.ERR_INVALID_STATUS.toString(), INVALID_STATUS_ERR_MSG, REQUEST_STATUS_VALUES, MessageFormat.format(INVALID_STATUS_ACTION_RANGE_ERR_MSG, REQUEST_STATUS_VALUES));
+                }
+        }
+        return false;
+    }
+
+
 
     public boolean validateValues(String inputStr, Map<String, Object> error, String key, String msg, List<String> statusValues, String rangeMsg) {
         if (StringUtils.isEmpty(inputStr)) {
             error.put(key, msg);
-            return false;
+            return true;
         } else if (!statusValues.contains(inputStr)) {
             error.put(key, rangeMsg);
-            return false;
+            return true;
         }
-        return true;
+        return false;
     }
+
 }

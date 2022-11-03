@@ -12,8 +12,7 @@ import java.util.Map;
  * The methods and variables to access the configuration. Enumeration of error codes and operations.
  */
 public class HCXIntegrator {
-
-    private static HCXIntegrator hcxIntegrator = null;
+    static  HCXIntegrator hcxIntegrator = null;
 
     private static Config config = null;
 

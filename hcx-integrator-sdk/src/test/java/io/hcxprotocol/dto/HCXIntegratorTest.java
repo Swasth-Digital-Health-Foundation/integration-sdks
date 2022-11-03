@@ -1,18 +1,17 @@
 package io.hcxprotocol.dto;
 
 import io.hcxprotocol.init.HCXIntegrator;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class HCXIntegratorTest {
+ class HCXIntegratorTest {
 
     @Test
-    public void testInitializeConfigMap() throws Exception {
+    void testInitializeConfigMap() throws Exception {
         Map<String,Object> configMap = new HashMap<>();
         configMap.put("protocolBasePath", "http://localhost:8095");
         configMap.put("participantCode", "participant@01");
@@ -40,7 +39,7 @@ public class HCXIntegratorTest {
     }
 
     @Test
-    public void testInitializeConfigString() throws Exception {
+    void testInitializeConfigString() throws Exception {
         String configStr = "{\"password\":\"12345\",\"protocolBasePath\":\"http://localhost:8095\",\"igUrl\":\"http://localhost:8090\",\"authBasePath\":\"http://localhost:8080\",\"encryptionPrivateKey\":\"Mz-VPPyU4RlcuYv1IwIvzw\",\"participantCode\":\"participant@01\",\"username\":\"participant@gmail.com\"}";
 
         HCXIntegrator.init(configStr);
