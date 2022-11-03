@@ -3,6 +3,7 @@ package io.hcxprotocol.utils;
 import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.dto.HttpResponse;
 import io.hcxprotocol.exception.ServerException;
+import lombok.experimental.UtilityClass;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.Map;
  * </ol>
  */
 
+@UtilityClass
 public class Utils {
 
     // TODO: In the initial version we are not handling the token caching, it will be handled in the next version
