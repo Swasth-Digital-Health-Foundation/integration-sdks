@@ -1,4 +1,6 @@
-# Integration SDKs
+# HCX Integrator SDK
+
+For information on how to use the SDK, Please refer the [SDK User Manual](https://github.com/Swasth-Digital-Health-Foundation/hcx-platform/wiki/HCX-Integration-SDK-User-Manual).
 
 # JWE-Helper
 
