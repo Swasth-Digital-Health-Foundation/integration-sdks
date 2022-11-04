@@ -173,6 +173,14 @@
                     <show>public</show>
                     <excludePackageNames>io.hcxprotocol.exception:io.hcxprotocol.dto:io.hcxprotocol.helper:io.hcxprotocol.utils:io.hcxprotocol.createresource:io.hcxprotocol.jwe:io.hcxprotocol.lib:io.hcxprotocol.key:io.hcxprotocol.validator</excludePackageNames>
                 </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
@@ -207,7 +215,7 @@
                     <execution>
                         <id>attach-sources</id>
                         <goals>
-                            <goal>jar-no-fork</goal>
+                            <goal>jar</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -240,7 +248,7 @@
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
-                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                     <!-- <autoReleaseAfterClose>true</autoReleaseAfterClose> -->
                 </configuration>
             </plugin>
