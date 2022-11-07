@@ -19,9 +19,9 @@
     </licenses>
     <developers>
         <developer>
-            <name>Swasth</name>
+            <name>swasth</name>
             <email>contact@hcxprotrocol.io</email>
-            <organization>Swasth</organization>
+            <organization>swasth</organization>
             <organizationUrl>http://hcxprotocol.io/</organizationUrl>
         </developer>
     </developers>
@@ -30,18 +30,19 @@
         <snapshotRepository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <layout>default</layout>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <layout>default</layout>
         </repository>
     </distributionManagement>
     <scm>
         <connection>scm:git:git://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</connection>
         <developerConnection>scm:git:ssh://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</developerConnection>
-        <url>https://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git/tree/main</url>
+        <url>https://github.com/Swasth-Digital-Health-Foundation/integration-sdks/tree/main</url>
     </scm>
-
     <dependencies>
         <dependency>
             <groupId>com.typesafe</groupId>
@@ -73,7 +74,6 @@
             <artifactId>hapi-fhir-validation-resources-r4</artifactId>
             <version>5.7.0</version>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -90,7 +90,6 @@
             <groupId>com.nimbusds</groupId>
             <artifactId>nimbus-jose-jwt</artifactId>
             <version>9.15.2</version>
-
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk15on -->
         <dependency>
@@ -99,7 +98,6 @@
             <version>1.70</version>
         </dependency>
         <!-- run mvn clean to store jwe-helper dependency in local repo -->
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -151,8 +149,6 @@
             <version>1.18.22</version>
             <scope>compile</scope>
         </dependency>
-
-
     </dependencies>
 
     <build>
@@ -171,7 +167,9 @@
                 <version>3.4.1</version>
                 <configuration>
                     <show>public</show>
-                    <excludePackageNames>io.hcxprotocol.exception:io.hcxprotocol.dto:io.hcxprotocol.helper:io.hcxprotocol.utils:io.hcxprotocol.createresource:io.hcxprotocol.jwe:io.hcxprotocol.lib:io.hcxprotocol.key:io.hcxprotocol.validator</excludePackageNames>
+                    <excludePackageNames>
+                        io.hcxprotocol.exception:io.hcxprotocol.dto:io.hcxprotocol.helper:io.hcxprotocol.utils:io.hcxprotocol.createresource:io.hcxprotocol.jwe:io.hcxprotocol.lib:io.hcxprotocol.key:io.hcxprotocol.validator
+                    </excludePackageNames>
                 </configuration>
                 <executions>
                     <execution>
@@ -223,11 +221,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.5</version>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
-                        <phase>deploy</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>sign</goal>
                         </goals>
@@ -240,11 +238,12 @@
                         </configuration>
                     </execution>
                 </executions>
+
             </plugin>
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
+                <version>1.6.8</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
@@ -259,5 +258,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
