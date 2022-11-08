@@ -17,7 +17,6 @@ jobs:
           server-password: ${{ secrets.OSSRH_TOKEN }}
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-
       - name: maven-settings-xml-action
         uses: whelk-io/maven-settings-xml-action@v20
         with:
