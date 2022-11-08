@@ -34,7 +34,7 @@ jobs:
                 }
               }
             }
-          ]
+           ]
           profiles: >
            [
             {
@@ -45,7 +45,7 @@ jobs:
             }
 
             }
-          ]
+           ]
       - name: Publish to the Maven Central Repository
         run: |
           mvn \
