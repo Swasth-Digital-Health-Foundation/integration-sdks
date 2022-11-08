@@ -44,14 +44,20 @@
             <name>https://maven.pkg.github.com/AbhiGaddi/integration-sdks</name>
         </repository>
     </distributionManagement>
-
-
-
     <scm>
-        <connection>scm:git:git://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</connection>
-        <developerConnection>scm:git:ssh://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</developerConnection>
-        <url>https://github.com/Swasth-Digital-Health-Foundation/integration-sdks/tree/main</url>
+        <connection>scm:git:git://github.com/ManjunathPrabhakar/AbhiGaddi/integration-sdks.git</connection>
+        <developerConnection>scm:git:git://github.com/ManjunathPrabhakar/AbhiGaddi/integration-sdks.git</developerConnection>
+        <url>https://github.com/AbhiGaddi/integration-sdks.git</url>
+        <tag>integration-sdks</tag>
     </scm>
+
+
+
+<!--    <scm>-->
+<!--        <connection>scm:git:git://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</connection>-->
+<!--        <developerConnection>scm:git:ssh://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</developerConnection>-->
+<!--        <url>https://github.com/Swasth-Digital-Health-Foundation/integration-sdks/tree/main</url>-->
+<!--    </scm>-->
     <dependencies>
         <dependency>
             <groupId>com.typesafe</groupId>
@@ -227,44 +233,44 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>3.0.1</version>
-                <executions>
-                    <execution>
-                        <id>sign-artifacts</id>
-                        <phase>deploy</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                        <configuration>
-                            <!-- This is necessary for gpg to not try to use the pinentry programs -->
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                        </configuration>
-                    </execution>
-                </executions>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-gpg-plugin</artifactId>-->
+<!--                <version>3.0.1</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <id>sign-artifacts</id>-->
+<!--                        <phase>deploy</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>sign</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            &lt;!&ndash; This is necessary for gpg to not try to use the pinentry programs &ndash;&gt;-->
+<!--                            <gpgArguments>-->
+<!--                                <arg>&#45;&#45;pinentry-mode</arg>-->
+<!--                                <arg>loopback</arg>-->
+<!--                            </gpgArguments>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
 
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.plugins</groupId>
-                <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <serverId>ossrh</serverId>
-                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                    <!-- <autoReleaseAfterClose>true</autoReleaseAfterClose> -->
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.2</version>
-            </plugin>
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.sonatype.plugins</groupId>-->
+<!--                <artifactId>nexus-staging-maven-plugin</artifactId>-->
+<!--                <version>1.6.8</version>-->
+<!--                <extensions>true</extensions>-->
+<!--                <configuration>-->
+<!--                    <serverId>ossrh</serverId>-->
+<!--                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>-->
+<!--                    &lt;!&ndash; <autoReleaseAfterClose>true</autoReleaseAfterClose> &ndash;&gt;-->
+<!--                </configuration>-->
+<!--            </plugin>-->
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                <version>2.22.2</version>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 </project>
