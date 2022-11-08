@@ -38,6 +38,14 @@ jobs:
           ]
      - name : Publish to the Maven Central Repository
        run: |
+     - uses: actions/checkout@v2
+        - name: maven-settings-xml-action
+        uses: whelk-io/maven-settings-xml-action@v20
+        with:
+          profiles: '[{"id":"ossrh", "activation": {"activeByDefault": true},"properties":{"gpg.executable":"gpg","gpg.passphrase":"${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}"}}]'
+          servers: '[{ "id": "ossrh", "username": "${{ secrets.OSSRH_USERNAME }}", "password": "${{ secrets.OSSRH_TOKEN }}" }]'
+     - name: Publish to the Maven Central Repository
+       run: |
           mvn \
             --no-transfer-progress \
             --batch-mode \
