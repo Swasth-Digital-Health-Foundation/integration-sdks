@@ -17,8 +17,6 @@ jobs:
           server-password: ${{ secrets.OSSRH_TOKEN }}
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-      - name: print gpg secret key
-        run: echo ${{gpg-private-key}}
       - name: build artifact
         run: mvn clean package
       - name: Create release
