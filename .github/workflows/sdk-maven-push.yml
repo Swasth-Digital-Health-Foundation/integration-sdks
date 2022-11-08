@@ -24,7 +24,6 @@ jobs:
         with:
           allowUpdates: true
           artifacts: "${{ github.workspace }}/target/*.jar"
-          token: ${{ secrets.TOKEN }}
       - name: Publish to the Maven Central Repository
         run: mvn --batch-mode deploy
       
