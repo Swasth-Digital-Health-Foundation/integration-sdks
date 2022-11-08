@@ -7,7 +7,6 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
       - name: maven-settings-xml-action
         uses: whelk-io/maven-settings-xml-action@v20
         with:
