@@ -8,18 +8,10 @@ jobs:
     runs-on: ubuntu-latest
     steps :
       - uses : actions/checkout@v2
-      - name: Set up Java for publishing to Maven Central Repository
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-          server-id: ossrh
-          server-username: ${{ secrets.OSSRH_USERNAME }}
-          server-password: ${{ secrets.OSSRH_TOKEN }}
-          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          gpg-passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
       - name: maven-settings-xml-action
         uses: whelk-io/maven-settings-xml-action@v20
         with:
+          java-version: 11
           servers: >
            [ 
             {
