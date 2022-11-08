@@ -17,21 +17,14 @@ jobs:
           server-password: ${{ secrets.OSSRH_TOKEN }}
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-      - name: print gpg secret key
-        run: echo ${{gpg-private-key}}
-      - name: build artifact
-        run: mvn clean package
-      - name: Create release
-        uses: ncipollo/release-action@v1
-        with:
-          allowUpdates: true
-          artifacts: "${{ github.workspace }}/target/*.jar"
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to the Maven Central Repository
-        run: mvn --batch-mode deploy
-      
-         
+        run: |
+          mvn \
+            --no-transfer-progress \
+            --batch-mode \
+            deploy
 
 
-          
+
+
 
