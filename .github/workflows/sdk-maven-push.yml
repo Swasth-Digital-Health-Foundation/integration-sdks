@@ -1,8 +1,8 @@
 name: release and push to central
 on:
   push:
-    tags:
-      - '*'
+    branches:
+      - local-2
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -11,7 +11,7 @@ jobs:
       - name: Set up Java for publishing to Maven Central Repository
         uses: actions/setup-java@v1
         with:
-          java-version: 1.8
+          java-version: 11
           server-id: ossrh
           server-username: ${{ secrets.OSSRH_USERNAME }}
           server-password: ${{ secrets.OSSRH_TOKEN }}
@@ -28,10 +28,10 @@ jobs:
           artifacts: "${{ github.workspace }}/target/*.jar"
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish to the Maven Central Repository
-        run: |
-          mvn \
-            --no-transfer-progress \
-            --batch-mode \
-            deploy
+        run: mvn --batch-mode deploy
       
          
+
+
+          
+
