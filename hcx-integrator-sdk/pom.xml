@@ -42,6 +42,7 @@
         <repository>
             <id>github</id>
             <name>https://maven.pkg.github.com/AbhiGaddi/integration-sdks</name>
+            <layout>default</layout>
         </repository>
     </distributionManagement>
     <scm>
