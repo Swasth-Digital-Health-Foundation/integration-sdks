@@ -26,40 +26,23 @@
         </developer>
     </developers>
 
-<!--    <distributionManagement>-->
-<!--        <snapshotRepository>-->
-<!--            <id>ossrh</id>-->
-<!--            <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-<!--            <layout>default</layout>-->
-<!--        </snapshotRepository>-->
-<!--        <repository>-->
-<!--            <id>ossrh</id>-->
-<!--            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-<!--            <layout>default</layout>-->
-<!--        </repository>-->
-<!--    </distributionManagement>-->
     <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <layout>default</layout>
+        </snapshotRepository>
         <repository>
-            <id>github</id>
-            <name>https://maven.pkg.github.com/AbhiGaddi/integration-sdks/</name>
-            <url>https://github.com/AbhiGaddi/integration-sdks.git</url>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
             <layout>default</layout>
         </repository>
     </distributionManagement>
     <scm>
-        <connection>scm:git:git://github.com/AbhiGaddi/integration-sdks.git</connection>
-        <developerConnection>scm:git:git://github.com/AbhiGaddi/integration-sdks.git</developerConnection>
-        <url>https://github.com/AbhiGaddi/integration-sdks.git</url>
-        <tag>integration-sdks</tag>
+        <connection>scm:git:git://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</connection>
+        <developerConnection>scm:git:ssh://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</developerConnection>
+        <url>https://github.com/Swasth-Digital-Health-Foundation/integration-sdks/tree/main</url>
     </scm>
-
-
-
-<!--    <scm>-->
-<!--        <connection>scm:git:git://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</connection>-->
-<!--        <developerConnection>scm:git:ssh://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</developerConnection>-->
-<!--        <url>https://github.com/Swasth-Digital-Health-Foundation/integration-sdks/tree/main</url>-->
-<!--    </scm>-->
     <dependencies>
         <dependency>
             <groupId>com.typesafe</groupId>
@@ -263,7 +246,7 @@
                 <version>1.6.8</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <serverId>github</serverId>
+                    <serverId>ossrh</serverId>
                     <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
                     <!-- <autoReleaseAfterClose>true</autoReleaseAfterClose> -->
                 </configuration>

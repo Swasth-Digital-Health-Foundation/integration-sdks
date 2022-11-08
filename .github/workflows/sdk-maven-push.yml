@@ -22,5 +22,5 @@ jobs:
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           GITHUB_TOKEN : ${{ secrets.TOKEN }}
 
-      
+
 
