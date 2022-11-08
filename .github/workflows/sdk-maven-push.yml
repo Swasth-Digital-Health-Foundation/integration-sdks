@@ -18,7 +18,7 @@ jobs:
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase:  ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
       - name: build artifact
-        run: mvn clean package
+        run: mvn clean install
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
