@@ -1,0 +1,33 @@
+name: Release
+
+# Run workflow on commits to the `master` branch
+on:
+  push:
+    branches:
+      - local-2
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
+      - name: Install Java and Maven
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: Release Maven package
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+          gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          gpg_passphrase: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+          nexus_username: ${{ secrets.OSSRH_USERNAME }}
+          nexus_password: ${{ secrets.OSSRH_TOKEN }}
+          token: ${{ secrets.TOKEN }}
+      - name: Publish to the Maven Central Repository
+        run: mvn --batch-mode deploy
+
+
