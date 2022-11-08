@@ -27,6 +27,8 @@ jobs:
           nexus_username: ${{ secrets.OSSRH_USERNAME }}
           nexus_password: ${{ secrets.OSSRH_TOKEN }}
           token: ${{ secrets.TOKEN }}
+      - name : gpg private key 
+         run:echo $gpg_private_key
       - name: Publish to the Maven Central Repository
         run: mvn --batch-mode deploy
     
