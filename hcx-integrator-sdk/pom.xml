@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.hcxprotocol</groupId>
     <artifactId>hcx-integrator-sdk</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <packaging>jar</packaging>
     <name>HCX Integrator SDK</name>
     <description>The SDK for HCX Participant System to help in integrating with HCX Gateway easily.</description>
@@ -42,6 +42,7 @@
         <repository>
             <id>github</id>
             <name>https://maven.pkg.github.com/AbhiGaddi/integration-sdks</name>
+            <url>https://github.com/AbhiGaddi/integration-sdks/</url>
             <layout>default</layout>
         </repository>
     </distributionManagement>
