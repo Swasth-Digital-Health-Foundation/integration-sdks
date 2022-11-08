@@ -1,7 +1,6 @@
 package io.hcxprotocol.impl;
 
 import io.hcxprotocol.dto.BaseRequest;
-import io.hcxprotocol.dto.JSONRequest;
 import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.utils.Constants;
