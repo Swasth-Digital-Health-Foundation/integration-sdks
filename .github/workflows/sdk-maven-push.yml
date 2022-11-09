@@ -14,11 +14,12 @@ jobs:
         uses : actions/checkout@v2
       - name : Build with Maven
         run: mvn clean -B package -s .maven/settings.xml
-      - name : deploy to maven central repository
-        run: mvn clean -B package deploy -s .maven/settings.xml
       - name: Configure GPG Key
         run: |
-         echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
+         echo -n "$OSSRH_GPG_SECRET_KEY" | base64 --decode | gpg --import
+      - name : deploy to maven central repository
+        run: mvn clean -B package deploy -s .maven/settings.xml
+     
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
