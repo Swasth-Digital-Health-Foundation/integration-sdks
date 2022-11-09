@@ -16,6 +16,9 @@ jobs:
         run: mvn clean -B package -s .maven/settings.xml
       - name : deploy to maven central repository
         run: mvn clean -B package deploy -s .maven/settings.xml
+      - name: Configure GPG Key
+        run: |
+         echo -n "$GPG_SIGNING_KEY" | base64 --decode | gpg --import
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
