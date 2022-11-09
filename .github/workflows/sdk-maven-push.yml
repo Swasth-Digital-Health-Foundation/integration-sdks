@@ -12,15 +12,22 @@ jobs:
     steps:
       - name : Checkout repository
         uses : actions/checkout@v2
-      - name : Build and Deply with Maven
+      - name: Set up Java for publishing to Maven Central Repository
+        uses: actions/setup-java@v1
+        with:
+         java-version: 11
+         server-id: ossrh
+         server-username: ${{ secrets.OSSRH_USERNAME }}
+         server-password: ${{ secrets.OSSRH_TOKEN }}
+         gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+         gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      - name : Build artifact
+        run: mvn clean package
+      - name : deploy to maven central repository
         run: mvn clean -B package deploy -s .maven/settings.xml
 
         env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
-          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          GITHUB_TOKEN : ${{ secrets.TOKEN }}
+           GITHUB_TOKEN : ${{ secrets.TOKEN }}
 
 
 
