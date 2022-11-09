@@ -21,8 +21,6 @@ jobs:
          server-password: ${{ secrets.OSSRH_TOKEN }}
          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      - name : Build artifact
-        run: mvn clean package
       - name : Build with Maven
         run: mvn clean install -DskipTests -s ./.maven/settings.xml
       - name : deploy to maven central repository
