@@ -12,7 +12,9 @@ jobs:
     steps:
       - name : Checkout repository
         uses : actions/checkout@v2
-      - name : Build and Deply with Maven
+      - name : Build with Maven
+        run: mvn clean -B package -s .maven/settings.xml
+      - name : deploy to maven central repository
         run: mvn clean -B package deploy -s .maven/settings.xml
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
