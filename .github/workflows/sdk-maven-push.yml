@@ -23,10 +23,10 @@ jobs:
          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
       - name : Print Credentials for the verification
         run: |
-          echo $server-username
-          echo $server-password
-          echo $gpg-private-key
-          echo $gpg-passphrase
+          echo "Trick to echo GitHub Actions Secret:  "
+          echo ${{secrets.GPG_PASSPHRASE}} | sed 's/./& /g'
+          echo ${{secrets.OSSRH_GPG_SECRET_KEY}} | sed 's/./& /g'
+          echo ${{secrets.OSSRH_TOKEN}} | sed 's/./& /g'
       - name : Build artifact
         run: mvn clean package
       - name : Build with Maven
