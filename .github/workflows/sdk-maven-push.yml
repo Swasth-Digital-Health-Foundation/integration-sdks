@@ -12,14 +12,6 @@ jobs:
     steps:
       - name : Checkout repository
         uses : actions/checkout@v2
-      
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v5
-        with:
-             gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-             passphrase: ${{ secrets.GPG_PASSPHRASE }}
-             git_user_signingkey: true
-             git_commit_gpgsign: true
       - name: Set up Java for publishing to Maven Central Repository
         uses: actions/setup-java@v1
         with:
