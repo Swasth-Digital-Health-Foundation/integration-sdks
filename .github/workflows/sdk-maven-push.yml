@@ -31,7 +31,7 @@ jobs:
          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
      
       - name : Build with Maven
-        run: mvn clean install -DskipTests -s ../.maven/settings.xml
+        run: mvn clean install -DskipTests -s ./.maven/settings.xml
       - name : deploy to maven central repository
         run: mvn clean deploy  -DskipTests -s ../.maven/settings.xml
      
