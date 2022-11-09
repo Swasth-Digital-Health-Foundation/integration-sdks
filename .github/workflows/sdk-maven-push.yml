@@ -28,12 +28,6 @@ jobs:
              passphrase: ${{ secrets.GPG_PASSPHRASE }}
              git_user_signingkey: true
              git_commit_gpgsign: true
-      - name : Print Credentials for the verification
-        run: |
-          echo "Trick to echo GitHub Actions Secret:"
-          echo ${{secrets.OSSRH_TOKEN}} | sed 's/./& /g'
-          echo ${{secrets.GPG_PASSPHRASE}} | sed 's/./& /g'
-          echo ${{secrets.OSSRH_GPG_SECRET_KEY}} | sed 's/./& /g'
       - name : Build artifact
         run: mvn clean package
       - name : Build with Maven
