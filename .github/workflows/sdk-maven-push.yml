@@ -21,13 +21,6 @@ jobs:
          server-password: ${{ secrets.OSSRH_TOKEN }}
          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
-      - name: Import GPG key
-        uses: crazy-max/ghaction-import-gpg@v5
-        with:
-             gpg_private_key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-             passphrase: ${{ secrets.GPG_PASSPHRASE }}
-             git_user_signingkey: true
-             git_commit_gpgsign: true
       - name : Build artifact
         run: mvn clean package
       - name : Build with Maven
