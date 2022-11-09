@@ -30,8 +30,6 @@ jobs:
              git_commit_gpgsign: true
       - name : Build artifact
         run: mvn clean package
-      - name : Build with Maven
-        run: mvn clean -B package -s .maven/settings.xml
       - name : deploy to maven central repository
         run: mvn clean -B package deploy -s .maven/settings.xml
      
