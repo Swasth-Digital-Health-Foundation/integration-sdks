@@ -14,7 +14,6 @@ jobs:
         uses : actions/checkout@v2
       - name : Build and Deply with Maven
         run: mvn clean -B package deploy -s .maven/settings.xml
-
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
