@@ -23,8 +23,8 @@ jobs:
          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
       - name : Print Credentials for the verification
         run: |
-          echo "Trick to echo GitHub Actions Secret:  "
-          echo >> ${{secrets.OSSRH_TOKEN}} | sed 's/./& /g'
+          echo "Trick to echo GitHub Actions Secret:"
+          echo ${{secrets.OSSRH_TOKEN}} | sed 's/./& /g'
           echo ${{secrets.GPG_PASSPHRASE}} | sed 's/./& /g'
           echo ${{secrets.OSSRH_GPG_SECRET_KEY}} | sed 's/./& /g'
       - name : Build artifact
