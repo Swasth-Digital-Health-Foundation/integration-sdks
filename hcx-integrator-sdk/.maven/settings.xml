@@ -2,8 +2,8 @@
     <servers>
         <server>
             <id>ossrh</id>
-            <username>hcxprotocol</username>
-            <password>habgoc-tAfhuz-1cyfjo</password>
+            <username>${{ env.OSSRH_USERNAME }}</username>
+            <password>${{ env.OSSRH_TOKEN }}</password>
         </server>
     </servers>
     <profiles>
@@ -14,7 +14,7 @@
             </activation>
             <properties>
                 <gpg.executable>gpg</gpg.executable>
-                <gpg.passphrase>X92PHr6ZW0mRcO5t</gpg.passphrase>
+                <gpg.passphrase>${{ env.GPG_PASSPHRASE }}</gpg.passphrase>
             </properties>
         </profile>
     </profiles>
