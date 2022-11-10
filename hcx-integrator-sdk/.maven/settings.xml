@@ -2,8 +2,8 @@
     <servers>
         <server>
             <id>ossrh</id>
-            <username>${{ env.OSSRH_USERNAME }}</username>
-            <password>${{ env.OSSRH_TOKEN }}</password>
+            <username>hcxprotocol</username>
+            <password>habgoc-tAfhuz-1cyfjo</password>
         </server>
     </servers>
     <profiles>
