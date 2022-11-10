@@ -1,34 +1,29 @@
-name: release and push to central
+name: Publish package to the Maven Central Repository and GitHub Packages
 on:
-  push:
-    branches:
-      - local-2
-        
+  release:
+    types: [created]
+  push :
+     branches :
+     - local-2
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
+    permissions: 
+      contents: read
+      packages: write 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Set up Java for publishing to Maven Central Repository
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: '11'
+          distribution: 'adopt'
           server-id: ossrh
-          server-username:  ${{ secrets.OSSRH_USERNAME }}
-          server-password: ${{ secrets.OSSRH_PASSWORD }}
-          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          gpg-passphrase:  ${{ secrets.GPG_PASSPHRASE }}
-   
-      - name : listing gpg keys
-        run : gpg --list-keys
-      
-      - name : cat settings.xml
-        run : cat ./.maven/settings.xml
-      - name : maven clean install
-        run : mvn clean install -s ./.maven/settings.xml
-   
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
       - name: Publish to the Maven Central Repository
-        run:  mvn clean deploy -s ./.maven/settings.xml
-     
-           
-        
+        run: mvn --batch-mode deploy -s ./.maven/settings.xml
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+    
