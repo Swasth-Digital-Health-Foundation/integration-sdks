@@ -1,29 +1,33 @@
-name: Publish package to the Maven Central Repository 
 on:
   release:
     types: [created]
   push :
-     branches :
-     - local-2
+    branches :
+      - local-2
 jobs:
   publish:
-    runs-on: ubuntu-latest 
-    permissions: 
+    runs-on: ubuntu-latest
+    permissions:
       contents: read
-      packages: write 
+      packages: write
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Set up Java for publishing to Maven Central Repository
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          server-id: ossrh
+          server-username: ${{ secrets.OSSRH_USERNAME }}
+          server-password: ${{ secrets.OSSRH_TOKEN }}
+          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name: Set up secret file
-        env:
-          DEBUG_PASSWORD: ${{ secrets.GPG_PASSPHRASE }}
-          DEBUG_SECRET_KEY: ${{ secrets.OSSRH_TOKEN }}
+      - name: Publish to the Maven Central Repository
         run: |
-          echo $DEBUG_PASSWORD >> secrets.txt
-          echo $DEBUG_SECRET_KEY >> secrets.txt
-          
-          
-       
-
-     
+          cd hcx-integrator-sdk/
+          mvn clean deploy -s ./.maven/settings.xml
+        env:
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+		  
