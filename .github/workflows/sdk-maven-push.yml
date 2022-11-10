@@ -29,15 +29,11 @@ jobs:
         
       - name : listing directory
         run : ls
-
-      - name : changing directory
-        run  : cd hcx-integrator-sdk
-
-      - name : Second path
-        run : pwd
-
+  
       - name: Publish to the Maven Central Repository
-        run: mvn clean deploy -s ./.maven/settings.xml
+        run: |
+            cd hcx-integrator-sdk/
+            mvn clean deploy -s ./.maven/settings.xml
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
