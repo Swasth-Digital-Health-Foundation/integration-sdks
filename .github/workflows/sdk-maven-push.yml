@@ -21,7 +21,7 @@ jobs:
           server-id: ossrh
           server-username: ${{ env.OSSRH_USERNAME }}
           server-password: ${{ env.OSSRH_TOKEN }}
-          gpg-private-key: ${{ env.OSSRH_GPG_SECRET_KEY }}
+          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: ${{ env.GPG_PASSPHRASE }}
 
       - name: Publish to the Maven Central Repository
