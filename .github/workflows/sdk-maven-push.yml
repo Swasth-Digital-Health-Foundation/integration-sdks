@@ -24,12 +24,6 @@ jobs:
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
-      - name : First path
-        run: pwd
-        
-      - name : listing directory
-        run : ls
-  
       - name: Publish to the Maven Central Repository
         run: |
             cd hcx-integrator-sdk/
