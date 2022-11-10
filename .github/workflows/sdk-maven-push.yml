@@ -25,6 +25,10 @@ jobs:
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
       - name : changing directory
         run  : cd hcx-integrator-sdk
+
+      - name : path
+        run : pwd
+
       - name: Publish to the Maven Central Repository
         run: mvn clean deploy -s ./.maven/settings.xml
         env:
