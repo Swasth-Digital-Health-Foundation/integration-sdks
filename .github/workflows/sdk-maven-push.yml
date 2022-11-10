@@ -29,7 +29,6 @@ jobs:
    
       - name: Publish to the Maven Central Repository
         run:  mvn clean deploy -s ./.maven/settings.xml
-        env:
-            GITHUB_TOKEN : ${{ secrets.TOKEN }}
+     
            
         
