@@ -26,6 +26,9 @@ jobs:
 
       - name : First path
         run: pwd
+        
+      - name : listing directory
+        run : ls
 
       - name : changing directory
         run  : cd hcx-integrator-sdk
