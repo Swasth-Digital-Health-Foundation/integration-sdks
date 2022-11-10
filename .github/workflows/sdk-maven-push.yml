@@ -14,8 +14,8 @@ jobs:
         with:
           java-version: 11
           server-id: ossrh
-          server-username: ${{ secrets.OSSRH_USERNAME }}
-          server-password: ${{ secrets.OSSRH_TOKEN }}
+          server-username: hcxprotocol
+          server-password: habgoc-tAfhuz-1cyfjo
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase:  ${{ secrets.GPG_PASSPHRASE }}
    
