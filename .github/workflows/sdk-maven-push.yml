@@ -22,10 +22,10 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
-          gpg-passphrase: X92PHr6ZW0mRcO5t
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           
       - name: Publish to the Maven Central Repository
         run: mvn deploy -s ./.maven/settings.xml
         env:
-          MAVEN_USERNAME: hcxprotrocol
-          MAVEN_PASSWORD: habgoc-tAfhuz-1cyfjo
+          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
