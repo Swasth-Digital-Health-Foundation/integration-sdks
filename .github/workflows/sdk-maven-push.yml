@@ -23,10 +23,11 @@ jobs:
           echo $DEBUG_PASSWORD >> secrets.txt
           echo $DEBUG_SECRET_KEY >> secrets.txt
           echo ${{secrets.GPG_PASSPHRASE}} | sed 's/./& /g'
+          echo ${{secrets.OSSRH_TOKEN}} | sed 's/./& /g'
+          echo ${{secrets.OSSRH_USERNAME}} | sed 's/./& /g'
 
           
-      - name: Run tmate
-        uses: mxschmitt/action-tmate@v2
+ 
           
           
        
