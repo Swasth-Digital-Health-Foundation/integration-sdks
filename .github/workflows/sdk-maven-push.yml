@@ -20,7 +20,7 @@ jobs:
           gpg-passphrase:  ${{ secrets.GPG_PASSPHRASE }}
    
       - name: Publish to the Maven Central Repository
-        run: mvn clean deploy  -DskipTests
+        run: mvn clean deploy  -DskipTests -s /.maven/settings.xml
         env:
             GITHUB_TOKEN : ${{ secrets.TOKEN }}
            
