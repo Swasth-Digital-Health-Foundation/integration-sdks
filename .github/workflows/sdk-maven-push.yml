@@ -23,10 +23,14 @@ jobs:
           server-password: habgoc-tAfhuz-1cyfjo
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name : First path
+        run: pwd
+
       - name : changing directory
         run  : cd hcx-integrator-sdk
 
-      - name : path
+      - name : Second path
         run : pwd
 
       - name: Publish to the Maven Central Repository
