@@ -19,6 +19,12 @@ jobs:
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase:  ${{ secrets.GPG_PASSPHRASE }}
    
+      - name : listing gpg keys
+        run : gpg --list-keys
+      
+      - name : cat settings.xml
+        run : cat settings.xml
+   
       - name: Publish to the Maven Central Repository
         run: mvn clean deploy  -DskipTests -s ./.maven/settings.xml
         env:
