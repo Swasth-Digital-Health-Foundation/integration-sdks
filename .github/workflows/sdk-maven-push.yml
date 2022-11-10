@@ -24,9 +24,11 @@ jobs:
       
       - name : cat settings.xml
         run : cat ./.maven/settings.xml
+      - name : maven clean install
+        run : mvn clean install -s ./.maven/settings.xml
    
       - name: Publish to the Maven Central Repository
-        run: mvn clean deploy  -DskipTests -s ./.maven/settings.xml
+        run: mvn clean deploy -s ./.maven/settings.xml
         env:
             GITHUB_TOKEN : ${{ secrets.TOKEN }}
            
