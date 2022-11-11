@@ -33,7 +33,7 @@ jobs:
                   [{
                     "id": "ossrh",
                     "username": "${{ secrets.OSSRH_USERNAME }}",
-                    "password": "${{ secrets.OSSRH_TOKEN }}",
+                    "password": "${{ secrets.OSSRH_TOKEN }}"
                       }]
       - name : path
         run : pwd
