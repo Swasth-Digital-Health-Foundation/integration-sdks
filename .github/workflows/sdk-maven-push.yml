@@ -1,4 +1,4 @@
-name: Publish package to the Maven Central Repository
+ame: Publish package to the Maven Central Repository
 on:
   release:
     types: [created]
@@ -12,29 +12,35 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name : settings.xml file
-        uses: s4u/maven-settings-action@v2.3.0
-        with:
-          servers: |
-            [{
-            "id": "ossrh",
-            "username": "${{ secrets.OSSRH_USERNAME }}",
-            "password": "${{ secrets.OSSRH_TOKEN }}",
-            "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
-             }]
-            
+      - uses: actions/checkout@v3
       - name: Set up Java for publishing to Maven Central Repository
         uses: actions/setup-java@v3
         with:
           java-version: '11'
           distribution: 'adopt'
+          server-id: ossrh
+          server-username: hcxprotrocol
+          server-password: habgoc-tAfhuz-1cyfjo
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      - name : settings.xml file
+        uses: s4u/maven-settings-action@v2.3.0
+        with:
+        servers: |
+          [{
+            "id": "ossrh",
+             "username": "${{ secrets.OSSRH_USERNAME }}",
+             "password": "${{ secrets.OSSRH_TOKEN }}",
+              "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
+           }]
+      - name : path
+        run : pwd
+
+      - name : listing
+        run : ls
 
       - name: Publish to the Maven Central Repository
         run: |
-            cd hcx-integrator-sdk/
-            mvn clean deploy 
+          cd hcx-integrator-sdk/
+          mvn clean deploy 
        
-            
-            
-    
