@@ -11,6 +11,9 @@ jobs:
     permissions:
       contents: read
       packages: write
+    env :
+         GITHUB_ACTOR : ${{ env.GIT_USERNAME }}
+         GITHUB_TOKEN : ${{ env.GIT_PASSWORD }}
     steps:
       - uses: actions/checkout@v3
       - name: Set up Java for publishing to Maven Central Repository
@@ -25,9 +28,9 @@ jobs:
         with:
          servers: |
           [{
-            "id": "github",
-             "username": "$GITHUB_ACTOR",
-             "password": "$GITHUB_TOKEN",
+            "id": "ossrh",
+             "username": "${{secrets.OSSRH_USERNAME}}",
+             "password": "${{secrets.OSSRH_TOKEN}}",
               "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
            }]
       - name : path
@@ -36,13 +39,12 @@ jobs:
         run : |
               cd /home/runner/.m2
               cat settings.xml
-        
+      - name : path 2
+        run : pwd
         
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
           run: mvn clean deploy -s /home/runner/.m2/settings.xml
-        env :
-             GITHUB_ACTOR : ${{ env.GIT_USERNAME }}
-             GITHUB_TOKEN : ${{ env.GIT_PASSWORD }}
+       
        
