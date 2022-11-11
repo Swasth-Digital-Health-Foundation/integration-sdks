@@ -31,7 +31,9 @@ jobs:
         run : ls
         
       - name : going back
-        run : cd ..
+        run : cd ../home/runner/work/integration-sdks/integration-sdks
+      - name : listing dir
+        run : ls
 
 
       - name: Publish to the Maven Central Repository
