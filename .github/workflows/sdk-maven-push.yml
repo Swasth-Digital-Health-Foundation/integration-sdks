@@ -21,9 +21,7 @@ jobs:
             "username": "${{ secrets.OSSRH_USERNAME }}",
             "password": "${{ secrets.OSSRH_TOKEN }}",
             "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
-            "gpg-private-key": "${{ secrets.OSSRH_GPG_SECRET_KEY }}"
-            
-            }]
+             }]
             
       - name: Set up Java for publishing to Maven Central Repository
         uses: actions/setup-java@v3
