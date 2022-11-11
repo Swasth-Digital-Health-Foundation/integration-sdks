@@ -26,7 +26,7 @@ jobs:
       - name : settings.xml file
         uses: s4u/maven-settings-action@v2.3.0
         with:
-        servers: |
+         servers: |
           [{
             "id": "ossrh",
              "username": "${{ secrets.OSSRH_USERNAME }}",
