@@ -12,7 +12,6 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name: Set up Java for publishing to Maven Central Repository
       - uses: s4u/maven-settings-action@v2.3.0
         with:
           servers: |
