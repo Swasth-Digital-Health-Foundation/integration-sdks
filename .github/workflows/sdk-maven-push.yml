@@ -28,5 +28,5 @@ jobs:
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
-          mvn deploy --batch-mode -D skipTests --activate-profiles release --no-transfer-progress -s ./.maven/settings.xml
+          mvn clean deploy  -s ./.maven/settings.xml
       
