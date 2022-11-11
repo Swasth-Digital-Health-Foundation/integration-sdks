@@ -12,20 +12,19 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v3
       - name: Set up Java for publishing to Maven Central Repository
-        uses: actions/setup-java@v3
+      - uses: s4u/maven-settings-action@v2.3.0
         with:
-          java-version: '11'
-          distribution: 'adopt'
-          server-id: ossrh
-          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          server-username: ${{ secrets.OSSRH_USERNAME }}
-          server-password: ${{ secrets.OSSRH_TOKEN }}
-          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          servers: |
+              [{
+              "server-id": "ossrh",
+              "server-username": "${{ secrets.OSSRH_USERNAME }}",
+              "server-password": "${{ secrets.OSSRH_TOKEN }}",
+              "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
+            
+            } ]
 
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
           mvn clean deploy 
-          
