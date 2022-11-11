@@ -25,7 +25,7 @@ jobs:
 
       - name: Install gpg secret key
         run: |
-              cat <(echo -e "${{ env.GPG_PRIVATE_KEY }}") | gpg --batch --import
+              cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
               gpg --list-secret-keys --keyid-format LONG
               
       - name: Publish to the Maven Central Repository
