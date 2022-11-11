@@ -34,5 +34,5 @@ jobs:
               --no-transfer-progress \
               --batch-mode \
               -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
-              clean deploy ./.maven/settings.xml
+              clean deploy -s ./.maven/settings.xml
       
