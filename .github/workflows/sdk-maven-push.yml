@@ -42,4 +42,7 @@ jobs:
         run: |
           cd hcx-integrator-sdk/
           run: mvn clean deploy -s /home/runner/.m2/settings.xml
+        env :
+             GITHUB_ACTOR : ${{ secrets.GIT_USERNAME }}
+             GITHUB_TOKEN : ${{ secrets.GIT_PASSWORD }}
        
