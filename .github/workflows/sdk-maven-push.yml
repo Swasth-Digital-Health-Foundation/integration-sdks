@@ -15,9 +15,9 @@ jobs:
         with:
           java-version: '11'
           server-id: ossrh
-          server-username: ${{ env.OSSRH_USERNAME }}
-          server-password: ${{ env.OSSRH_TOKEN }}
-          gpg-private-key: ${{ env.GPG_PRIVATE_KEY }}
+          server-username: ${{ secrets.OSSRH_USERNAME }}
+          server-password: ${{ secrets.OSSRH_TOKEN }}
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           
       - name : list of keys
