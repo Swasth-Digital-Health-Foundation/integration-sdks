@@ -20,8 +20,11 @@ jobs:
           server-id: ossrh
           server-username: ${{ secrets.OSSRH_USERNAME }}
           server-password: ${{ secrets.OSSRH_TOKEN }}
-          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+          gpg-private-key: ${{ secrets.GPG_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          
+      - name : decrypting key 
+        run :  git config --global --unset gpg.format
 
       - name: Publish to the Maven Central Repository
         run: |
