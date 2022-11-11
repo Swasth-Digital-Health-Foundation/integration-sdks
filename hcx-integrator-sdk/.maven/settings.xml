@@ -14,7 +14,7 @@
             </activation>
             <properties>
                 <gpg.executable>gpg</gpg.executable>
-                <gpg.passphrase>${{ secrets.GPG_PASSPHRASE }}</gpg.passphrase>
+                <gpg.passphrase>${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}</gpg.passphrase>
             </properties>
         </profile>
     </profiles>
