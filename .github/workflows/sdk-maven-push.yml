@@ -31,11 +31,7 @@ jobs:
               "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
            }]
     
-      - name : viewing settings-xml file
-        run : |
-            cd  /home/runner/.m2/settings.xml
-            cat settings.xml
-    
+        
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
