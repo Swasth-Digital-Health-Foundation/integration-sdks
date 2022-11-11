@@ -8,12 +8,13 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
     env :
          GITHUB_ACTOR : ${{ env.GIT_USERNAME }}
          GITHUB_TOKEN : ${{ env.GIT_PASSWORD }}
+    permissions:
+      contents: read
+      packages: write
+   
     steps:
       - uses: actions/checkout@v3
       - name: Set up Java for publishing to Maven Central Repository
