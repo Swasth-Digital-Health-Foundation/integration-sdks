@@ -12,8 +12,9 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: s4u/maven-settings-action@v2.3.0
-      - with:
+      - name : settings.xml file
+        uses: s4u/maven-settings-action@v2.3.0
+        with:
           servers: |
             [{
             "server-id": "ossrh",
@@ -24,6 +25,6 @@ jobs:
             }]
 
       - name: Publish to the Maven Central Repository
-      - run: |
+        run: |
           cd hcx-integrator-sdk/
           mvn clean deploy 
