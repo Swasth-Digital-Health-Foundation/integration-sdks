@@ -26,8 +26,8 @@ jobs:
          servers: |
           [{
             "id": "github",
-             "username": $GITHUB_ACTOR,
-             "password": $GITHUB_TOKEN,
+             "username": "$GITHUB_ACTOR",
+             "password": "$GITHUB_TOKEN",
               "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
            }]
       - name : path
