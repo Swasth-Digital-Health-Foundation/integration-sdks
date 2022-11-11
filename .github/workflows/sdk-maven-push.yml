@@ -9,8 +9,8 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     env :
-         GITHUB_ACTOR : ${{ env.GIT_USERNAME }}
-         GITHUB_TOKEN : ${{ env.GIT_PASSWORD }}
+       GITHUB_ACTOR : ${{ env.GIT_USERNAME }}
+       GITHUB_TOKEN : ${{ env.GIT_PASSWORD }}
     permissions:
       contents: read
       packages: write
