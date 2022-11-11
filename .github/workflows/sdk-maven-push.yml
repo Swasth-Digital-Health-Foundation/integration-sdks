@@ -26,16 +26,12 @@ jobs:
         run: |
               cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
               gpg --list-secret-keys --keyid-format LONG
-
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
           mvn \
-          --no-transfer-progress \
-          --batch-mode \
-          -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} \
-           clean deploy -s ./.maven/settings.xml
-        env:
-          MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
-          MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
-          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+                --no-transfer-progress \
+                --batch-mode \
+                -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
+                clean deploy -s ./.maven/settings.xml
+      
