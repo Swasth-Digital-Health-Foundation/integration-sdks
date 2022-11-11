@@ -29,12 +29,5 @@ jobs:
         
       - name : listing dir
         run : ls
-        
-      - name : going back
-        run : cd ../home/runner/work/integration-sdks/integration-sdks
-      - name : listing dir
-        run : ls
-
-
       - name: Publish to the Maven Central Repository
         run: mvn clean deploy 
