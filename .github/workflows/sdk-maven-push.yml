@@ -38,7 +38,10 @@ jobs:
 
       - name : listing
         run : ls
-
+      - name : path
+        run : pwd
+      - name : listing dir
+        run : ls
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
