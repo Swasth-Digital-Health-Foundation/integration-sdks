@@ -25,12 +25,7 @@ jobs:
           server-id: ossrh
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
        
-      - name : disable github server
-        uses : s4u/maven-settings-action@v2.7.0
-        with :
-           githubServer: false 
-
-          
+            
       - name : settings.xml file
         uses: s4u/maven-settings-action@v2.3.0
         with:
