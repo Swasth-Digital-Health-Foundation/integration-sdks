@@ -23,9 +23,10 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           
-      - name : decrypting key 
-        run :  git config --global --unset gpg.format
+      - name : gpg key
+        run :  git config --global user.signingkey CE4EAD0B97C196DE
 
+          
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
