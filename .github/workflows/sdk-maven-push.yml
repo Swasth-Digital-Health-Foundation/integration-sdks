@@ -23,6 +23,9 @@ jobs:
             "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
             
             }]
+            
+      - name : path
+        run : pwd
 
       - name: Publish to the Maven Central Repository
         run: |
