@@ -19,10 +19,13 @@ jobs:
           server-password: ${{ secrets.OSSRH_TOKEN }}
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          
+      - name : list of keys
+        run : gpg --list-keys
 
       - name: Install gpg secret key
         run: |
-              cat <(echo -e "${{ secrets.GPG_PASSPHRASE }}") | gpg --batch --import
+              cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
               gpg --list-secret-keys --keyid-format LONG
               
       - name: Publish to the Maven Central Repository
