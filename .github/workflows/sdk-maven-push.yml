@@ -18,7 +18,7 @@ jobs:
           server-username: ${{ env.OSSRH_USERNAME }}
           server-password: ${{ env.OSSRH_TOKEN }}
           gpg-private-key: ${{ env.GPG_PRIVATE_KEY }}
-          gpg-passphrase: ${{ env.GPG_PASSPHRASE }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
           
       - name : list of keys
         run : gpg --list-keys
