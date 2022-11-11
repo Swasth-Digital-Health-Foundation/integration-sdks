@@ -24,11 +24,15 @@ jobs:
             
             }]
             
+            
       - name : path
         run : pwd
       
       - name : one step back
         run : cd ..
+        
+      - name : path to change
+        run : /home/runner/work/integration-sdks/integration-sdks/hcx-integrator-sdk
         
       - name : listing dir
         run : ls
