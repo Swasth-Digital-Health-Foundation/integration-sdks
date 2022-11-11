@@ -21,22 +21,22 @@ jobs:
             "username": "${{ secrets.OSSRH_USERNAME }}",
             "password": "${{ secrets.OSSRH_TOKEN }}",
             "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
+            "gpg-private-key": "${{ secrets.OSSRH_GPG_SECRET_KEY }}"
             
             }]
             
-            
-      - name : path
-        run : pwd
-      
-      - name : one step back
-        run : cd ..
-        
-      - name : path to change
-        run : /home/runner/work/integration-sdks/integration-sdks/hcx-integrator-sdk
-        
-      - name : listing dir
-        run : ls
-      - name : path
-        run : pwd
+      - name: Set up Java for publishing to Maven Central Repository
+        uses: actions/setup-java@v3
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+
       - name: Publish to the Maven Central Repository
-        run: mvn clean deploy 
+        run: |
+            cd hcx-integrator-sdk/
+            mvn clean deploy 
+       
+            
+            
+    
