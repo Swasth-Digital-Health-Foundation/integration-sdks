@@ -27,10 +27,12 @@ jobs:
       - name : path
         run : pwd
         
-      - name : listing
+      - name : listing dir
         run : ls
+        
+      - name : going back
+        run : cd ..
+
 
       - name: Publish to the Maven Central Repository
-        run: |
-          cd hcx-integrator-sdk/
-          mvn clean deploy 
+        run: mvn clean deploy 
