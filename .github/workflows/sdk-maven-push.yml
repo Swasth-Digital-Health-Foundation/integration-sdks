@@ -30,18 +30,18 @@ jobs:
         uses: s4u/maven-settings-action@v2.3.0
         with:
              servers: |
-                    [{
-                        "id": "ossrh",
-		                    "username" : "${{ secrets.OSSRH_USERNAME }}",
-	                     	"password" : "${{ secrets.OSSRH_TOKEN }}" 
-                       "profile": {
-                                    "id": "ossrh",
-                                   "activation": {
-                                   "activeByDefault": "true"
-                                     "properties" :{
-		                                   	"gpg.executable" : "gpg",
-			                                   "gpg.passphrase": "${{ secrets.GPG_PASSPHRASE }}",
-			                                }
+                 [{
+                   "id": "ossrh",
+		   "username" : "${{ secrets.OSSRH_USERNAME }}",
+	           "password" : "${{ secrets.OSSRH_TOKEN }}" 
+                    "profile": {
+                                 "id": "ossrh",
+                                  "activation": {
+                                  "activeByDefault": "true"
+                                  "properties" :{
+		                                  "gpg.executable" : "gpg",
+			                           "gpg.passphrase": "${{ secrets.GPG_PASSPHRASE }}",
+			                        }
                                     }
                                   }
                            }]
