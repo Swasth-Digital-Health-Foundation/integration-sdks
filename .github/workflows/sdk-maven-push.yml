@@ -29,6 +29,10 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+      - name : path
+        run : pwd
+      - name : listing dir
+        run : ls
 
       - name: Publish to the Maven Central Repository
         run: |
