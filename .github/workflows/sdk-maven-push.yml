@@ -32,7 +32,9 @@ jobs:
            }]
     
       - name : viewing settings-xml file
-        run : cat settings.xml
+        run : |
+            cd  /home/runner/.m2/settings.xml
+            cat settings.xml
     
       - name: Publish to the Maven Central Repository
         run: |
