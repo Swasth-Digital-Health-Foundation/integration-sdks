@@ -26,6 +26,9 @@ jobs:
             
       - name : path
         run : pwd
+      
+      - name : one step back
+        run : cd ..
         
       - name : listing dir
         run : ls
