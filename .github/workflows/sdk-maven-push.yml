@@ -16,13 +16,13 @@ jobs:
       - uses: s4u/maven-settings-action@v2.3.0
         with:
           servers: |
-              [{
-              "server-id": "ossrh",
-              "server-username": "${{ secrets.OSSRH_USERNAME }}",
-              "server-password": "${{ secrets.OSSRH_TOKEN }}",
-              "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
+            [{
+            "server-id": "ossrh",
+            "server-username": "${{ secrets.OSSRH_USERNAME }}",
+            "server-password": "${{ secrets.OSSRH_TOKEN }}",
+            "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
             
-            } ]
+            }]
 
       - name: Publish to the Maven Central Repository
         run: |
