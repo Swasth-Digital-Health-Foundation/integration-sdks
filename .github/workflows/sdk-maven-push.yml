@@ -31,7 +31,7 @@ jobs:
               "gpg-passphrase": "${{ secrets.GPG_PASSPHRASE }}"
            }]
       - name : path
-        run : pwd
+        run : cd
       - name : list dir
         run : ls
         
