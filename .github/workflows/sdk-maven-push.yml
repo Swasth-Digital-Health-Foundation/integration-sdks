@@ -25,10 +25,6 @@ jobs:
               cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
               gpg --list-secret-keys --keyid-format LONG
               
-      - name: Download drivers
-        shell: bash
-        run: scripts/download_driver_for_all_platforms.sh
-              
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
