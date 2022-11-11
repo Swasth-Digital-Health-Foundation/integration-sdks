@@ -30,11 +30,7 @@ jobs:
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
-          mvn \
-                --no-transfer-progress \
-                --batch-mode \
-                -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
-                clean deploy -s ./.maven/settings.xml
+          mvn clean deploy -s ./.maven/settings.xml
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
