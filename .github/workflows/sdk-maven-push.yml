@@ -29,6 +29,9 @@ jobs:
         
       - name : listing 
         run : ls
+      
+      - name : .m2
+        run : cd /home/runner/.m2
 
       - name: Publish to the Maven Central Repository
         run: |
