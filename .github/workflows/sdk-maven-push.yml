@@ -1,3 +1,4 @@
+
 name: Publish package to the Maven Central Repository
 on:
   release:
@@ -8,11 +9,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-   
     permissions:
       contents: read
       packages: write
-   
     steps:
       - uses: actions/checkout@v3
       - name: Set up Java for publishing to Maven Central Repository
@@ -21,11 +20,15 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           server-id: ossrh
+          server-username: ${{ secrets.OSSRH_USERNAME }}
+          server-password: ${{ secrets.OSSRH_TOKEN }}
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          gpg-passphrase: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Publish to the Maven Central Repository
         run: |
            mvn \
+            cd hcx-integrator-sdk \
            --no-transfer-progress \
            --batch-mode \
            -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
