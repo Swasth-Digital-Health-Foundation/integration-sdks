@@ -23,6 +23,9 @@ jobs:
           server-username : ${{ secrets.OSSRH_USERNAME }}
           server-password : ${{ secrets.OSSRH_TOKEN }}
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+      
+      - name : path 
+        run : pwd
 
       - name: Publish to the Maven Central Repository
         run: |
