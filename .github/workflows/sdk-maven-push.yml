@@ -35,6 +35,6 @@ jobs:
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
-          run: mvn clean deploy  -s ./.maven/settings.xml
+          run: mvn clean deploy 
        
        
