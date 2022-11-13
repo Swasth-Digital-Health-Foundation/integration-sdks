@@ -30,15 +30,21 @@ jobs:
 
       - name : path
         run : pwd
+      - id: install-secret-key
+        name: Install gpg secret key
+        run: |
+         cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
+         gpg --list-secret-keys --keyid-format LONG
 
       - name: Publish to the Maven Central Repository
         env :
-              gpg.executable : gpg
-              gpg.passphrase : ${{ secrets.GPG_PASSPHRASE }} 
               username : ${{ secrets.OSSRH_USERNAME }}
               password : ${{ secrets.TOKEN }}
         run: |
-          cd hcx-integrator-sdk/
-          mvn clean deploy -s ./.maven/settings.xml    
-           
+           mvn \
+           --no-transfer-progress \
+           --batch-mode \
+           -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
+            clean deploy  
+            
        
