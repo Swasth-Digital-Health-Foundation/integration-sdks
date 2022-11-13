@@ -31,7 +31,9 @@ jobs:
         run : ls
       
       - name : .m2
-        run : cd /home/runner/.m2
+        run : |
+            cd /home/runner/.m2
+            cat settings.xml
 
       - name: Publish to the Maven Central Repository
         run: |
