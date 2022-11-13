@@ -8,9 +8,6 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    env :
-       GITHUB_ACTOR : ${{ secrets.GIT_USERNAME }}
-       GITHUB_TOKEN : ${{ secrets.GIT_PASSWORD }}
     permissions:
       contents: read
       packages: write
@@ -21,42 +18,21 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11'
-          distribution: 'adopt'
           server-id: ossrh
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
        
             
-      - name : settings.xml file
-        uses: s4u/maven-settings-action@v2.3.0
+      - uses: whelk-io/maven-settings-xml-action@v20
         with:
-             servers: |
-                 [{
-                   "id": "ossrh",
-		   "username" : "${{ secrets.OSSRH_USERNAME }}",
-	           "password" : "${{ secrets.OSSRH_TOKEN }}" 
-                    "profile": {
-                                 "id": "ossrh",
-                                  "activation": {
-                                  "activeByDefault": "true"
-                                  "properties" :{
-		                                  "gpg.executable" : "gpg",
-			                           "gpg.passphrase": "${{ secrets.GPG_PASSPHRASE }}",
-			                        }
-                                    }
-                                  }
-                           }]
+          output_file: ./.maven/settings.xml
+
       - name : path
-        run : pwd
-      - name : list dir
-        run : |
-              cd /home/runner/.m2
-              cat settings.xml
-      - name : path 2
-        run : pwd
+        run : cat ./.maven.settings.xml
+
         
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
-          run: mvn clean deploy 
+          run: mvn clean deploy  -s ./.maven/settings.xml
        
        
