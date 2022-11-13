@@ -20,12 +20,13 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           server-id: ossrh
+          server-username : ${{ secrets.OSSRH_USERNAME }}
+          server-password : ${{ secrets.OSSRH_TOKEN }}
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-
 
       - name: Publish to the Maven Central Repository
         run: |
            cd hcx-integrator-sdk 
-           mvn clean deploy  -s ./.maven/settings.xml
+           mvn -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} clean deploy
             
        
