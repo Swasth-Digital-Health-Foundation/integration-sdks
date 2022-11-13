@@ -26,6 +26,10 @@ jobs:
             
       - name : path
         run : pwd
+      - uses: whelk-io/maven-settings-xml-action@v20
+        with:
+          output_file: ./.maven/settings.xml
+    
       - id: install-secret-key
         name: Install gpg secret key
         run: |
