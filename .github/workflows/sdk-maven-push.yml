@@ -26,6 +26,6 @@ jobs:
       - name: Publish to the Maven Central Repository
         run: |
            cd hcx-integrator-sdk 
-           mvn -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} clean deploy  -s ./.maven/settings.xml
+           mvn clean deploy  -s ./.maven/settings.xml
             
        
