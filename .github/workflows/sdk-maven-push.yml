@@ -22,22 +22,6 @@ jobs:
           distribution: 'adopt'
           server-id: ossrh
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase : ${{ secrets.GPG_PASSPHRASE }}
-          server-username : ${{ secrets.OSSRH_USERNAME }}
-          server-password : ${{ secrets.OSSRH_TOKEN }}
-
-            
-      - name : path
-        run : pwd
-      - uses: whelk-io/maven-settings-xml-action@v20
-        with:
-          output_file: ./.maven/settings.xml
-    
-      - id: install-secret-key
-        name: Install gpg secret key
-        run: |
-          cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
-          gpg --list-secret-keys --keyid-format LONG
 
       - name: Publish to the Maven Central Repository
         run: |
