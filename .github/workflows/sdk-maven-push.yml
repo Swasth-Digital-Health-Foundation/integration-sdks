@@ -24,16 +24,12 @@ jobs:
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
           gpg-passphrase : ${{ secrets.GPG_PASSPHRASE }}       
             
-      - uses: whelk-io/maven-settings-xml-action@v20
-        with:
-          output_file: ./.maven/settings.xml
-
       - name : path
         run : pwd
       - id: install-secret-key
         name: Install gpg secret key
         run: |
-         cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
+         cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
          gpg --list-secret-keys --keyid-format LONG
 
       - name: Publish to the Maven Central Repository
