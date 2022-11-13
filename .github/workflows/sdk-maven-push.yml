@@ -27,11 +27,7 @@ jobs:
 
       - name: Publish to the Maven Central Repository
         run: |
-           mvn \
-            cd hcx-integrator-sdk \
-           --no-transfer-progress \
-           --batch-mode \
-           -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
-            clean deploy  -s ./.maven/settings.xml
+           cd hcx-integrator-sdk 
+           mvn -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} clean deploy  -s ./.maven/settings.xml
             
        
