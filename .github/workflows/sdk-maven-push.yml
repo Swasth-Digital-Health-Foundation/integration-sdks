@@ -26,6 +26,9 @@ jobs:
       
       - name : path 
         run : pwd
+        
+      - name : listing 
+        run : ls
 
       - name: Publish to the Maven Central Repository
         run: |
