@@ -22,7 +22,7 @@ jobs:
           distribution: 'adopt'
           server-id: ossrh
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-       
+          gpg-passphrase : ${{ secrets.GPG_PASSPHRASE }}       
             
       - uses: whelk-io/maven-settings-xml-action@v20
         with:
@@ -32,6 +32,11 @@ jobs:
         run : pwd
 
       - name: Publish to the Maven Central Repository
+        env :
+              gpg.executable : gpg
+              gpg.passphrase : ${{ secrets.GPG_PASSPHRASE }} 
+              username : ${{ secrets.OSSRH_USERNAME }}
+              password : ${{ secrets.TOKEN }}
         run: |
           cd hcx-integrator-sdk/
           mvn clean deploy -s ./.maven/settings.xml    
