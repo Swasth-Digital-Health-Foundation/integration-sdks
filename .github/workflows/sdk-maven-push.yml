@@ -22,7 +22,10 @@ jobs:
           distribution: 'adopt'
           server-id: ossrh
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase : ${{ secrets.GPG_PASSPHRASE }}       
+          gpg-passphrase : ${{ secrets.GPG_PASSPHRASE }} 
+          username : ${{ secrets.OSSRH_USERNAME }}
+          password : ${{ secrets.TOKEN }}
+
             
       - name : path
         run : pwd
@@ -33,18 +36,15 @@ jobs:
       - id: install-secret-key
         name: Install gpg secret key
         run: |
-         cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
-         gpg --list-secret-keys --keyid-format LONG
+          cat <(echo -e "${{ secrets.GPG_PRIVATE_KEY }}") | gpg --batch --import
+          gpg --list-secret-keys --keyid-format LONG
 
       - name: Publish to the Maven Central Repository
-        env :
-              username : ${{ secrets.OSSRH_USERNAME }}
-              password : ${{ secrets.TOKEN }}
         run: |
            mvn \
            --no-transfer-progress \
            --batch-mode \
            -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} \
-            clean deploy  
+            clean deploy  -s ./.maven/settings.xml
             
        
