@@ -29,7 +29,7 @@ jobs:
           output_file: ./.maven/settings.xml
 
       - name : path
-        run : cat ./.maven.settings.xml
+        run : pwd
 
         
       - name: Publish to the Maven Central Repository
