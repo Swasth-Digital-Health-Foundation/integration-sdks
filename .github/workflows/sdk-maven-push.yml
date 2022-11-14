@@ -24,31 +24,11 @@ jobs:
           distribution: 'adopt'
           server-id: ossrh
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-
-
-      - name : settings.xml file
-        uses: s4u/maven-settings-action@v2.3.0
-        with:
-          servers: |
-            [{
-              "id": "ossrh",
-              "username": "${{ secrets.OSSRH_USERNAME }}",
-              "password": "${{ secrets.OSSRH_TOKEN }}",
-              "profiles" : {
-                   "id" :"ossrh",
-              "activation" : {
-                      "activeByDefault" :"true",
-              "properties" :{
-                       "gpg.executable" : "gpg",
-                       "gpg-passphrase" : "${{ secrets.GPG_PASSPHRASE }}"
-                 }}}}]
+      - name: Display settings.xml
+        run: |
+          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.OSSRH_USERNAME }}</username><password>${{ secrets.OSSRH_TOKEN }}</password></server></servers><profiles><profile><id>ossrh</id><activation><activeByDefault>true</activeByDefault></activation><properties><gpg.keyname>${{ secrets.GPG_KEY_ID }}</gpg.keyname><gpg.passphrase>'${{ secrets.GPG_PASSPHRASE }}'</gpg.passphrase></properties></profile></profiles></settings>" > /home/runner/.m2/settings.xml
+          cat /home/runner/.m2/settings.xml
       - name : path
-        run : pwd
-      - name : list dir
-        run : |
-          cd /home/runner/.m2
-          cat settings.xml
-      - name : path 2
         run : pwd
 
       - name: Publish to the Maven Central Repository
