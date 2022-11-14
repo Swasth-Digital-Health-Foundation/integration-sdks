@@ -1,5 +1,4 @@
-
-name: Publish package to the Maven Central Repository
+ame: Publish package to the Maven Central Repository
 on:
   release:
     types: [created]
@@ -9,9 +8,13 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    env :
+      GITHUB_ACTOR : ${{ secrets.GIT_USERNAME }}
+      GITHUB_TOKEN : ${{ secrets.GIT_PASSWORD }}
     permissions:
       contents: read
       packages: write
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up Java for publishing to Maven Central Repository
@@ -20,29 +23,31 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           server-id: ossrh
-          server-username : MAVEN_USERNAME
-          server-password : MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-          gpg-passphrase : GPG_PASSPHRASE
-      
-      - name : path 
+
+
+      - name : settings.xml file
+        uses: s4u/maven-settings-action@v2.3.0
+        with:
+          servers: |
+            [{
+              "server-id": "ossrh",
+              "server-username": "${{ secrets.OSSRH_USERNAME }}",
+              "server-password": "${{ secrets.OSSRH_TOKEN }}",
+              "properties" : {
+                   "server-id" :"ossrh",
+                   "gpg-passphrase" : "${{ secrets.GPG_PASSPHRASE }}"
+               }}]
+      - name : path
         run : pwd
-        
-      - name : listing 
-        run : ls
-      
-      - name : .m2
+      - name : list dir
         run : |
-            cd /home/runner/.m2
-            cat settings.xml
+          cd /home/runner/.m2
+          cat settings.xml
+      - name : path 2
+        run : pwd
 
       - name: Publish to the Maven Central Repository
         run: |
-           cd hcx-integrator-sdk 
-           mvn -Dgpg.passphrase=GPG_PASSPHRASE clean deploy
-        env :
-             MAVEN_USERNAME : ${{ secrets.OSSRH_USERNAME }}
-             MAVEN_PASSWORD : ${{ secrets.OSSRH_TOKEN }}
-             GPG_PASSPHRASE : ${{ secrets.GPG_PASSPHRASE }}
-            
-       
+          cd hcx-integrator-sdk/
+          run: mvn clean deploy 
