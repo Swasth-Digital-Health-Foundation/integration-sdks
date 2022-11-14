@@ -8,9 +8,6 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    env :
-      GITHUB_ACTOR : ${{ secrets.GIT_USERNAME }}
-      GITHUB_TOKEN : ${{ secrets.GIT_PASSWORD }}
     permissions:
       contents: read
       packages: write
@@ -23,18 +20,16 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
           server-id: ossrh
+          server-username : OSSRH_USERNAME
+          server-password: OSSRH_TOKEN
           gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
-      - name: Display settings.xml
-        run: |
-          echo "<settings><servers><server><id>ossrh</id><username>${{ secrets.OSSRH_USERNAME }}</username><password>${{ secrets.OSSRH_TOKEN }}</password></server></servers><profiles><profile><id>ossrh</id><activation><activeByDefault>true</activeByDefault></activation><properties><gpg.keyname>${{ secrets.GPG_KEY_ID }}</gpg.keyname><gpg.passphrase>'${{ secrets.GPG_PASSPHRASE }}'</gpg.passphrase></properties></profile></profiles></settings>" > /home/runner/.m2/settings.xml
-          cat /home/runner/.m2/settings.xml
-      - name : path
-        run : pwd
-
-      - name : listing
-        run : ls
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Publish to the Maven Central Repository
         run: |
           cd hcx-integrator-sdk/
-          mvn clean deploy -s /home/runner/.m2/settings.xml
+          mvn deploy
+        env:
+            OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+            OSSRH_TOKEN: ${{ secrets.OSSRH_TOKEN }}
+            MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
