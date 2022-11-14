@@ -3,8 +3,8 @@ on:
   release:
     types: [created]
   push :
-    branches :
-      - local-2
+    tags:
+      - '*'
 jobs:
   publish:
     runs-on: ubuntu-latest
