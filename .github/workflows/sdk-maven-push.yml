@@ -31,9 +31,9 @@ jobs:
         with:
           servers: |
             [{
-              "server-id": "ossrh",
-              "server-username": "${{ secrets.OSSRH_USERNAME }}",
-              "server-password": "${{ secrets.OSSRH_TOKEN }}",
+              "id": "ossrh",
+              "username": "${{ secrets.OSSRH_USERNAME }}",
+              "password": "${{ secrets.OSSRH_TOKEN }}",
               "properties" : {
                    "server-id" :"ossrh",
                    "gpg-passphrase" : "${{ secrets.GPG_PASSPHRASE }}"
