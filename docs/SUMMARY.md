@@ -10,4 +10,3 @@
     * [HCX Domain Specifications](https://docs.hcxprotocol.io/hcx-domain-specifications)
   * [For Technical Implementers](integration-guide/for-technical-implementers/README.md)
     * [HCX Technical Specifications](https://docs.hcxprotocol.io/hcx-technical-specifications)
-    * [About RFC7516](https://datatracker.ietf.org/doc/html/rfc7516)
