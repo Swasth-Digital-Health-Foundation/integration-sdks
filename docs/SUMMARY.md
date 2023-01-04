@@ -2,6 +2,7 @@
 
 * [Integration Documentation](README.md)
 * [HCX Overview](hcx-overview/README.md)
+  * [Context](https://docs.hcxprotocol.io/readme-1)
   * [Introduction to HCX](https://docs.hcxprotocol.io/what-is-hcx)
   * [Approach](https://docs.hcxprotocol.io/open-specifications)
   * [Business Policies and Specifications](https://docs.hcxprotocol.io/healthcare-operations-policies)
