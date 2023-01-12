@@ -14,8 +14,8 @@ public enum Operations {
     PAYMENT_NOTICE_ON_REQUEST("/paymentnotice/on_request","PaymentReconciliation"),
     HCX_STATUS("/hcx/status","StatusRequest"),
     HCX_ON_STATUS("/hcx/on_status","StatusResponse"),
-    COMMUNICATION_REQUEST("/communication/request","Communication"),
-    COMMUNICATION_ON_REQUEST("/communication/on_request","CommunicationRequest"),
+    COMMUNICATION_REQUEST("/communication/request","CommunicationRequest"),
+    COMMUNICATION_ON_REQUEST("/communication/on_request","Communication"),
     PREDETERMINATION_SUBMIT("/predetermination/submit","Bundle"),
     PREDETERMINATION_ON_SUBMIT("/predetermination/on_submit","Bundle");
 
