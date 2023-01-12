@@ -41,17 +41,31 @@ public class HCXFHIRValidator {
         String nrcesIGBasePath = "https://nrces.in/ndhm/fhir/r4/";
         // test: load HL7 base definition
         //StructureDefinition sdCoverageEligibilityRequest = (StructureDefinition) parser.parseResource(new URL("http://hl7.org/fhir/R4/coverageeligibilityrequest.profile.json").openStream());
+        StructureDefinition sdCoverageEligibilityRequestDoc = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CoverageEligibilityRequestDocument.json").openStream());
+        StructureDefinition sdCoverageEligibilityResponseDoc = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CoverageEligibilityResponseDocument.json").openStream());
+        StructureDefinition sdClaimRequestDoc = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-ClaimRequestDocument.json").openStream());
+        StructureDefinition sdClaimResponseDoc = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-ClaimResponseDocument.json").openStream());
+        StructureDefinition sdCommunicationDoc = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CommunicationDocument.json").openStream());
+
         StructureDefinition sdCoverageEligibilityRequest = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CoverageEligibilityRequest.json").openStream());
         StructureDefinition sdCoverageEligibilityResponse = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CoverageEligibilityResponse.json").openStream());
         StructureDefinition sdClaim = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-Claim.json").openStream());
+        StructureDefinition sdClaimResponse = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-ClaimResponse.json").openStream());
+        StructureDefinition sdCommunicationRequest = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CommunicationRequest.json").openStream());
+        StructureDefinition sdCommunication = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-Communication.json").openStream());
+        StructureDefinition sdPaymentReconciliation = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-PaymentReconciliation.json").openStream());
+        StructureDefinition sdCoverage = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-Coverage.json").openStream());
+        StructureDefinition sdPaymentNotice = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-PaymentNotice.json").openStream());
         StructureDefinition sdNRCESPatient = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Patient.json").openStream());
+        StructureDefinition sdNRCESOrganization = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Organization.json").openStream());
+        StructureDefinition sdNRCESPractitioner = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Practitioner.json").openStream());
         StructureDefinition sdInsurancePlan = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXInsurancePlan.json").openStream());
         StructureDefinition sdHCXProofOfIdentificationExtension = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXProofOfIdentificationExtension.json").openStream());
         StructureDefinition sdHCXProofOfPresenceExtension = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXProofOfPresenceExtension.json").openStream());
         StructureDefinition sdHCXDiagnosticDocumentsExtension = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXDiagnosticDocumentsExtension.json").openStream());
         StructureDefinition sdHCXInformationalMessagesExtension = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXInformationalMessagesExtension.json").openStream());
         StructureDefinition sdHCXQuestionnairesExtension = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXQuestionnairesExtension.json").openStream());
-
+        StructureDefinition sdHCXCoverageEleComp = (StructureDefinition) parser.parseResource(new URL("https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-CoverageEligibilityRequestBundle.json").openStream());
         //adding the value sets
         ValueSet vsProofOfIdentity = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-proof-of-identity-codes.json").openStream());
         ValueSet vsProofOfPresence = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-proof-of-presence-codes.json").openStream());
@@ -63,8 +77,21 @@ public class HCXFHIRValidator {
         PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(fhirContext);
         prePopulatedSupport.addStructureDefinition(sdCoverageEligibilityRequest);
         prePopulatedSupport.addStructureDefinition(sdCoverageEligibilityResponse);
+        prePopulatedSupport.addStructureDefinition(sdClaimResponse);
+        prePopulatedSupport.addStructureDefinition(sdCommunication);
+        prePopulatedSupport.addStructureDefinition(sdCoverageEligibilityRequestDoc);
+        prePopulatedSupport.addStructureDefinition(sdCoverageEligibilityResponseDoc);
+        prePopulatedSupport.addStructureDefinition(sdClaimRequestDoc);
+        prePopulatedSupport.addStructureDefinition(sdClaimResponseDoc);
+        prePopulatedSupport.addStructureDefinition(sdCoverage);
+        prePopulatedSupport.addStructureDefinition(sdPaymentNotice);
+        prePopulatedSupport.addStructureDefinition(sdPaymentReconciliation);
         prePopulatedSupport.addStructureDefinition(sdClaim);
+        prePopulatedSupport.addStructureDefinition(sdCommunicationRequest);
+        prePopulatedSupport.addStructureDefinition(sdCommunicationDoc);
         prePopulatedSupport.addStructureDefinition(sdNRCESPatient);
+        prePopulatedSupport.addStructureDefinition(sdNRCESOrganization);
+        prePopulatedSupport.addStructureDefinition(sdNRCESPractitioner);
         prePopulatedSupport.addStructureDefinition(sdInsurancePlan);
         prePopulatedSupport.addStructureDefinition(sdHCXProofOfIdentificationExtension);
         prePopulatedSupport.addStructureDefinition(sdHCXProofOfPresenceExtension);
@@ -75,6 +102,7 @@ public class HCXFHIRValidator {
         prePopulatedSupport.addValueSet(vsInformationalMessages);
         prePopulatedSupport.addValueSet(vsProofOfPresence);
         prePopulatedSupport.addValueSet(vsProofOfIdentity);
+        prePopulatedSupport.addStructureDefinition(sdHCXCoverageEleComp);
 
         // Add the custom definitions to the chain
         supportChain.addValidationSupport(prePopulatedSupport);
