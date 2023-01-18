@@ -1,13 +1,7 @@
 # Table of contents
 
 * [Integration Documentation](README.md)
-* [HCX Overview](hcx-overview/README.md)
-  * [Context](https://docs.hcxprotocol.io/readme-1)
-  * [Introduction to HCX](https://docs.hcxprotocol.io/what-is-hcx)
-  * [Approach](https://docs.hcxprotocol.io/open-specifications)
-  * [Business Policies and Specifications](https://docs.hcxprotocol.io/healthcare-operations-policies)
-  * [Contributing to the Specifications](https://docs.hcxprotocol.io/how-to-submit-responses)
-  * [Future Roadmap](https://docs.hcxprotocol.io/future-roadmap)
+* [HCX Overview](hcx-overview.md)
 * [Participants Onboarding](participants-onboarding/README.md)
   * [Overview of different types of participants](participants-onboarding/overview-of-different-types-of-participants.md)
   * [Guidelines for Participants Onboarding](https://docs.hcxprotocol.io/healthcare-operations-policies/participant-onboarding)
