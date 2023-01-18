@@ -6,7 +6,7 @@
 * [Participants Onboarding](participants-onboarding/README.md)
   * [Overview of different environments](participants-onboarding/overview-of-different-environments.md)
   * [Overview of different types of participants](participants-onboarding/overview-of-different-types-of-participants.md)
-  * [Onboarding Processing](participants-onboarding/onboarding-processing/README.md)
+  * [Onboarding Processing](participants-onboarding/onboarding-processing.md)
     * [Provider onboarding](participants-onboarding/onboarding-processing/provider-onboarding.md)
     * [Payer onboarding](participants-onboarding/onboarding-processing/payer-onboarding.md)
 * [Integration Guide](integration-guide/README.md)
