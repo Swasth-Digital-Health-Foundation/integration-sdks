@@ -11,7 +11,7 @@
     * [Provider onboarding](participants-onboarding/onboarding-processing/provider-onboarding.md)
     * [Payer onboarding](participants-onboarding/onboarding-processing/payer-onboarding.md)
   * [Next steps](participants-onboarding/next-steps.md)
-* [For Technical Implementers](integration-guide/for-technical-implementers/README.md)
+* [Technical Integration](technical-integration/README.md)
   * [HCX Technical Specifications](https://docs.hcxprotocol.io/hcx-technical-specifications)
   * [About RFC7516](https://datatracker.ietf.org/doc/html/rfc7516)
 * [For Domain/Business Teams](integration-guide/for-domain-business-teams/README.md)

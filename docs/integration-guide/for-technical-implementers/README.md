@@ -1,2 +1,0 @@
-# For Technical Implementers
-
