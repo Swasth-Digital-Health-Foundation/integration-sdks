@@ -1,7 +1,8 @@
 # Table of contents
 
 * [Integration Documentation](README.md)
-* [HCX Overview](hcx-overview.md)
+* [HCX Overview](hcx-overview/README.md)
+* [Reading this guide](reading-this-guide.md)
 * [Participants Onboarding](participants-onboarding/README.md)
   * [Overview of different types of participants](participants-onboarding/overview-of-different-types-of-participants.md)
   * [Guidelines for Participants Onboarding](https://docs.hcxprotocol.io/healthcare-operations-policies/participant-onboarding)
