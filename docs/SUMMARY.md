@@ -9,6 +9,7 @@
   * [Onboarding Processing](participants-onboarding/onboarding-processing.md)
     * [Provider onboarding](participants-onboarding/onboarding-processing/provider-onboarding.md)
     * [Payer onboarding](participants-onboarding/onboarding-processing/payer-onboarding.md)
+* [Next step](next-step.md)
 * [Integration Guide](integration-guide/README.md)
   * [For Domain/Business Teams](integration-guide/for-domain-business-teams/README.md)
     * [HCX Domain Specifications](https://docs.hcxprotocol.io/hcx-domain-specifications)
