@@ -20,11 +20,13 @@ jobs:
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: Building maven project
-        run : mvn clean install -DskipTests
+        run : |
+          cd java/hcx-integrator-sdk/
+          mvn clean install -DskipTests
 
       - name: Publish to the Maven Central Repository
         run: |
-          cd hcx-integrator-sdk/
+          cd java/hcx-integrator-sdk/
           mvn deploy -DskipTests
         env:
           OSSRH_USERNAME: ${{ secrets.OSSRH_USERNAME }}
