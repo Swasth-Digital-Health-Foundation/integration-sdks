@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFramework>netstandard2.0</TargetFramework>
+	  <!--<TargetFramework>net461</TargetFramework>-->
+
+	  <RootNamespace>Io.HcxProtocol</RootNamespace>
+	  <AssemblyName>Io.HcxProtocol</AssemblyName>
+	  <GenerateDocumentationFile>True</GenerateDocumentationFile>
+	  <DocumentationFile>D:\walkingtree\Swasth App\integration-sdks\Io.HcxProtocol\bin\Debug\netstandard2.0\Doc.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="CreateResource\**" />
+    <Compile Remove="Exception\**" />
+    <Compile Remove="lib\**" />
+    <Compile Remove="Validator\**" />
+    <EmbeddedResource Remove="CreateResource\**" />
+    <EmbeddedResource Remove="Exception\**" />
+    <EmbeddedResource Remove="lib\**" />
+    <EmbeddedResource Remove="Validator\**" />
+    <None Remove="CreateResource\**" />
+    <None Remove="Exception\**" />
+    <None Remove="lib\**" />
+    <None Remove="Validator\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hl7.Fhir.R4" Version="4.3.0" />
+    <PackageReference Include="Hl7.Fhir.Specification.R4" Version="4.3.0" />
+    <PackageReference Include="jose-jwt" Version="4.1.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.25.1" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dto\" />
+  </ItemGroup>
+
+</Project>
