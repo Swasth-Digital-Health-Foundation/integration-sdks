@@ -24,8 +24,6 @@ class ValidateHelperTest {
     @Test
     void testActionJWEPayloadSuccess() throws Exception {
         boolean isValid = ValidateHelper.getInstance().validateRequest(JSONUtils.serialize(getRequestBody()), Operations.COVERAGE_ELIGIBILITY_CHECK, new HashMap<>());
-        System.out.println("------------------------------uh00----------------------------");
-        System.out.println(isValid);
         assertTrue(isValid);
     }
 
