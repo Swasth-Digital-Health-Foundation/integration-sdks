@@ -3,11 +3,13 @@ package io.hcxprotocol.fhirexamples;
 import org.hl7.fhir.r4.model.*;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class HCXPayment {
 
     public static PaymentReconciliation paymentReconciliationExample(){
         PaymentReconciliation pay = new PaymentReconciliation();
+        pay.setId(UUID.randomUUID().toString());
         Meta meta = new Meta();
         meta.getProfile().add(new CanonicalType("https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-PaymentReconciliation.html"));
         meta.setLastUpdated(new Date());
@@ -24,6 +26,7 @@ public class HCXPayment {
 
     public static PaymentNotice paymentNoticeExample(){
         PaymentNotice pay = new PaymentNotice();
+        pay.setId(UUID.randomUUID().toString());
         Meta meta = new Meta();
         meta.getProfile().add(new CanonicalType("https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-PaymentNotice.html"));
         meta.setLastUpdated(new Date());
