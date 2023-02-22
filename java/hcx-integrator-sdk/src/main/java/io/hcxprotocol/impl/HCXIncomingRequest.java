@@ -101,9 +101,11 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             responseObj.put(Constants.CORRELATION_ID, headers.get(Constants.HCX_CORRELATION_ID));
             result = true;
         } else {
+            System.out.println("HCXIncomingRequest: Errors from sendResponse: " + error);
             // Fetching only the first error and constructing the error object
             String code = (String) error.keySet().toArray()[0];
-            responseObj.put(Constants.ERROR, new ResponseError(code, (String) error.get(code), ""));
+            String message =  error.get(code).toString();
+            responseObj.put(Constants.ERROR, new ResponseError(code, message, ""));
         }
         output.put(Constants.RESPONSE_OBJ, responseObj);
         return result;
