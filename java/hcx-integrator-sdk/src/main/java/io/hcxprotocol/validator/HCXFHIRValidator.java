@@ -77,6 +77,7 @@ public class HCXFHIRValidator {
         StructureDefinition sdNRCESPatient = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Patient.json").openStream());
         StructureDefinition sdNRCESOrganization = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Organization.json").openStream());
         StructureDefinition sdNRCESPractitioner = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Practitioner.json").openStream());
+        StructureDefinition sdNRCESPractitionerRole = (StructureDefinition) parser.parseResource(new URL( nrcesIGBasePath+ "StructureDefinition-PractitionerRole.json").openStream());
 
         /**
          * Adding the valusets from v0.7.0
@@ -126,6 +127,8 @@ public class HCXFHIRValidator {
         ValueSet vsProofOfPresence_v071 = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-proof-of-presence-codes.json").openStream());
         ValueSet vsClinicalDiagnostics_v071 = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-clinical-diagnostics-document-codes.json").openStream());
         ValueSet vsInformationalMessages_v071 = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-informational-messages-codes.json").openStream());
+        ValueSet vsClaimServiceCodes_v071 = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-claim-service-codes.json").openStream());
+
 
 
         // Create a PrePopulatedValidationSupport which can be used to load custom definitions.
@@ -154,6 +157,7 @@ public class HCXFHIRValidator {
         prePopulatedSupport.addStructureDefinition(sdNRCESPatient);
         prePopulatedSupport.addStructureDefinition(sdNRCESOrganization);
         prePopulatedSupport.addStructureDefinition(sdNRCESPractitioner);
+        prePopulatedSupport.addStructureDefinition(sdNRCESPractitionerRole);
 
         prePopulatedSupport.addValueSet(vsClinicalDiagnostics);
         prePopulatedSupport.addValueSet(vsInformationalMessages);
@@ -192,6 +196,7 @@ public class HCXFHIRValidator {
         prePopulatedSupport.addValueSet(vsInformationalMessages_v071);
         prePopulatedSupport.addValueSet(vsProofOfPresence_v071);
         prePopulatedSupport.addValueSet(vsProofOfIdentity_v071);
+        prePopulatedSupport.addValueSet(vsClaimServiceCodes_v071);
 
         // Add the custom definitions to the chain
         supportChain.addValidationSupport(prePopulatedSupport);
@@ -203,7 +208,7 @@ public class HCXFHIRValidator {
     }
 
     private static HCXFHIRValidator getInstance() throws Exception {
-        if (null == instance) 
+        if (null == instance)
             instance = new HCXFHIRValidator();
 
         return instance;
