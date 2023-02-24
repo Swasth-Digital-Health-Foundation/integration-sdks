@@ -33,9 +33,11 @@ class JWEHelper {
         await keystore.add(await JWK.asKey(keyData, "pem"));
         let parsedPayload = parse.compact(payload);
         let decrypted = await parsedPayload.perform(keystore);
-        const payloadMap = decrypted.payload.toString();
+        const payloadString = decrypted.payload.toString();
+        const payloadMap = JSON.parse(payloadString);
         decrypted.payload = payloadMap;
-        return decrypted;
+        const { key, plaintext, protected: _, ...rest } = decrypted;
+        return rest;
     }
 }
 

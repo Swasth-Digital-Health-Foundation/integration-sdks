@@ -22,3 +22,19 @@ Example for URL
 ```
   "https://private-key-url"
 ```
+### Encrypted data example
+```
+eyJhbGciOiJSU0EtT0FFUC0yNTYiLCJ0eXAiOiJqd3QiLCJlbmMiOiJBMjU2R0NNIiwia2lkIjoicVNHNjh0UlAyQzJaempEVnN5TzQtS2NteFhURHp6NGloNGFwUWRxbmxiMCJ9.TQnzqEwtfzCC06pI_wlXXGFt9gWhChGVhM4moFLvy1E29hA8pVK1WhhsZSZnGR7RIGT-YKOgZ5TN_iR3KRLpFeWcsfM3g2q3EoTosp4mFizqCUEL3GOe_1yLf_j9oDBLMae5H5i56BYBej-M2OIc4mqpguegCQT04AM7Ci3UW-aAzjpzC87JWavCXGnI4dp2xU0egilvedOqrofDzy6y4NrdvtTZFpxiAU-28cEf-bWf3aCrEkV-catX53S-lfnARZnvC9T99c6vmm9T7NY9l9ZABFbsIVQ3N44m-4QB7JEOi62Ynxjmn3ilOg7BX4K8LZaqv5RqIAG1b6ONtsmwqg.f_7MQAn_Qw_kXWkf.IDBMwZ9enF04Pnuqg17Ie7SNFwZziuBRMnxnUBKlVC0uadNmBhhGWkNEYC5PvGxGQfpvI3HX8brIYTv5OXUNNTdVhg.EqdBRhIZNs8kf9FXADOSVg
+```
+### Decrypted data example
+```
+{
+  header: {
+    alg: 'RSA-OAEP-256',
+    typ: 'jwt',
+    enc: 'A256GCM',
+    kid: 'qSG68tRP2C2ZzjDVsyO4-KcmxXTDzz4ih4apQdqnlb0'
+  },
+  payload: { iss: 'testpayor1.icici@swasth-hcx-dev', sub: 'payor-test-user-3' }
+}
+```
