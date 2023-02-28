@@ -61,8 +61,8 @@ public class Utils {
             details = (List<Map<String, Object>>) respMap.get(Constants.PARTICIPANTS);
         } else {
             String errMsg = ((Map<String,Object>) respMap.getOrDefault("error",  new HashMap<>())).getOrDefault("message", respMap).toString();
-            logger.error("Error while fetching the participant details in the registry :: status: " + response.status + " message: " + errMsg);
-            throw new ServerException("Error while fetching the participant details in the registry :: status: " + response.status + " :: message: " + errMsg);
+            logger.error("Error while fetching the participant details from the registry :: status: " + response.getStatus() + " :: message: " + errMsg);
+            throw new ServerException("Error while fetching the participant details from the registry :: status: " + response.getStatus() + " :: message: " + errMsg);
         }
         return !details.isEmpty() ? details.get(0) : new HashMap<>();
     }
