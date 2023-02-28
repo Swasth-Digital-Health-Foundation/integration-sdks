@@ -3,12 +3,14 @@ package io.hcxprotocol.fhirexamples;
 import org.hl7.fhir.r4.model.*;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class HCXClaim {
 
     public static Claim claimExample(){
         //Creating the Claims request
         Claim claim = new Claim();
+        claim.setId(UUID.randomUUID().toString());
         Meta metaClaim = new Meta();
         metaClaim.getProfile().add(new CanonicalType("https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-Claim.html"));
         metaClaim.setLastUpdated(new Date());
@@ -32,6 +34,7 @@ public class HCXClaim {
     public static ClaimResponse claimResponseExample(){
         //Creating Claim response
         ClaimResponse claimRes = new ClaimResponse();
+        claimRes.setId(UUID.randomUUID().toString());
         Meta metaClaimRes = new Meta();
         metaClaimRes.getProfile().add(new CanonicalType("https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-ClaimResponse.html"));
         metaClaimRes.setLastUpdated(new Date());

@@ -4,6 +4,7 @@ import org.hl7.fhir.r4.model.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 public class HCXCoverageEligibility {
 
     public static CoverageEligibilityRequest coverageEligibilityRequestExample() {
@@ -59,6 +60,7 @@ public class HCXCoverageEligibility {
     public static CoverageEligibilityResponse coverageEligibilityResponseExample() {
         //Creating the coverage eligibility response
         CoverageEligibilityResponse covelires = new CoverageEligibilityResponse();
+        covelires.setId(UUID.randomUUID().toString());
         Meta metaResponse = new Meta();
         metaResponse.getProfile().add(new CanonicalType("https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-CoverageEligibilityResponse.html"));
         metaResponse.setLastUpdated(new Date());
@@ -71,6 +73,8 @@ public class HCXCoverageEligibility {
         covelires.setRequest(new Reference("CoverageEligibilityRequest/dc82673b-8c71-48c2-8a17-16dcb3b035f6"));
         covelires.setRequestor(new Reference("Organization/Tmh01"));
         covelires.setOutcome(Enumerations.RemittanceOutcome.COMPLETE);
+        EnumFactory<CoverageEligibilityResponse.EligibilityResponsePurpose> fact = new CoverageEligibilityResponse.EligibilityResponsePurposeEnumFactory();
+        covelires.setPurpose(List.of((Enumeration) new Enumeration<>(fact).setValue(CoverageEligibilityResponse.EligibilityResponsePurpose.BENEFITS)));
         return covelires;
     }
 }
