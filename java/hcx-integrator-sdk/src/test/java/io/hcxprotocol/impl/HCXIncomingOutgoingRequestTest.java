@@ -21,10 +21,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class HCXIncomingOutgoingRequestTest {
 
 
-    private void intilizingConfigMap() {
+    private void initializingConfigMap() {
         Map<String, Object> configMap = new HashMap<>();
         //configMap.put("protocolBasePath","a851b026063934683964f22c6732f177-1969328968.ap-south-1.elb.amazonaws.com");
-        configMap.put("protocolBasePath", "http://dev-hcx.swasth.app/api/v0.7");
+        configMap.put("protocolBasePath", "https://dev-hcx.swasth.app/api/v0.7");
         configMap.put("participantCode", "testprovider1.apollo@swasth-hcx-dev");
         configMap.put("authBasePath", "http://aef8101c432d04a659e6317b3e5031cf-1674586068.ap-south-1.elb.amazonaws.com:8080/auth/realms/swasth-health-claim-exchange/protocol/openid-connect/token");
         configMap.put("username", "testprovider1@apollo.com");
@@ -39,18 +39,18 @@ class HCXIncomingOutgoingRequestTest {
 
     @DisplayName("1")
     @Test
-    void HcxOutgoingRequestCheckSucess() throws Exception {
-        intilizingConfigMap();
+    void HcxOutgoingRequestCheckSuccess() throws Exception {
+        initializingConfigMap();
         HCXOutgoingRequest hcxOutgoingRequest = new HCXOutgoingRequest();
         Map<String, Object> output = new HashMap<>();
-        hcxOutgoingRequest.generate(commonFhirPayload, Operations.COVERAGE_ELIGIBILITY_CHECK, "testprovider1.apollo@swasth-hcx-dev", output);
+        hcxOutgoingRequest.generate(commonFhirPayload, Operations.COVERAGE_ELIGIBILITY_CHECK, "testpayor1.icici@swasth-hcx-dev", output);
         BaseRequest baseRequest = new BaseRequest(output);
-       assertEquals(HCXIntegrator.getInstance().getParticipantCode(), baseRequest.getHcxSenderCode());
+        assertEquals(HCXIntegrator.getInstance().getParticipantCode(), baseRequest.getHcxSenderCode());
     }
 
     @DisplayName("2")
     @Test
-    void HcxOutgoingRequestOncheckSucess() throws Exception {
+    void HcxOutgoingRequestOncheckSuccess() throws Exception {
         HCXOutgoingRequest hcxOutgoingRequest = new HCXOutgoingRequest();
         Map<String, Object> output = new HashMap<>();
         hcxOutgoingRequest.generate(commonFhirPayload, Operations.COVERAGE_ELIGIBILITY_ON_CHECK, "testprovider1.apollo@swasth-hcx-dev", output);

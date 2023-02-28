@@ -5,10 +5,13 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ca.uhn.fhir.validation.ValidationResult;
 import io.hcxprotocol.exception.ErrorCodes;
+import io.hcxprotocol.impl.HCXIncomingRequest;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
 import io.hcxprotocol.validator.HCXFHIRValidator;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,8 @@ import java.util.Map;
  * Implementation of FHIR validation using HCX FHIR IG.
  */
 public abstract class FhirPayload {
+
+    private static final Logger logger = LoggerFactory.getLogger(FhirPayload.class);
 
     public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error) {
         boolean returnBool = true;
@@ -38,8 +43,10 @@ public abstract class FhirPayload {
                     returnBool = false;
                 }
             }
+            logger.info("FHIR Payload is validated successfully");
         }catch (Exception e){
-            error.put(String.valueOf(ErrorCodes.ERR_INVALID_DOMAIN_PAYLOAD),e.getMessage());
+            e.printStackTrace();
+            error.put(String.valueOf(ErrorCodes.ERR_INVALID_DOMAIN_PAYLOAD), e.getMessage());
         }
         return returnBool;
     }

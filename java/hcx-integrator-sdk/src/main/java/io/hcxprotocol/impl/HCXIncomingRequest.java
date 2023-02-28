@@ -1,5 +1,6 @@
 package io.hcxprotocol.impl;
 
+import io.hcxprotocol.dto.JWERequest;
 import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.dto.ResponseError;
 import io.hcxprotocol.exception.ErrorCodes;
@@ -10,8 +11,11 @@ import io.hcxprotocol.jwe.JweRequest;
 import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
+import io.hcxprotocol.utils.Utils;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.io.*;
@@ -40,6 +44,7 @@ import java.util.Map;
  */
 public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
 
+    private static final Logger logger = LoggerFactory.getLogger(HCXIncomingRequest.class);
     private final HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance();
 
     public HCXIncomingRequest() throws Exception {
@@ -49,6 +54,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     public boolean process(String jwePayload, Operations operation, Map<String, Object> output) {
         Map<String, Object> error = new HashMap<>();
         boolean result = false;
+        logger.info("Processing incoming request has started :: operation: {}", operation);
         if (!validateRequest(jwePayload, operation, error)) {
             sendResponse(error, output);
         } else if (!decryptPayload(jwePayload, output)) {
@@ -73,8 +79,10 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             jweRequest.decryptRequest(getRsaPrivateKey(hcxIntegrator.getPrivateKey()));
             output.put(Constants.HEADERS, jweRequest.getHeaders());
             output.put(Constants.FHIR_PAYLOAD, JSONUtils.serialize(jweRequest.getPayload()));
+            logger.info("Request is decrypted successfully");
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             output.put(ErrorCodes.ERR_INVALID_ENCRYPTION.toString(), e.getMessage());
             return false;
         }
@@ -99,9 +107,10 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             Map<String, Object> headers = (Map<String, Object>) output.get(Constants.HEADERS);
             responseObj.put(Constants.API_CALL_ID, headers.get(Constants.HCX_API_CALL_ID));
             responseObj.put(Constants.CORRELATION_ID, headers.get(Constants.HCX_CORRELATION_ID));
+            logger.info("Processing incoming request has completed :: response: {}", responseObj);
             result = true;
         } else {
-            System.out.println("HCXIncomingRequest: Errors from sendResponse: " + error);
+            logger.error("Error while processing the request: {}", error);
             // Fetching only the first error and constructing the error object
             String code = (String) error.keySet().toArray()[0];
             String message =  error.get(code).toString();
