@@ -60,7 +60,12 @@ public class Utils {
         if (response.getStatus() == 200) {
             details = (List<Map<String, Object>>) respMap.get(Constants.PARTICIPANTS);
         } else {
-            String errMsg = ((Map<String,Object>) respMap.getOrDefault("error",  new HashMap<>())).getOrDefault("message", respMap).toString();
+            String errMsg;
+            if(respMap.get("error") instanceof String) {
+                errMsg = respMap.get("error").toString();
+            } else {
+                errMsg = ((Map<String,Object>) respMap.getOrDefault("error",  new HashMap<>())).getOrDefault("message", respMap).toString();
+            }
             logger.error("Error while fetching the participant details from the registry :: status: " + response.getStatus() + " :: message: " + errMsg);
             throw new ServerException("Error while fetching the participant details from the registry :: status: " + response.getStatus() + " :: message: " + errMsg);
         }
