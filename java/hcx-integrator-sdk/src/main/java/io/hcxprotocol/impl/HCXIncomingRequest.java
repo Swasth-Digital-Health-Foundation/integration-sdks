@@ -114,7 +114,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             // Fetching only the first error and constructing the error object
             String code = (String) error.keySet().toArray()[0];
             String message =  error.get(code).toString();
-            responseObj.put(Constants.ERROR, new ResponseError(code, message, ""));
+            responseObj.put(Constants.ERROR, new ResponseError(code, message, "").toString());
         }
         output.put(Constants.RESPONSE_OBJ, responseObj);
         return result;
