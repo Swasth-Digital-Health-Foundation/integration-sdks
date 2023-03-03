@@ -43,6 +43,16 @@
         <developerConnection>scm:git:ssh://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</developerConnection>
         <url>https://github.com/Swasth-Digital-Health-Foundation/integration-sdks/tree/main</url>
     </scm>
+<properties>
+    <repository.owner>saurabh-singh-17</repository.owner>
+</properties>
+    <repositories>
+        <repository>
+            <id>github</id>
+            <name>GitHub Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/${repository.owner}}/*</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.typesafe</groupId>
