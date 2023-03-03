@@ -1,5 +1,3 @@
-package io.hcxprotocol.fhirexamples;
-
 import org.hl7.fhir.r4.model.*;
 
 import java.util.Date;

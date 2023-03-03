@@ -78,6 +78,8 @@ public class HCXFHIRValidator {
         StructureDefinition sdNRCESOrganization = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Organization.json").openStream());
         StructureDefinition sdNRCESPractitioner = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Practitioner.json").openStream());
         StructureDefinition sdNRCESPractitionerRole = (StructureDefinition) parser.parseResource(new URL( nrcesIGBasePath+ "StructureDefinition-PractitionerRole.json").openStream());
+        StructureDefinition sdNRCESCondition = (StructureDefinition) parser.parseResource(new URL( nrcesIGBasePath+ "StructureDefinition-Condition.json").openStream());
+
 
         /**
          * Adding the valusets from v0.7.0
@@ -158,6 +160,7 @@ public class HCXFHIRValidator {
         prePopulatedSupport.addStructureDefinition(sdNRCESOrganization);
         prePopulatedSupport.addStructureDefinition(sdNRCESPractitioner);
         prePopulatedSupport.addStructureDefinition(sdNRCESPractitionerRole);
+        prePopulatedSupport.addStructureDefinition(sdNRCESCondition);
 
         prePopulatedSupport.addValueSet(vsClinicalDiagnostics);
         prePopulatedSupport.addValueSet(vsInformationalMessages);
