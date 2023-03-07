@@ -1,10 +1,9 @@
-﻿using Hl7.Fhir.Language.Debugging;
-using Hl7.Fhir.Specification.Source;
+﻿using Hl7.Fhir.Specification.Source;
 using Hl7.Fhir.Validation;
 using Io.HcxProtocol.Utils;
+using System;
 using System.IO;
 using System.IO.Compression;
-using System.Net;
 
 namespace Io.HcxProtocol.Validation
 {
@@ -19,6 +18,7 @@ namespace Io.HcxProtocol.Validation
             string rootDir = Directory.GetCurrentDirectory();
             string profileDirectory = Path.Combine(rootDir, "profiles");
 
+            CopySpecifiationZipToBin();
             DownloadProfileDirectory(profileDirectory);
 
             // create a cached resolver for resource validation
@@ -94,6 +94,40 @@ namespace Io.HcxProtocol.Validation
             {
                 throw new System.Exception("Unable to Clear Profile Directory." + "\n" + ex.Message.ToString());
             }
+        }
+
+        static void CopySpecifiationZipToBin()
+        {
+            //Used If specification.zip is not copied to local by hl7.fhir.specification.r4 itself.
+            string specificationFile = "specification.zip";
+
+            // Package Path from User Profile Directory
+            string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string packagePathUserProfile = Path.Combine(userProfilePath, ".nuget\\packages\\hl7.fhir.specification.r4\\4.3.0\\contentFiles\\any\\any", specificationFile);
+            string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, specificationFile);
+
+            // Package Path from Project Directory
+            string projectDirPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+            string packagePathfromProject = Path.Combine(projectDirPath, "packages\\Hl7.Fhir.Specification.R4.4.3.0\\contentFiles\\any\\any", specificationFile);
+
+            try
+            {
+                if (!File.Exists(basePath))
+                {
+                    if (File.Exists(packagePathUserProfile))
+                    {
+                        File.Copy(packagePathUserProfile, basePath, false);
+                    }
+                    else if (File.Exists(packagePathfromProject))
+                    {
+                        File.Copy(packagePathfromProject, basePath, false);
+                    }
+                }
+            }
+            catch (System.Exception)
+            {
+            }
+
         }
     }
 }

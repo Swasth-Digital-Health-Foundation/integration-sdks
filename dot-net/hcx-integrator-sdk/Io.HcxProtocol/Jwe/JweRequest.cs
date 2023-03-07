@@ -42,7 +42,8 @@ namespace Io.HcxProtocol.Jwe
 
         public void EncryptRequest(RSA rsaPublicKey)
         {
-            string tokenString = Jose.JWT.Encode(payload, rsaPublicKey, JweAlgorithm.RSA_OAEP_256, JweEncryption.A256GCM, extraHeaders: headers);
+            string payloadString = JSONUtils.Serialize(payload);
+            string tokenString = Jose.JWT.Encode(payloadString, rsaPublicKey, KEY_MANAGEMENT_ALGORITHM, CONTENT_ENCRYPTION_ALGORITHM, extraHeaders: headers);
             encryptedObject = new Dictionary<string, object>() { { Constants.PAYLOAD, tokenString } };
         }
 
@@ -51,6 +52,10 @@ namespace Io.HcxProtocol.Jwe
             string tokenString = encryptedObject[Constants.PAYLOAD].ToString();
             payload = Jose.JWT.Decode<Dictionary<string, object>>(tokenString, rsaPrivateKey);
             headers = Jose.JWT.Headers<Dictionary<string, object>>(tokenString);
+
+            //Remove default headers
+            headers.Remove("alg");
+            headers.Remove("enc");
         }
     }
 }

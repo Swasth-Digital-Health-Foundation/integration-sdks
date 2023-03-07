@@ -6,7 +6,6 @@ using Io.HcxProtocol.Interfaces;
 using Io.HcxProtocol.Jwe;
 using Io.HcxProtocol.Key;
 using Io.HcxProtocol.Utils;
-using Jose;
 using System;
 using System.Collections.Generic;
 using System.Linq;

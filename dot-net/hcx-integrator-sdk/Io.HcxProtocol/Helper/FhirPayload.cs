@@ -46,10 +46,12 @@ namespace Io.HcxProtocol.Helper
                 // check outcome success
                 if (!outcome.Success)
                 {
+                    List<string> errors = new List<string>();    
                     foreach (var issue in outcome.Issue)
                     {
-                        error.Add(ErrorCodes.ERR_INVALID_DOMAIN_PAYLOAD.ToString(), issue.Details.Text);
+                        errors.Add(issue.Details.Text);
                     }
+                        error.Add(ErrorCodes.ERR_INVALID_DOMAIN_PAYLOAD.ToString(), errors);
                     return false;
                 }
             }
