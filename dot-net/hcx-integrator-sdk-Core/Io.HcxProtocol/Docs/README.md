@@ -8,12 +8,10 @@ The HCX Integration SDK abstract most of these operations and make it simple for
 
 ## About HCX Integration SDK:
 
-The SDK implemented using dot net programming language and accessible as a nuget package file. The latest version of the SDK is available in github repository. We will soon publish it to nuget repository and provide the details.
-
-The docs also attached along with the release in github repository for the developers to understand the details about each function of the SDK.
+The SDK implemented using dot net programming language and accessible as a DLL file. 
 
 ## How to use:
-The hcx-integrator-sdk is published to https://www.nuget.org/  and available for consumption.  To use the sdk, add the below dependency to the project:
+The hcx-integrator-sdk is published to https://www.nuget.org/ and available for consumption.
 
 The SDK expect configuration of the HCX Instance and the participant details to initialise and set the context to use it. The configuration can be given as a Dictionary or JSON String.
 
@@ -36,16 +34,17 @@ Please use the “init” static method from HCXIntegrator class by passing the 
 Below is the sample code snippet to initialise the SDK.
 
 ```
-//Define the configuration as a Dictionary.
+// Create a config object
 
-Dictionary<String, Object> configDictionary = new Dictionary<string, object>();
-configDictionary.Add("protocolBasePath", "http://staging-hcx.swasth.app/api/v0.7");
-configDictionary.Add("participantCode", "<Participant code shared with you>");
-configDictionary.Add("authBasePath", "http://a9dd63de91ee94d59847a1225da8b111-273954130.ap-south-1.elb.amazonaws.com:8080/auth/realms/swasth-health-claim-exchange/protocol/openid-connect/token");
-configDictionary.Add("username", "<Email ID used for registration>");
-configDictionary.Add("password", "<Your Password>");
-configDictionary.Add("encryptionPrivateKey", "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEF=\n-----END PRIVATE KEY-----");
-configDictionary.Add("igUrl", "https://ig.hcxprotocol.io/v0.7");
+Config configObj = new Config();
+configObj.ProtocolBasePath = "http://staging-hcx.swasth.app/api/v0.7";
+configObj.ParticipantCode = "<Participant code shared with you>";
+configObj.AuthBasePath = "http://a9dd63de91ee94d59847a1225da8b111-273954130.ap-south-1.elb.amazonaws.com:8080/auth/realms/swasth-health-claim-exchange/protocol/openid-connect/token";
+configObj.UserName = "<Email ID used for registration>";
+configObj.Password = "<Your Password>";
+configObj.EncryptionPrivateKey = "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEF=\n-----END PRIVATE KEY-----";
+configObj.IgUrl = "https://ig.hcxprotocol.io/v0.7";
+
 HCXIntegrator.init(configDictionary);
 ```
 
@@ -55,7 +54,7 @@ The participant system implements the HCX Protocol API Specification. The incomi
 ```
 //Processing an incoming request to extract the FHIR object.
 
-hcxIncomingRequest.Process(String jwePayload, Operations operation, Dictionary<String, Object> output);
+HCXIncomingRequest.Process(String jwePayload, Operations operation, Dictionary<String, Object> output);
 
 Sample code for processing an incoming request. For reference, a sample JWE payload is also provided.
 
@@ -80,7 +79,7 @@ Below are the SDK methods which will help in executing these steps easily.
 ```
 
 // Initialising a new request for a workflow
- HCXOutgoingRequest.Generate(fhirPayload, Operations.operation,Dictionary<String, Object> output);
+HCXOutgoingRequest.Generate(fhirPayload, Operations.operation,Dictionary<String, Object> output);
 
 // Responding to the incoming request
 HCXOutgoingRequest.generate(String fhirPayload, Operations operation, String actionJwe, String onActionStatus, Dictionary<String, Object> output);
