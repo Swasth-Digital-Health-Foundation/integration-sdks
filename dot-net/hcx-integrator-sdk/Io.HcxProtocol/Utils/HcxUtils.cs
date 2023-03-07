@@ -30,7 +30,20 @@ namespace Io.HcxProtocol.Utils
             };
             HttpResponse response = HttpUtils.Post(HCXIntegrator.config.AuthBasePath, headers, fields);
             var responseBody = JSONUtils.Deserialize<Dictionary<string, string>>(response.Body);//JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Body);
-            return responseBody["access_token"];
+            string token;
+            if (response.Status == 200)
+            {
+                token = responseBody["access_token"];
+            }
+            else if (response.Status == 401)
+            {
+                throw new ClientException("Error while generating API access token: Invalid credentials");
+            }
+            else
+            {
+                throw new ServerException("Error while generating API access token :: status: " + response.Status + " :: message: " + responseBody);
+            }
+            return token;
         }
 
         public static Dictionary<string, object> SearchRegistry(object participantCode)
@@ -47,7 +60,7 @@ namespace Io.HcxProtocol.Utils
             }
             else
             {
-                throw new ServerException("Error in fetching the participant details" + response.Status);
+                throw new ServerException("Error while fetching the participant details from the registry :: status: " + response.Status + " :: " + response.Body);
             }
             return details.Any() ? details.FirstOrDefault() : new Dictionary<string, object>();
         }
