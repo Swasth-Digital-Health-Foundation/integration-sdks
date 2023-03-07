@@ -4,8 +4,8 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 
 		<RootNamespace>Io.HcxProtocol</RootNamespace>
-		<AssemblyName>Io.HcxProtocolRavi</AssemblyName>
-		<Version>1.0.5</Version>
+		<AssemblyName>Io.HcxProtocol</AssemblyName>
+		<Version>1.0.0</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
