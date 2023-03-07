@@ -1,0 +1,31 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net6.0;netcoreapp3.1</TargetFrameworks>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AssemblyName>Io.HcxProtocolRavi.Core</AssemblyName>
+		<Version>1.0.2</Version>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Hl7.Fhir.Specification.R4" Version="4.3.0" />
+		<PackageReference Include="jose-jwt" Version="4.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="Docs\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Docs\specification.zip">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<PackageCopyToOutput>true</PackageCopyToOutput>
+			<PackagePath>contentFiles\any\any</PackagePath>
+			<TargetPath>%(Filename)%(Extension)</TargetPath>
+		</Content>
+	</ItemGroup>
+
+</Project>
