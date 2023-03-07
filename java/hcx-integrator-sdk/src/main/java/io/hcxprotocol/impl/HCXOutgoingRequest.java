@@ -10,6 +10,8 @@ import io.hcxprotocol.key.PublicKeyLoader;
 import io.hcxprotocol.utils.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.io.ByteArrayInputStream;
@@ -52,6 +54,7 @@ import java.util.UUID;
  */
 public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
+    private static final Logger logger = LoggerFactory.getLogger(HCXOutgoingRequest.class);
     private final HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance();
 
     public HCXOutgoingRequest() throws Exception {
@@ -73,9 +76,10 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             Map<String, Object> error = new HashMap<>();
             Map<String, Object> headers = new HashMap<>();
             Map<String, Object> response = new HashMap<>();
+            logger.info("Processing outgoing request has started :: operation: {}", operation);
             if (!validatePayload(fhirPayload, operation, error)) {
                 output.putAll(error);
-            } else if (!createHeader(recipientCode, actionJwe, onActionStatus, headers)) {
+            } else if (!createHeader(recipientCode, actionJwe, onActionStatus, headers, error)) {
                 output.putAll(error);
             } else if (!encryptPayload(headers, fhirPayload, output)) {
                 output.putAll(error);
@@ -83,16 +87,20 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
                 result = initializeHCXCall(JSONUtils.serialize(output), operation, response);
                 output.putAll(response);
             }
+            if(output.containsKey(Constants.ERROR) || output.containsKey(ErrorCodes.ERR_DOMAIN_PROCESSING.toString()))
+                logger.error("Error while processing the outgoing request: {}", output);
             return result;
         } catch (Exception ex) {
             // TODO: Exception is handled as domain processing error, we will be enhancing in next version.
+            ex.printStackTrace();
             output.put(ErrorCodes.ERR_DOMAIN_PROCESSING.toString(), ex.getMessage());
+            logger.error("Error while processing the outgoing request: {}", ex.getMessage());
             return result;
         }
     }
 
     @Override
-    public boolean createHeader(String recipientCode, String actionJwe, String onActionStatus, Map<String, Object> headers) {
+    public boolean createHeader(String recipientCode, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error) {
         try {
             headers.put(Constants.ALG, Constants.A256GCM);
             headers.put(Constants.ENC, Constants.RSA_OAEP);
@@ -111,9 +119,11 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
                 if(headers.containsKey(Constants.WORKFLOW_ID))
                     headers.put(Constants.WORKFLOW_ID, actionHeaders.get(Constants.WORKFLOW_ID));
             }
+            logger.info("Request headers are created: " + headers);
             return true;
         } catch (Exception e) {
-            headers.put(Constants.ERROR, "Error while creating headers: " + e.getMessage());
+            e.printStackTrace();
+            error.put(Constants.ERROR, "Error while creating headers: " + e.getMessage());
             return false;
         }
     }
@@ -129,8 +139,10 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             JweRequest jweRequest = new JweRequest(headers, JSONUtils.deserialize(fhirPayload, Map.class));
             jweRequest.encryptRequest(rsaPublicKey);
             output.putAll(jweRequest.getEncryptedObject());
+            logger.info("Payload is encrypted successfully");
             return true;
         } catch (Exception e) {
+            e.printStackTrace();
             output.put(Constants.ERROR, e.getMessage());
             return false;
         }
@@ -143,6 +155,14 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
         headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken());
         HttpResponse hcxResponse = HttpUtils.post(hcxIntegrator.getHCXProtocolBasePath() + operation.getOperation(), headers, jwePayload);
         response.put(Constants.RESPONSE_OBJ, JSONUtils.deserialize(hcxResponse.getBody(), Map.class));
-        return hcxResponse.getStatus() == 202;
+        int status = hcxResponse.getStatus();
+        boolean result = false;
+        if(status == 202){
+            result = true;
+            logger.info("Processing outgoing request has completed ::  response: {}", response.get(Constants.RESPONSE_OBJ));
+        } else {
+            logger.error("Error while processing the outgoing request :: status: {} :: response: {}", status, response.get(Constants.RESPONSE_OBJ));
+        }
+        return result;
     }
 }

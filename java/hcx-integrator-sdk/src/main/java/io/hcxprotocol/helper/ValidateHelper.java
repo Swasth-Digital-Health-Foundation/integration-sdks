@@ -3,8 +3,11 @@ package io.hcxprotocol.helper;
 import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.dto.JSONRequest;
 import io.hcxprotocol.dto.JWERequest;
+import io.hcxprotocol.impl.HCXIncomingRequest;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +21,7 @@ import static io.hcxprotocol.utils.ResponseMessage.INVALID_JSON_REQUEST_BODY_ERR
  */
 public class ValidateHelper {
 
+    private static final Logger logger = LoggerFactory.getLogger(ValidateHelper.class);
     private static ValidateHelper validateHelper = null;
 
     private ValidateHelper() {
@@ -70,6 +74,7 @@ public class ValidateHelper {
                 if (!validateJsonRequest(operation, error, requestBody)) return false;
             }
         } catch (Exception e) {
+            e.printStackTrace();
             error.put(ErrorCodes.ERR_INVALID_PAYLOAD.toString(), e.getMessage());
             return false;
         }
@@ -84,20 +89,25 @@ public class ValidateHelper {
         if (jweRequest.validateJwePayload(error, payloadArr)) return true;
         // Validate the headers and if there are any failures add the corresponding error message to the error Map
         // protocol_mandatory_headers:x-hcx-sender_code, x-hcx-recipient_code, x-hcx-api_call_id, x-hcx-timestamp, x-hcx-correlation_id
-        return jweRequest.validateHeadersData(List.of(ALG,ENC,HCX_SENDER_CODE,HCX_RECIPIENT_CODE,HCX_API_CALL_ID,HCX_TIMESTAMP,HCX_CORRELATION_ID), operation, error);
+        boolean result = jweRequest.validateHeadersData(List.of(ALG,ENC,HCX_SENDER_CODE,HCX_RECIPIENT_CODE,HCX_API_CALL_ID,HCX_TIMESTAMP,HCX_CORRELATION_ID), operation, error);
+        logger.info("Request is validated successfully :: api call id: {}", jweRequest.getApiCallId());
+        return result;
     }
 
     boolean validateJsonRequest(Operations operation, Map<String, Object> error, Map<String, Object> requestBody) throws Exception {
         JSONRequest jsonRequest = new JSONRequest(requestBody);
+        boolean result;
         if (ERROR_RESPONSE.equalsIgnoreCase(jsonRequest.getStatus())) {
             //error_mandatory_headers:x-hcx-status, x-hcx-sender_code, x-hcx-recipient_code, x-hcx-error_details, x-hcx-correlation_id, x-hcx-api_call_id, x-hcx-timestamp
-            return jsonRequest.validateHeadersData(List.of(STATUS,HCX_SENDER_CODE,HCX_RECIPIENT_CODE,ERROR_DETAILS,HCX_CORRELATION_ID,HCX_API_CALL_ID,HCX_TIMESTAMP), operation, error);
+            result = jsonRequest.validateHeadersData(List.of(STATUS,HCX_SENDER_CODE,HCX_RECIPIENT_CODE,ERROR_DETAILS,HCX_CORRELATION_ID,HCX_API_CALL_ID,HCX_TIMESTAMP), operation, error);
         } else {
             //redirect_mandatory_headers:x-hcx-sender_code, x-hcx-recipient_code, x-hcx-api_call_id, x-hcx-timestamp, x-hcx-correlation_id, x-hcx-status, x-hcx-redirect_to
-            if (jsonRequest.validateHeadersData(List.of(HCX_SENDER_CODE,HCX_RECIPIENT_CODE,HCX_API_CALL_ID,HCX_TIMESTAMP,HCX_CORRELATION_ID,STATUS,REDIRECT_TO), operation, error))
-                return true;
-            return jsonRequest.validateRedirect(error);
+            result = jsonRequest.validateHeadersData(List.of(HCX_SENDER_CODE,HCX_RECIPIENT_CODE,HCX_API_CALL_ID,HCX_TIMESTAMP,HCX_CORRELATION_ID,STATUS,REDIRECT_TO), operation, error);
+            if (result) return true;
+            result = jsonRequest.validateRedirect(error);
         }
+        if (result) logger.info("Request is validated successfully :: api call id: {}", jsonRequest.getApiCallId());
+        return  result;
     }
 
 }

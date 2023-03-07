@@ -141,13 +141,14 @@ public interface OutgoingRequest {
      * @param actionJwe The JWE Payload from the incoming request for which the response JWE Payload created here.
      * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JEW Payload.
      * @param headers The HCX Protocol headers to create the JWE Payload.
+     * @param error A wrapper map to collect the errors from the header creation.
      * @return It is a boolean value to understand the HCX Protocol Headers generation is successful or not.
      * <ol>
      *      <li>true - It is successful.</li>
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean createHeader(String recipientCode, String actionJwe, String onActionStatus, Map<String,Object> headers);
+    boolean createHeader(String recipientCode, String actionJwe, String onActionStatus, Map<String,Object> headers, Map<String,Object> error);
 
     /**
      * It generates JWE Payload using the HCX Protocol Headers and FHIR object. The JWE Payload follows RFC7516.
