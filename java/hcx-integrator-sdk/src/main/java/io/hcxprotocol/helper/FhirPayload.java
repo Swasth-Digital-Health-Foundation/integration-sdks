@@ -5,7 +5,6 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ca.uhn.fhir.validation.ValidationResult;
 import io.hcxprotocol.exception.ErrorCodes;
-import io.hcxprotocol.impl.HCXIncomingRequest;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
 import io.hcxprotocol.validator.HCXFHIRValidator;

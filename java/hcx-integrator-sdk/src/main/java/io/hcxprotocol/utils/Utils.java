@@ -1,11 +1,10 @@
 package io.hcxprotocol.utils;
 
 import io.hcxprotocol.exception.ClientException;
-import io.hcxprotocol.init.HCXIntegrator;
+import io.hcxprotocol.impl.HCXIntegrator;
 import io.hcxprotocol.dto.HttpResponse;
 import io.hcxprotocol.exception.ServerException;
 import lombok.experimental.UtilityClass;
-import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,14 +27,15 @@ public class Utils {
 
     // TODO: In the initial version we are not handling the token caching, it will be handled in the next version
     public static String generateToken() throws Exception {
+        HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance();
         Map<String,String> headers = new HashMap<>();
         headers.put("content-type", "application/x-www-form-urlencoded");
         Map<String,Object> fields = new HashMap<>();
         fields.put("client_id", "registry-frontend");
-        fields.put("username", HCXIntegrator.getInstance().getUsername());
-        fields.put("password", HCXIntegrator.getInstance().getPassword());
+        fields.put("username", hcxIntegrator.getUsername());
+        fields.put("password", hcxIntegrator.getPassword());
         fields.put("grant_type", "password");
-        HttpResponse response = HttpUtils.post(HCXIntegrator.getInstance().getAuthBasePath(), headers, fields);
+        HttpResponse response = HttpUtils.post(hcxIntegrator.getAuthBasePath(), headers, fields);
         Map<String,Object> respMap = JSONUtils.deserialize(response.getBody(), Map.class);
         String token;
         if (response.getStatus() == 200) {
@@ -51,10 +51,11 @@ public class Utils {
     }
 
     public static Map<String,Object> searchRegistry(Object participantCode) throws Exception {
+        HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance();
         String filter = "{\"filters\":{\"participant_code\":{\"eq\":\"" + participantCode + "\"}}}";
         Map<String,String> headers = new HashMap<>();
         headers.put(Constants.AUTHORIZATION, "Bearer " + generateToken());
-        HttpResponse response = HttpUtils.post(HCXIntegrator.getInstance().getHCXProtocolBasePath() + "/participant/search", headers, filter);
+        HttpResponse response = HttpUtils.post(hcxIntegrator.getHCXProtocolBasePath() + "/participant/search", headers, filter);
         Map<String,Object> respMap = JSONUtils.deserialize(response.getBody(), Map.class);
         List<Map<String,Object>> details;
         if (response.getStatus() == 200) {
