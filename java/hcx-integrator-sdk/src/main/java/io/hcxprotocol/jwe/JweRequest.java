@@ -4,9 +4,16 @@ import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jose.crypto.RSAEncrypter;
 import com.nimbusds.jose.util.Base64URL;
+import org.bouncycastle.util.io.pem.PemObject;
+import org.bouncycastle.util.io.pem.PemReader;
 
+import java.io.*;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,17 +73,27 @@ public class JweRequest implements JweRequestInterface {
         this.deserializedObject.put("tag", jweParts[4]);
     }
 
-    public void decryptRequest(RSAPrivateKey rsaPrivateKey) throws ParseException, JOSEException {
+    public void decryptRequest(String privateKey) throws ParseException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, JOSEException {
         buildEncryptedObjectFromString(encryptedObject.get("payload"));
         JWEObject jweObject = new JWEObject(new Base64URL(this.deserializedObject.get("protected")),
                 new Base64URL(this.deserializedObject.get("encrypted_key")),
                 new Base64URL(this.deserializedObject.get("iv")),
                 new Base64URL(this.deserializedObject.get("ciphertext")),
                 new Base64URL(this.deserializedObject.get("tag")));
-        JWEDecrypter jweDecrypter = new RSADecrypter(rsaPrivateKey);
+        JWEDecrypter jweDecrypter = new RSADecrypter(getRsaPrivateKey(privateKey));
         jweObject.decrypt(jweDecrypter);
         this.headers = jweObject.getHeader().toJSONObject();
         this.payload = new HashMap<>(jweObject.getPayload().toJSONObject());
+    }
+
+    private static RSAPrivateKey getRsaPrivateKey(String privateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        InputStream stream = new ByteArrayInputStream(privateKey.getBytes());
+        Reader fileReader = new InputStreamReader(stream);
+        PemReader pemReader = new PemReader(fileReader);
+        PemObject pemObject = pemReader.readPemObject();
+        PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(pemObject.getContent());
+        KeyFactory factory = KeyFactory.getInstance("RSA");
+        return (RSAPrivateKey) factory.generatePrivate(privateKeySpec);
     }
 
 }

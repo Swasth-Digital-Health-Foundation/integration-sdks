@@ -31,11 +31,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         assertEquals("Mz-VPPyU4RlcuYv1IwIvzw", hcxIntegrator.getPrivateKey());
         assertEquals("http://localhost:8090", hcxIntegrator.getIGUrl());
 
-        configMap.put("password", "67890");
-        hcxIntegrator = HCXIntegrator.getInstance(configMap);
+        Map<String,Object> configMap2 = new HashMap<>();
+        configMap2.put("protocolBasePath", "http://localhost:8095");
+        configMap2.put("participantCode", "participant@02");
+        configMap2.put("authBasePath", "http://localhost:8080");
+        configMap2.put("username", "participant2@gmail.com");
+        configMap2.put("password", "67890");
+        configMap2.put("encryptionPrivateKey", "Mz-VPPyU4RlcuYv1IwIvzw");
+        configMap2.put("igUrl", "http://localhost:8090");
+        hcxIntegrator = HCXIntegrator.getInstance(configMap2);
 
-        assertEquals("67890", hcxIntegrator.getPassword());
+        assertEquals("participant@02", HCXIntegrator.getInstance("participant@02").getParticipantCode());
+        assertEquals(2, hcxIntegrator.getContextMap().size());
     }
-
 
 }
