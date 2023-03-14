@@ -20,6 +20,7 @@ namespace Io.HcxProtocol.Validation
 
             CopySpecifiationZipToBin();
             DownloadProfileDirectory(profileDirectory);
+            DownloadNRCESProfileDirectory(profileDirectory);
 
             // create a cached resolver for resource validation
             IResourceResolver resolver = new CachedResolver(
@@ -56,7 +57,7 @@ namespace Io.HcxProtocol.Validation
 
         private bool DownloadProfileDirectory(string profileDirPath)
         {
-            string fileSourceUrl = "https://ig.hcxprotocol.io/v0.7/definitions.json.zip";
+            string fileSourceUrl = "https://ig.hcxprotocol.io/v0.7.1/definitions.json.zip";
             string profileFileName = "definitions.json.zip";
             string fullPathToFile = Path.Combine(profileDirPath, profileFileName);
             try
@@ -66,6 +67,31 @@ namespace Io.HcxProtocol.Validation
                     Directory.CreateDirectory(profileDirPath);
                 }
                 ClearProfileDirectory(profileDirPath);
+
+                HttpUtils.DownloadFile(fileSourceUrl, fullPathToFile);
+
+                string zipFilePath = fullPathToFile;
+                ZipFile.ExtractToDirectory(zipFilePath, profileDirPath);
+            }
+            catch (System.Exception ex)
+            {
+                throw new System.Exception("Unable to download Profile Directory File." + "\n" + ex.Message.ToString());
+            }
+
+            return true;
+        }
+
+        private bool DownloadNRCESProfileDirectory(string profileDirPath)
+        {
+            string fileSourceUrl = "https://nrces.in/ndhm/fhir/r4/definitions.json.zip";
+            string profileFileName = "definitions_nrces.json.zip";
+            string fullPathToFile = Path.Combine(profileDirPath, profileFileName);
+            try
+            {
+                if (!Directory.Exists(profileDirPath))
+                {
+                    Directory.CreateDirectory(profileDirPath);
+                }
 
                 HttpUtils.DownloadFile(fileSourceUrl, fullPathToFile);
 
