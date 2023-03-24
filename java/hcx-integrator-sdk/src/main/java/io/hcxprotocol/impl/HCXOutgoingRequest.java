@@ -55,18 +55,20 @@ import java.util.UUID;
 public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HCXOutgoingRequest.class);
-    private final HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance();
+    private HCXIntegrator hcxIntegrator = null;
 
     public HCXOutgoingRequest() throws Exception {
     }
 
     @Override
-    public boolean generate(String fhirPayload, Operations operation, String recipientCode, Map<String,Object> output){
+    public boolean generate(String fhirPayload, Operations operation, String recipientCode, Map<String,Object> output, HCXIntegrator hcxIntegrator){
+        this.hcxIntegrator = hcxIntegrator;
         return process(fhirPayload, operation, recipientCode, "", "", output);
     }
 
     @Override
-    public boolean generate(String fhirPayload, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output){
+    public boolean generate(String fhirPayload, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output, HCXIntegrator hcxIntegrator){
+        this.hcxIntegrator = hcxIntegrator;
         return process(fhirPayload, operation, "", actionJwe, onActionStatus, output);
     }
 
@@ -131,7 +133,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     @Override
     public boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output) {
         try {
-            String publicKeyUrl = (String) Utils.searchRegistry(headers.get(Constants.HCX_RECIPIENT_CODE)).get(Constants.ENCRYPTION_CERT);
+            String publicKeyUrl = (String) Utils.searchRegistry(headers.get(Constants.HCX_RECIPIENT_CODE).toString(), hcxIntegrator).get(Constants.ENCRYPTION_CERT);
             String certificate = IOUtils.toString(new URL(publicKeyUrl), StandardCharsets.UTF_8.toString());
             InputStream stream = new ByteArrayInputStream(certificate.getBytes());
             Reader fileReader = new InputStreamReader(stream);
@@ -152,7 +154,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     @Override
     public boolean initializeHCXCall(String jwePayload, Operations operation, Map<String,Object> response) throws Exception {
         Map<String,String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken());
+        headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(hcxIntegrator));
         HttpResponse hcxResponse = HttpUtils.post(hcxIntegrator.getHCXProtocolBasePath() + operation.getOperation(), headers, jwePayload);
         response.put(Constants.RESPONSE_OBJ, JSONUtils.deserialize(hcxResponse.getBody(), Map.class));
         int status = hcxResponse.getStatus();

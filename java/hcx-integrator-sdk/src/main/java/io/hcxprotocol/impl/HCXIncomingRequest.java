@@ -45,13 +45,14 @@ import java.util.Map;
 public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HCXIncomingRequest.class);
-    private final HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance();
+    private HCXIntegrator hcxIntegrator = null;
 
     public HCXIncomingRequest() throws Exception {
     }
 
     @Override
-    public boolean process(String jwePayload, Operations operation, Map<String, Object> output) {
+    public boolean process(String jwePayload, Operations operation, Map<String, Object> output, HCXIntegrator hcxIntegrator) {
+        this.hcxIntegrator = hcxIntegrator;
         Map<String, Object> error = new HashMap<>();
         boolean result = false;
         logger.info("Processing incoming request has started :: operation: {}", operation);
