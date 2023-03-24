@@ -45,6 +45,8 @@
     </scm>
 <properties>
     <repository.owner>saurabh-singh-17</repository.owner>
+    <sonar.organization>swasth-digital-health-foundation</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>     
 </properties>
     <repositories>
         <repository>
