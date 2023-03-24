@@ -34,6 +34,7 @@ public class HCXIntegrator {
      * @param configMap A Map that contains configuration variables and its values.
      */
     public static void init(Map<String,Object> configMap) {
+        
         config = ConfigFactory.parseMap(configMap);
     }
 
