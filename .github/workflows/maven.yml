@@ -34,7 +34,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          cd java/hcx-integrator-sdk/
-          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectBaseDir=java/hcx-integrator-sdk -Dsonar.projectKey=Swasth-Digital-Health-Foundation_integration-sdks
-  
+        run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=Swasth-Digital-Health-Foundation_integration-sdks 
