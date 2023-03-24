@@ -2,6 +2,7 @@ package io.hcxprotocol.interfaces;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.utils.Operations;
 
 import java.util.Map;
@@ -26,6 +27,7 @@ public interface OutgoingRequest {
      * @param fhirPayload The FHIR object created by the participant system.
      * @param operation The HCX operation or action defined by specs to understand the functional behaviour.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
+     * @param hcxIntegrator The HCX Integrator object to get config variables.
      * <ol>
      *    <li>output -
      *    <pre>
@@ -61,7 +63,7 @@ public interface OutgoingRequest {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean generate(String fhirPayload, Operations operation, String recipientCode, Map<String,Object> output);
+    boolean generate(String fhirPayload, Operations operation, String recipientCode, Map<String,Object> output, HCXIntegrator hcxIntegrator);
 
     /**
      * Generates the JWE Payload using FHIR Object, Operation and other parameters part of input. This method is used to handle the on_action API request.
@@ -79,6 +81,7 @@ public interface OutgoingRequest {
      * @param actionJwe The JWE Payload from the incoming request for which the response JWE Payload created here.
      * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JEW Payload.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
+     * @param hcxIntegrator The HCX Integrator object to get config variables.
      * <ol>
      *    <li>output -
      *    <pre>
@@ -114,7 +117,7 @@ public interface OutgoingRequest {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean generate(String fhirPayload, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output);
+    boolean generate(String fhirPayload, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output, HCXIntegrator hcxIntegrator);
 
     /**
      * Validates the FHIR Object structure and required attributes using HCX FHIR IG.

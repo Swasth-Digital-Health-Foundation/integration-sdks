@@ -21,8 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         configMap.put("encryptionPrivateKey", "Mz-VPPyU4RlcuYv1IwIvzw");
         configMap.put("igUrl", "http://localhost:8090");
 
-        HCXIntegrator.init(configMap);
-        HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance();
+        HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance(configMap);
 
         assertEquals("http://localhost:8095", hcxIntegrator.getHCXProtocolBasePath());
         assertEquals("participant@01", hcxIntegrator.getParticipantCode());
@@ -33,25 +32,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         assertEquals("http://localhost:8090", hcxIntegrator.getIGUrl());
 
         configMap.put("password", "67890");
-        HCXIntegrator.init(configMap);
+        hcxIntegrator = HCXIntegrator.getInstance(configMap);
 
         assertEquals("67890", hcxIntegrator.getPassword());
-    }
-
-    @Test
-    void testInitializeConfigString() throws Exception {
-        String configStr = "{\"password\":\"12345\",\"protocolBasePath\":\"http://localhost:8095\",\"igUrl\":\"http://localhost:8090\",\"authBasePath\":\"http://localhost:8080\",\"encryptionPrivateKey\":\"Mz-VPPyU4RlcuYv1IwIvzw\",\"participantCode\":\"participant@01\",\"username\":\"participant@gmail.com\"}";
-
-        HCXIntegrator.init(configStr);
-        HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance();
-
-        assertEquals("http://localhost:8095", hcxIntegrator.getHCXProtocolBasePath());
-        assertEquals("participant@01", hcxIntegrator.getParticipantCode());
-        assertEquals("http://localhost:8080", hcxIntegrator.getAuthBasePath());
-        assertEquals("participant@gmail.com", hcxIntegrator.getUsername());
-        assertEquals("12345", hcxIntegrator.getPassword());
-        assertEquals("Mz-VPPyU4RlcuYv1IwIvzw", hcxIntegrator.getPrivateKey());
-        assertEquals("http://localhost:8090", hcxIntegrator.getIGUrl());
     }
 
 

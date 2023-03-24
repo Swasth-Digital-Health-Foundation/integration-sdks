@@ -2,6 +2,9 @@ package io.hcxprotocol.init;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import io.hcxprotocol.impl.HCXIncomingRequest;
+import io.hcxprotocol.impl.HCXOutgoingRequest;
+import io.hcxprotocol.utils.Operations;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
@@ -12,39 +15,38 @@ import java.util.Map;
  * The methods and variables to access the configuration. Enumeration of error codes and operations.
  */
 public class HCXIntegrator {
-    static  HCXIntegrator hcxIntegrator = null;
 
     private static Config config = null;
+
+    private static HCXIntegrator hcxIntegrator = null;
 
     private HCXIntegrator() {
     }
 
-    public static HCXIntegrator getInstance() throws Exception {
-        if(config == null)
-            throw new Exception("Please initialize the configuration variables, in order to initialize the SDK");
-        validateConfig();
-        if (hcxIntegrator == null)
-            hcxIntegrator = new HCXIntegrator();
-        return hcxIntegrator;
-    }
-    
     /**
      * This method is to initialize config factory by passing the configuration as Map.
      *
      * @param configMap A Map that contains configuration variables and its values.
      */
-    public static void init(Map<String,Object> configMap) {
+    public static HCXIntegrator getInstance(Map<String,Object> configMap) throws Exception {
         config = ConfigFactory.parseMap(configMap);
+        if(config == null)
+            throw new Exception("Please initialize the configuration variables, in order to initialize the SDK");
+        validateConfig();
+        hcxIntegrator = new HCXIntegrator();
+        return hcxIntegrator;
     }
 
+    public boolean processIncoming(String jwePayload, Operations operation, Map<String, Object> output) throws Exception {
+        return new HCXIncomingRequest().process(jwePayload, operation, output, hcxIntegrator);
+    }
 
-    /**
-     * This method is to initialize config factory by passing the configuration as JSON String.
-     *
-     * @param configStr A String that contains configuration variables and its values in a JSON format.
-     */
-    public static void init(String configStr) {
-        config = ConfigFactory.parseString(configStr);
+    public boolean processOutgoing(String fhirPayload, Operations operation, String recipientCode, Map<String,Object> output) throws Exception {
+        return new HCXOutgoingRequest().generate(fhirPayload, operation, recipientCode, output, hcxIntegrator);
+    }
+
+    public boolean processOutgoing(String fhirPayload, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output) throws Exception {
+        return new HCXOutgoingRequest().generate(fhirPayload, operation, actionJwe, onActionStatus, output, hcxIntegrator);
     }
 
     private static void validateConfig() throws Exception {
