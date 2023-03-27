@@ -27,15 +27,15 @@ public class Utils {
     private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 
     // TODO: In the initial version we are not handling the token caching, it will be handled in the next version
-    public static String generateToken(HCXIntegrator hcxIntegrator) throws Exception {
+    public static String generateToken(String username, String password, String authBasePath) throws Exception {
         Map<String,String> headers = new HashMap<>();
         headers.put("content-type", "application/x-www-form-urlencoded");
         Map<String,Object> fields = new HashMap<>();
         fields.put("client_id", "registry-frontend");
-        fields.put("username", hcxIntegrator.getUsername());
-        fields.put("password", hcxIntegrator.getPassword());
+        fields.put("username", username);
+        fields.put("password", password);
         fields.put("grant_type", "password");
-        HttpResponse response = HttpUtils.post(hcxIntegrator.getAuthBasePath(), headers, fields);
+        HttpResponse response = HttpUtils.post(authBasePath, headers, fields);
         Map<String,Object> respMap = JSONUtils.deserialize(response.getBody(), Map.class);
         String token;
         if (response.getStatus() == 200) {
@@ -50,11 +50,11 @@ public class Utils {
         return token;
     }
 
-    public static Map<String,Object> searchRegistry(String participantCode, HCXIntegrator hcxIntegrator) throws Exception {
+    public static Map<String,Object> searchRegistry(String participantCode, String token, String protocolBasePath) throws Exception {
         String filter = "{\"filters\":{\"participant_code\":{\"eq\":\"" + participantCode + "\"}}}";
         Map<String,String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, "Bearer " + generateToken(hcxIntegrator));
-        HttpResponse response = HttpUtils.post(hcxIntegrator.getHCXProtocolBasePath() + "/participant/search", headers, filter);
+        headers.put(Constants.AUTHORIZATION, "Bearer " + token);
+        HttpResponse response = HttpUtils.post(protocolBasePath + "/participant/search", headers, filter);
         Map<String,Object> respMap = JSONUtils.deserialize(response.getBody(), Map.class);
         List<Map<String,Object>> details;
         if (response.getStatus() == 200) {

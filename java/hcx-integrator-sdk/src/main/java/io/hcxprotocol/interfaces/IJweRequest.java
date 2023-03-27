@@ -1,13 +1,15 @@
-package io.hcxprotocol.jwe;
+package io.hcxprotocol.interfaces;
 
 import com.nimbusds.jose.JOSEException;
 
-import java.security.interfaces.RSAPrivateKey;
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.util.Map;
 
-public interface JweRequestInterface {
+public interface IJweRequest {
 
     public Map<String, String> getEncryptedObject();
 
@@ -15,6 +17,6 @@ public interface JweRequestInterface {
     public Map<String, Object> getPayload();
 
     public void encryptRequest(RSAPublicKey rsaPublicKey) throws JOSEException;
-    public void decryptRequest(RSAPrivateKey rsaPrivateKey) throws ParseException, JOSEException;
+    public void decryptRequest(String PrivateKey) throws ParseException, IOException, NoSuchAlgorithmException, InvalidKeySpecException, JOSEException;
 
 }

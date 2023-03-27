@@ -1,22 +1,19 @@
 package io.hcxprotocol.impl;
 
-import io.hcxprotocol.dto.JWERequest;
-import io.hcxprotocol.init.HCXIntegrator;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.hcxprotocol.dto.ResponseError;
 import io.hcxprotocol.exception.ErrorCodes;
-import io.hcxprotocol.helper.ValidateHelper;
 import io.hcxprotocol.helper.FhirPayload;
+import io.hcxprotocol.helper.ValidateHelper;
 import io.hcxprotocol.interfaces.IncomingRequest;
 import io.hcxprotocol.jwe.JweRequest;
 import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
-import io.hcxprotocol.utils.Utils;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 import java.io.*;
 import java.security.KeyFactory;
@@ -24,6 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,20 +43,19 @@ import java.util.Map;
 public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HCXIncomingRequest.class);
-    private HCXIntegrator hcxIntegrator = null;
 
-    public HCXIncomingRequest() throws Exception {
+    public HCXIncomingRequest() {
     }
 
     @Override
-    public boolean process(String jwePayload, Operations operation, Map<String, Object> output, HCXIntegrator hcxIntegrator) {
-        this.hcxIntegrator = hcxIntegrator;
+    public boolean process(String jwePayload, Operations operation, String privateKey, Map<String, Object> output) throws JsonProcessingException {
         Map<String, Object> error = new HashMap<>();
         boolean result = false;
+        jwePayload = formatPayload(jwePayload);
         logger.info("Processing incoming request has started :: operation: {}", operation);
         if (!validateRequest(jwePayload, operation, error)) {
             sendResponse(error, output);
-        } else if (!decryptPayload(jwePayload, output)) {
+        } else if (!decryptPayload(jwePayload, privateKey, output)) {
             sendResponse(output, output);
         } else if (!validatePayload((String) output.get(Constants.FHIR_PAYLOAD), operation, error)) {
             sendResponse(error, output);
@@ -74,10 +71,10 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     }
 
     @Override
-    public boolean decryptPayload(String jwePayload, Map<String, Object> output) {
+    public boolean decryptPayload(String jwePayload, String privateKey, Map<String, Object> output) {
         try {
             JweRequest jweRequest = new JweRequest(JSONUtils.deserialize(jwePayload, Map.class));
-            jweRequest.decryptRequest(getRsaPrivateKey(hcxIntegrator.getPrivateKey()));
+            jweRequest.decryptRequest(privateKey);
             output.put(Constants.HEADERS, jweRequest.getHeaders());
             output.put(Constants.FHIR_PAYLOAD, JSONUtils.serialize(jweRequest.getPayload()));
             logger.info("Request is decrypted successfully");
@@ -87,16 +84,6 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             output.put(ErrorCodes.ERR_INVALID_ENCRYPTION.toString(), e.getMessage());
             return false;
         }
-    }
-
-    private static RSAPrivateKey getRsaPrivateKey(String privateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        InputStream stream = new ByteArrayInputStream(privateKey.getBytes());
-        Reader fileReader = new InputStreamReader(stream);
-        PemReader pemReader = new PemReader(fileReader);
-        PemObject pemObject = pemReader.readPemObject();
-        PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(pemObject.getContent());
-        KeyFactory factory = KeyFactory.getInstance("RSA");
-        return (RSAPrivateKey) factory.generatePrivate(privateKeySpec);
     }
 
     @Override
@@ -119,5 +106,13 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
         }
         output.put(Constants.RESPONSE_OBJ, responseObj);
         return result;
+    }
+
+    private String formatPayload(String payload) throws JsonProcessingException {
+        if (payload.contains(Constants.PAYLOAD) || payload.contains(Constants.HCX_API_CALL_ID)){
+            return payload;
+        } else {
+            return JSONUtils.serialize(Collections.singletonMap(Constants.PAYLOAD, payload));
+        }
     }
 }

@@ -1,5 +1,7 @@
 package io.hcxprotocol.interfaces;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.typesafe.config.Config;
 import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.utils.Operations;
 
@@ -20,7 +22,6 @@ public interface IncomingRequest {
      * @param jwePayload The JWE payload from the incoming API request body.
      * @param operation The HCX operation name.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload processing.
-     * @param hcxIntegrator The HCX Integrator object to get config variables.
      * <ol>
      *    <li>output -
      *    <pre>
@@ -58,7 +59,7 @@ public interface IncomingRequest {
      *  </ol>
      *
      */
-    boolean process(String jwePayload, Operations operation, Map<String,Object> output, HCXIntegrator hcxIntegrator);
+    boolean process(String jwePayload, Operations operation, String privateKey, Map<String,Object> output) throws JsonProcessingException;
 
     /**
      * Validates the HCX Protocol Headers from the JWE Payload.
@@ -106,7 +107,7 @@ public interface IncomingRequest {
      *     <li>false - Decryption is failure.</li>
      * </ol>
      */
-    boolean decryptPayload(String jwePayload, Map<String,Object> output);
+    boolean decryptPayload(String jwePayload, String privateKey, Map<String,Object> output);
 
     /**
      * Validates the FHIR Object structure and required attributes using HCX FHIR IG.
