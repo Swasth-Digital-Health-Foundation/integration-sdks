@@ -1,5 +1,6 @@
 package io.hcxprotocol.impl;
 
+import com.typesafe.config.Config;
 import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.dto.HttpResponse;
 import io.hcxprotocol.exception.ErrorCodes;
@@ -55,20 +56,20 @@ import java.util.UUID;
 public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HCXOutgoingRequest.class);
-    private HCXIntegrator hcxIntegrator = null;
+    private Config config = null;
 
-    public HCXOutgoingRequest() throws Exception {
+    public HCXOutgoingRequest() {
     }
 
     @Override
-    public boolean generate(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output, HCXIntegrator hcxIntegrator){
-        this.hcxIntegrator = hcxIntegrator;
+    public boolean generate(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output, Config config){
+        this.config = config;
         return process(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", "", output);
     }
 
     @Override
-    public boolean generate(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, HCXIntegrator hcxIntegrator){
-        this.hcxIntegrator = hcxIntegrator;
+    public boolean generate(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, Config config){
+        this.config = config;
         return process(fhirPayload, operation, "", apiCallId, correlationId, actionJwe, onActionStatus, output);
     }
 
@@ -111,7 +112,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
                 apiCallId = UUID.randomUUID().toString();
             headers.put(Constants.HCX_API_CALL_ID, apiCallId);
             if (!StringUtils.isEmpty(recipientCode)) {
-                headers.put(Constants.HCX_SENDER_CODE, hcxIntegrator.getParticipantCode());
+                headers.put(Constants.HCX_SENDER_CODE, config.getString("participantCode"));
                 headers.put(Constants.HCX_RECIPIENT_CODE, recipientCode);
                 if(StringUtils.isEmpty(correlationId))
                     correlationId = UUID.randomUUID().toString();
@@ -137,7 +138,8 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     @Override
     public boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output) {
         try {
-            String publicKeyUrl = (String) Utils.searchRegistry(headers.get(Constants.HCX_RECIPIENT_CODE).toString(), hcxIntegrator).get(Constants.ENCRYPTION_CERT);
+            String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH));
+            String publicKeyUrl = (String) Utils.searchRegistry(headers.get(Constants.HCX_RECIPIENT_CODE).toString(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
             String certificate = IOUtils.toString(new URL(publicKeyUrl), StandardCharsets.UTF_8.toString());
             InputStream stream = new ByteArrayInputStream(certificate.getBytes());
             Reader fileReader = new InputStreamReader(stream);
@@ -154,12 +156,12 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
         }
     }
 
-    // we are handling the Exception in processFunction method
+    // Exception is handled in processFunction method
     @Override
     public boolean initializeHCXCall(String jwePayload, Operations operation, Map<String,Object> response) throws Exception {
         Map<String,String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(hcxIntegrator));
-        HttpResponse hcxResponse = HttpUtils.post(hcxIntegrator.getHCXProtocolBasePath() + operation.getOperation(), headers, jwePayload);
+        headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH)));
+        HttpResponse hcxResponse = HttpUtils.post(config.getString(Constants.PROTOCOL_BASE_PATH) + operation.getOperation(), headers, jwePayload);
         response.put(Constants.RESPONSE_OBJ, JSONUtils.deserialize(hcxResponse.getBody(), Map.class));
         int status = hcxResponse.getStatus();
         boolean result = false;

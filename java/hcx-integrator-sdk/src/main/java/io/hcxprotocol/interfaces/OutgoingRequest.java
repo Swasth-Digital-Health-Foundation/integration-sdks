@@ -2,6 +2,7 @@ package io.hcxprotocol.interfaces;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.typesafe.config.Config;
 import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.utils.Operations;
 
@@ -32,7 +33,7 @@ public interface OutgoingRequest {
      * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
      *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
-     * @param hcxIntegrator The HCX Integrator object to get config variables.
+     * @param config The config instance to get config variables.
      * <ol>
      *    <li>output -
      *    <pre>
@@ -68,7 +69,7 @@ public interface OutgoingRequest {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean generate(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output, HCXIntegrator hcxIntegrator);
+    boolean generate(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output, Config config);
 
     /**
      * Generates the JWE Payload using FHIR Object, Operation and other parameters part of input. This method is used to handle the on_action API request.
@@ -90,7 +91,7 @@ public interface OutgoingRequest {
      * @param actionJwe The JWE Payload from the incoming request for which the response JWE Payload created here.
      * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JEW Payload.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
-     * @param hcxIntegrator The HCX Integrator object to get config variables.
+     * @param config The config instance to get config variables.
      * <ol>
      *    <li>output -
      *    <pre>
@@ -126,7 +127,7 @@ public interface OutgoingRequest {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean generate(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, HCXIntegrator hcxIntegrator);
+    boolean generate(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, Config config);
 
     /**
      * Validates the FHIR Object structure and required attributes using HCX FHIR IG.
