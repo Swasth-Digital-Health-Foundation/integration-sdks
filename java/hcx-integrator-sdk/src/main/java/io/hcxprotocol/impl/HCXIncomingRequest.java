@@ -74,7 +74,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     public boolean decryptPayload(String jwePayload, String privateKey, Map<String, Object> output) {
         try {
             JweRequest jweRequest = new JweRequest(JSONUtils.deserialize(jwePayload, Map.class));
-            jweRequest.decryptRequest(getRsaPrivateKey(privateKey));
+            jweRequest.decryptRequest(privateKey);
             output.put(Constants.HEADERS, jweRequest.getHeaders());
             output.put(Constants.FHIR_PAYLOAD, JSONUtils.serialize(jweRequest.getPayload()));
             logger.info("Request is decrypted successfully");
@@ -84,16 +84,6 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             output.put(ErrorCodes.ERR_INVALID_ENCRYPTION.toString(), e.getMessage());
             return false;
         }
-    }
-
-    private static RSAPrivateKey getRsaPrivateKey(String privateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        InputStream stream = new ByteArrayInputStream(privateKey.getBytes());
-        Reader fileReader = new InputStreamReader(stream);
-        PemReader pemReader = new PemReader(fileReader);
-        PemObject pemObject = pemReader.readPemObject();
-        PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(pemObject.getContent());
-        KeyFactory factory = KeyFactory.getInstance("RSA");
-        return (RSAPrivateKey) factory.generatePrivate(privateKeySpec);
     }
 
     @Override
