@@ -150,6 +150,7 @@ public interface OutgoingRequest {
     /**
      * Creates the HCX Protocol Headers using the input parameters.
      *
+     * @param senderCode The sender code from HCX Participant registry.
      * @param recipientCode The recipient code from HCX Participant registry.
      * @param apiCallId The unique id for each request, to use the custom identifier, pass the same or else
      *                  pass empty string("") and method will generate a UUID and uses it.
@@ -165,7 +166,7 @@ public interface OutgoingRequest {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean createHeader(String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error);
+    boolean createHeader(String senderCode, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error);
 
     /**
      * It generates JWE Payload using the HCX Protocol Headers and FHIR object. The JWE Payload follows RFC7516.
@@ -173,6 +174,7 @@ public interface OutgoingRequest {
      * @param headers The HCX Protocol headers to create the JWE Payload.
      * @param fhirPayload The FHIR object created by the participant system.
      * @param output A wrapper map to collect the JWE Payload or the error details in case of failure.
+     * @param config The config instance to get config variables.
      * <ol>
      *    <li>success output -
      *    <pre>
@@ -193,7 +195,7 @@ public interface OutgoingRequest {
      *     <li>false - It is failure.</li>
      * </ol>
      */
-    boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output);
+    boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output, Config config);
 
     /**
      * Uses the input parameters and the SDK configuration to call HCX Gateway REST API based on the operation.
@@ -201,6 +203,7 @@ public interface OutgoingRequest {
      * @param jwePayload The JWE Payload created using HCX Protocol Headers and FHIR object.
      * @param operation The HCX operation or action defined by specs to understand the functional behaviour.
      * @param response A wrapper map to collect response of the REST API call.
+     * @param config The config instance to get config variables.
      * <ol>
      *    <li>success response -
      *    <pre>
@@ -230,6 +233,6 @@ public interface OutgoingRequest {
      *
      * @throws JsonProcessingException The exception throws when it is having issues in parsing the JSON object.
      */
-    boolean initializeHCXCall(String jwePayload, Operations operation, Map<String,Object> response) throws Exception;
+    boolean initializeHCXCall(String jwePayload, Operations operation, Map<String,Object> response, Config config) throws Exception;
 
 }

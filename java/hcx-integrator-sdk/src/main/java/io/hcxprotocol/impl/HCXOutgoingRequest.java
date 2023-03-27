@@ -56,24 +56,21 @@ import java.util.UUID;
 public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HCXOutgoingRequest.class);
-    private Config config = null;
 
     public HCXOutgoingRequest() {
     }
 
     @Override
     public boolean generate(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output, Config config){
-        this.config = config;
-        return process(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", "", output);
+        return process(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", "", output, config);
     }
 
     @Override
     public boolean generate(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, Config config){
-        this.config = config;
-        return process(fhirPayload, operation, "", apiCallId, correlationId, actionJwe, onActionStatus, output);
+        return process(fhirPayload, operation, "", apiCallId, correlationId, actionJwe, onActionStatus, output, config);
     }
 
-    private boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output){
+    private boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, Config config){
         boolean result = false;
         try {
             Map<String, Object> error = new HashMap<>();
@@ -82,12 +79,12 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             logger.info("Processing outgoing request has started :: operation: {}", operation);
             if (!validatePayload(fhirPayload, operation, error)) {
                 output.putAll(error);
-            } else if (!createHeader(recipientCode, apiCallId, correlationId, actionJwe, onActionStatus, headers, error)) {
+            } else if (!createHeader(config.getString(Constants.PARTICIPANT_CODE), recipientCode, apiCallId, correlationId, actionJwe, onActionStatus, headers, error)) {
                 output.putAll(error);
-            } else if (!encryptPayload(headers, fhirPayload, output)) {
+            } else if (!encryptPayload(headers, fhirPayload, output, config)) {
                 output.putAll(error);
             } else {
-                result = initializeHCXCall(JSONUtils.serialize(output), operation, response);
+                result = initializeHCXCall(JSONUtils.serialize(output), operation, response, config);
                 output.putAll(response);
             }
             if(output.containsKey(Constants.ERROR) || output.containsKey(ErrorCodes.ERR_DOMAIN_PROCESSING.toString()))
@@ -103,7 +100,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     }
 
     @Override
-    public boolean createHeader(String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error) {
+    public boolean createHeader(String senderCode, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error) {
         try {
             headers.put(Constants.ALG, Constants.A256GCM);
             headers.put(Constants.ENC, Constants.RSA_OAEP);
@@ -112,7 +109,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
                 apiCallId = UUID.randomUUID().toString();
             headers.put(Constants.HCX_API_CALL_ID, apiCallId);
             if (!StringUtils.isEmpty(recipientCode)) {
-                headers.put(Constants.HCX_SENDER_CODE, config.getString(Constants.PARTICIPANT_CODE));
+                headers.put(Constants.HCX_SENDER_CODE, senderCode);
                 headers.put(Constants.HCX_RECIPIENT_CODE, recipientCode);
                 if(StringUtils.isEmpty(correlationId))
                     correlationId = UUID.randomUUID().toString();
@@ -136,7 +133,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     }
 
     @Override
-    public boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output) {
+    public boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output, Config config) {
         try {
             String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH));
             String publicKeyUrl = (String) Utils.searchRegistry(headers.get(Constants.HCX_RECIPIENT_CODE).toString(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
@@ -158,7 +155,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     // Exception is handled in processFunction method
     @Override
-    public boolean initializeHCXCall(String jwePayload, Operations operation, Map<String,Object> response) throws Exception {
+    public boolean initializeHCXCall(String jwePayload, Operations operation, Map<String,Object> response, Config config) throws Exception {
         Map<String,String> headers = new HashMap<>();
         headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH)));
         HttpResponse hcxResponse = HttpUtils.post(config.getString(Constants.PROTOCOL_BASE_PATH) + operation.getOperation(), headers, jwePayload);
