@@ -3,7 +3,6 @@ package io.hcxprotocol.interfaces;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.typesafe.config.Config;
-import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.utils.Operations;
 
 import java.util.Map;

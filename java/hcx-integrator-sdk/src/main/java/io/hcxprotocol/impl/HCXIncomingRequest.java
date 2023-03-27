@@ -10,17 +10,9 @@ import io.hcxprotocol.jwe.JweRequest;
 import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
-import org.bouncycastle.util.io.pem.PemObject;
-import org.bouncycastle.util.io.pem.PemReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.*;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
