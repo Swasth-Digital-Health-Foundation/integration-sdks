@@ -112,7 +112,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
                 apiCallId = UUID.randomUUID().toString();
             headers.put(Constants.HCX_API_CALL_ID, apiCallId);
             if (!StringUtils.isEmpty(recipientCode)) {
-                headers.put(Constants.HCX_SENDER_CODE, config.getString("participantCode"));
+                headers.put(Constants.HCX_SENDER_CODE, config.getString(Constants.PARTICIPANT_CODE));
                 headers.put(Constants.HCX_RECIPIENT_CODE, recipientCode);
                 if(StringUtils.isEmpty(correlationId))
                     correlationId = UUID.randomUUID().toString();
