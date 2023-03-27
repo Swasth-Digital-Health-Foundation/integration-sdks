@@ -29,7 +29,7 @@ public interface OutgoingRequest {
      * @param recipientCode The recipient code from HCX Participant registry.
      * @param apiCallId The unique id for each request, to use the custom identifier, pass the same or else
      *                  pass an empty string("") and method will generate a UUID and uses it.
-     * @param correlationId The unique id for all the messages (requests & responses) that are involved in processing of one cycle,
+     * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
      *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
      * @param hcxIntegrator The HCX Integrator object to get config variables.
@@ -85,7 +85,7 @@ public interface OutgoingRequest {
      * @param operation The HCX operation or action defined by specs to understand the functional behaviour.
      * @param apiCallId The unique id for each request, to use the custom identifier, pass the same or else
      *                  pass empty string("") and method will generate a UUID and uses it.
-     * @param correlationId The unique id for all the messages (requests & responses) that are involved in processing of one cycle,
+     * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
      *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
      * @param actionJwe The JWE Payload from the incoming request for which the response JWE Payload created here.
      * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JEW Payload.
@@ -152,7 +152,7 @@ public interface OutgoingRequest {
      * @param recipientCode The recipient code from HCX Participant registry.
      * @param apiCallId The unique id for each request, to use the custom identifier, pass the same or else
      *                  pass empty string("") and method will generate a UUID and uses it.
-     * @param correlationId The unique id for all the messages (requests & responses) that are involved in processing of one cycle,
+     * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
      *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
      * @param actionJwe The JWE Payload from the incoming request for which the response JWE Payload created here.
      * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JEW Payload.
