@@ -7,9 +7,9 @@ public interface ResponseMessage {
 
      String INVALID_PAYLOAD_LENGTH_ERR_MSG = "Mandatory elements of JWE token are missing.Should have all 5 elements";
      String INVALID_PAYLOAD_VALUES_ERR_MSG = "Payload contains null or empty values";
-     String INVALID_API_CALL_ID_ERR_MSG = "API call id should be a valid UUID";
-     String INVALID_CORRELATION_ID_ERR_MSG = "Correlation id should be a valid UUID";
-     String INVALID_WORKFLOW_ID_ERR_MSG = "Workflow id should be a valid UUID";
+     String INVALID_API_CALL_ID_ERR_MSG = "Api call id cannot be null, empty and other than 'String'";
+     String INVALID_CORRELATION_ID_ERR_MSG = "Correlation id cannot be null, empty and other than 'String'";
+     String INVALID_WORKFLOW_ID_ERR_MSG = "Workflow id should be a string";
      String INVALID_TIMESTAMP_ERR_MSG = "Timestamp cannot be in future date";
      String INVALID_DEBUG_FLAG_ERR_MSG = "Debug flag cannot be null, empty and other than 'String'";
      String INVALID_DEBUG_FLAG_RANGE_ERR_MSG = "Debug flag cannot be other than {0}";

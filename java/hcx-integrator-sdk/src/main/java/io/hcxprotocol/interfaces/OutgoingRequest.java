@@ -26,6 +26,11 @@ public interface OutgoingRequest {
      * </ul>
      * @param fhirPayload The FHIR object created by the participant system.
      * @param operation The HCX operation or action defined by specs to understand the functional behaviour.
+     * @param recipientCode The recipient code from HCX Participant registry.
+     * @param apiCallId The unique id for each request, to use the custom identifier, pass the same or else
+     *                  pass an empty string("") and method will generate a UUID and uses it.
+     * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
+     *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
      * @param hcxIntegrator The HCX Integrator object to get config variables.
      * <ol>
@@ -63,7 +68,7 @@ public interface OutgoingRequest {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean generate(String fhirPayload, Operations operation, String recipientCode, Map<String,Object> output, HCXIntegrator hcxIntegrator);
+    boolean generate(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output, HCXIntegrator hcxIntegrator);
 
     /**
      * Generates the JWE Payload using FHIR Object, Operation and other parameters part of input. This method is used to handle the on_action API request.
@@ -78,6 +83,10 @@ public interface OutgoingRequest {
      * </ul>
      * @param fhirPayload The FHIR object created by the participant system.
      * @param operation The HCX operation or action defined by specs to understand the functional behaviour.
+     * @param apiCallId The unique id for each request, to use the custom identifier, pass the same or else
+     *                  pass empty string("") and method will generate a UUID and uses it.
+     * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
+     *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
      * @param actionJwe The JWE Payload from the incoming request for which the response JWE Payload created here.
      * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JEW Payload.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
@@ -117,7 +126,7 @@ public interface OutgoingRequest {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean generate(String fhirPayload, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output, HCXIntegrator hcxIntegrator);
+    boolean generate(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, HCXIntegrator hcxIntegrator);
 
     /**
      * Validates the FHIR Object structure and required attributes using HCX FHIR IG.
@@ -141,6 +150,10 @@ public interface OutgoingRequest {
      * Creates the HCX Protocol Headers using the input parameters.
      *
      * @param recipientCode The recipient code from HCX Participant registry.
+     * @param apiCallId The unique id for each request, to use the custom identifier, pass the same or else
+     *                  pass empty string("") and method will generate a UUID and uses it.
+     * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
+     *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
      * @param actionJwe The JWE Payload from the incoming request for which the response JWE Payload created here.
      * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JEW Payload.
      * @param headers The HCX Protocol headers to create the JWE Payload.
@@ -151,7 +164,7 @@ public interface OutgoingRequest {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean createHeader(String recipientCode, String actionJwe, String onActionStatus, Map<String,Object> headers, Map<String,Object> error);
+    boolean createHeader(String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error);
 
     /**
      * It generates JWE Payload using the HCX Protocol Headers and FHIR object. The JWE Payload follows RFC7516.

@@ -61,18 +61,18 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     }
 
     @Override
-    public boolean generate(String fhirPayload, Operations operation, String recipientCode, Map<String,Object> output, HCXIntegrator hcxIntegrator){
+    public boolean generate(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output, HCXIntegrator hcxIntegrator){
         this.hcxIntegrator = hcxIntegrator;
-        return process(fhirPayload, operation, recipientCode, "", "", output);
+        return process(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", "", output);
     }
 
     @Override
-    public boolean generate(String fhirPayload, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output, HCXIntegrator hcxIntegrator){
+    public boolean generate(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, HCXIntegrator hcxIntegrator){
         this.hcxIntegrator = hcxIntegrator;
-        return process(fhirPayload, operation, "", actionJwe, onActionStatus, output);
+        return process(fhirPayload, operation, "", apiCallId, correlationId, actionJwe, onActionStatus, output);
     }
 
-    private boolean process(String fhirPayload, Operations operation, String recipientCode, String actionJwe, String onActionStatus, Map<String,Object> output){
+    private boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output){
         boolean result = false;
         try {
             Map<String, Object> error = new HashMap<>();
@@ -81,7 +81,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             logger.info("Processing outgoing request has started :: operation: {}", operation);
             if (!validatePayload(fhirPayload, operation, error)) {
                 output.putAll(error);
-            } else if (!createHeader(recipientCode, actionJwe, onActionStatus, headers, error)) {
+            } else if (!createHeader(recipientCode, apiCallId, correlationId, actionJwe, onActionStatus, headers, error)) {
                 output.putAll(error);
             } else if (!encryptPayload(headers, fhirPayload, output)) {
                 output.putAll(error);
@@ -102,16 +102,20 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     }
 
     @Override
-    public boolean createHeader(String recipientCode, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error) {
+    public boolean createHeader(String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error) {
         try {
             headers.put(Constants.ALG, Constants.A256GCM);
             headers.put(Constants.ENC, Constants.RSA_OAEP);
-            headers.put(Constants.HCX_API_CALL_ID, UUID.randomUUID().toString());
             headers.put(Constants.HCX_TIMESTAMP,  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()));
+            if (StringUtils.isEmpty(apiCallId))
+                apiCallId = UUID.randomUUID().toString();
+            headers.put(Constants.HCX_API_CALL_ID, apiCallId);
             if (!StringUtils.isEmpty(recipientCode)) {
                 headers.put(Constants.HCX_SENDER_CODE, hcxIntegrator.getParticipantCode());
                 headers.put(Constants.HCX_RECIPIENT_CODE, recipientCode);
-                headers.put(Constants.HCX_CORRELATION_ID, UUID.randomUUID().toString());
+                if(StringUtils.isEmpty(correlationId))
+                    correlationId = UUID.randomUUID().toString();
+                headers.put(Constants.HCX_CORRELATION_ID, correlationId);
             } else {
                 Map<String,Object> actionHeaders = JSONUtils.decodeBase64String(actionJwe.split("\\.")[0], Map.class);
                 headers.put(Constants.HCX_SENDER_CODE,  actionHeaders.get(Constants.HCX_RECIPIENT_CODE));

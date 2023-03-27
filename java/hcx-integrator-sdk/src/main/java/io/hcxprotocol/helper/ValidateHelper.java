@@ -65,8 +65,7 @@ public class ValidateHelper {
             Map<String, Object> requestBody = JSONUtils.deserialize(payload, HashMap.class);
             if (requestBody.containsKey(PAYLOAD)) {
                 if (validateJWERequest(operation, error, requestBody)) return false;
-            }
-            else {
+            } else {
                 if (!operation.toString().contains("ON_")) {
                     error.put(ErrorCodes.ERR_INVALID_PAYLOAD.toString(), INVALID_JSON_REQUEST_BODY_ERR_MSG);
                     return false;
