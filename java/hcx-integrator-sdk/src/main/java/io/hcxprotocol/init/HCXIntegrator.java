@@ -41,12 +41,12 @@ public class HCXIntegrator {
         return new HCXIncomingRequest().process(jwePayload, operation, output, hcxIntegrator);
     }
 
-    public boolean processOutgoing(String fhirPayload, Operations operation, String recipientCode, Map<String,Object> output) throws Exception {
-        return new HCXOutgoingRequest().generate(fhirPayload, operation, recipientCode, output, hcxIntegrator);
+    public boolean processOutgoing(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output) throws Exception {
+        return new HCXOutgoingRequest().generate(fhirPayload, operation, recipientCode, apiCallId, correlationId, output, hcxIntegrator);
     }
 
-    public boolean processOutgoing(String fhirPayload, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output) throws Exception {
-        return new HCXOutgoingRequest().generate(fhirPayload, operation, actionJwe, onActionStatus, output, hcxIntegrator);
+    public boolean processOutgoing(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output) throws Exception {
+        return new HCXOutgoingRequest().generate(fhirPayload, operation, apiCallId, correlationId, actionJwe, onActionStatus, output, hcxIntegrator);
     }
 
     private static void validateConfig() throws Exception {
