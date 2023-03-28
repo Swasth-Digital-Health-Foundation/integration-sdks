@@ -1,11 +1,9 @@
 package io.hcxprotocol.utils;
 
-import io.hcxprotocol.exception.ClientException;
-import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.dto.HttpResponse;
+import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.exception.ServerException;
 import lombok.experimental.UtilityClass;
-import org.apache.http.client.ClientProtocolException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

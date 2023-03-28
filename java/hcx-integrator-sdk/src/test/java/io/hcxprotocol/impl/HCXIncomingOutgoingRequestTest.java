@@ -66,7 +66,7 @@ class HCXIncomingOutgoingRequestTest {
 
     @DisplayName("4")
     @Test
-    void HcxOutgoingErrorDetails() throws Exception {
+    void HcxOutgoingErrorDetails() {
         Map<String, Object> output = new HashMap<>();
         String errorDetails = "eyJlbmMiOiJBMjU2R0NNIiwiYWxnIjoiUlNBLU9BRVAiLCJ4LWhjeC1zZW5kZXJfY29kZSI6IjEtM2EzYmQ2OGEtODQ4YS00ZDUyLTllYzItMDdhOTJkNzY1ZmI0IiwieC1oY3gtcmVjaXBpZW50X2NvZGUiOiIxLTdiYTA3ZTMxLWNlYmItNDc1MS1iMmI3LWZlMDUwZDlkMmMwMCIsIngtaGN4LWNvcnJlbGF0aW9uX2lkIjoiODU0ZmU0MWItMjEyZi00YTU1LWJlMmYtMTBiZGE4ZGFkYzk1IiwieC1oY3gtdGltZXN0YW1wIjoiMjAyMi0wNS0xMlQxNToyNjoxOS42MjcrMDUzMCIsIngtaGN4LWFwaV9jYWxsX2lkIjoiYWExZTNmOWItOTBhNy00ZWQ5LTk4MjEtMDMwNmYxYmNiNzQ2IiwieC1oY3gtd29ya2Zsb3dfaWQiOiI1ZTkzNGY5MC0xMTFkLTRmMGItYjAxNi1jMjJkODIwNjc0ZTIiLCJ4LWhjeC1zdGF0dXMiOiJyZXNwb25zZS5jb21wbGV0ZSIsCiJ4LWhjeC1lcnJvcl9kZXRhaWxzIjp7CiJjb2RlIjoiRVJSX0lOVkFMSURfUEFZTE9BRCIsCiJtZXNzYWdlIjoiaW52YWxpZCByZXF1ZXN0IHBheWxvYWQiLAoidHJhY2UiOiIifX0";
         hcxIntegrator.processOutgoing(commonFhirPayload, Operations.COVERAGE_ELIGIBILITY_CHECK, "", "", errorDetails, "response.complete", output);
