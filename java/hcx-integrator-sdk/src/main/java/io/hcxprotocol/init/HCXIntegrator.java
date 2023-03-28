@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class contains the methods to initialize config variables and process incoming and outgoing requests.
+ * This class contains the methods to initialize configuration variables, process incoming and outgoing requests.
  */
 public class HCXIntegrator {
 
@@ -212,30 +212,52 @@ public class HCXIntegrator {
                 throw new Exception(prop + " is missing or has empty value, please add to the configuration.");
         }
     }
+
+    /**
+     * This method is to get the hcx protocol base path.
+     */
     public String getHCXProtocolBasePath() {
         return config.getString(Constants.PROTOCOL_BASE_PATH);
     }
 
+    /**
+     * This method is to get the participant code.
+     */
     public String getParticipantCode() {
         return config.getString(Constants.PARTICIPANT_CODE);
     }
 
+    /**
+     * This method is to get the authorization base path.
+     */
     public String getAuthBasePath() {
         return config.getString(Constants.AUTH_BASE_PATH);
     }
 
+    /**
+     * This method is to get the username.
+     */
     public String getUsername() {
         return config.getString(Constants.USERNAME);
     }
 
+    /**
+     * This method is to get the password.
+     */
     public String getPassword() {
         return config.getString(Constants.PASSWORD);
     }
 
+    /**
+     * This method is to get the encryption private key.
+     */
     public String getPrivateKey() {
         return config.getString(Constants.ENCRYPTION_PRIVATE_KEY);
     }
 
+    /**
+     * This method is to get the implementation guide url.
+     */
     public String getIGUrl() {
         return config.getString(Constants.IG_URL);
     }
