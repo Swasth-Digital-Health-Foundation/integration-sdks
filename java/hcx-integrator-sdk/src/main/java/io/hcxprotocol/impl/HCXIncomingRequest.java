@@ -36,9 +36,6 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HCXIncomingRequest.class);
 
-    public HCXIncomingRequest() {
-    }
-
     @Override
     public boolean process(String jwePayload, Operations operation, String privateKey, Map<String, Object> output) throws JsonProcessingException {
         Map<String, Object> error = new HashMap<>();

@@ -55,9 +55,6 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HCXOutgoingRequest.class);
 
-    public HCXOutgoingRequest() {
-    }
-
     @Override
     public boolean generate(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output, Config config){
         return process(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", "", output, config);

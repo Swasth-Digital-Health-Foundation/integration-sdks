@@ -19,6 +19,7 @@ public interface IncomingRequest {
      * </ol>
      * @param jwePayload The JWE payload from the incoming API request body.
      * @param operation The HCX operation name.
+     * @param privateKey The Private Key in String format.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload processing.
      * <ol>
      *    <li>output -
@@ -56,6 +57,7 @@ public interface IncomingRequest {
      *      <li>false - It is failure.</li>
      *  </ol>
      *
+     * @throws com.fasterxml.jackson.core.JsonProcessingException
      */
     boolean process(String jwePayload, Operations operation, String privateKey, Map<String,Object> output) throws JsonProcessingException;
 

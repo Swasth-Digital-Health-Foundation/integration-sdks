@@ -15,24 +15,16 @@ import java.util.Map;
 /**
  * This class contains the methods to initialize configuration variables, process incoming and outgoing requests.
  */
-public class HCXIntegrator {
-
-    private Config config;
-
-    public HCXIntegrator() {
-    }
+public class HCXIntegrator extends BaseIntegrator {
 
     /**
      * This method is to initialize config factory by passing the configuration as Map.
      *
-     * @param configMap A Map that contains configuration variables and its values.
+     * @param config A Map that contains configuration variables and its values.
      */
-    public static HCXIntegrator getInstance(Map<String,Object> configMap) throws Exception {
+    public static HCXIntegrator getInstance(Map<String,Object> config) throws Exception {
         HCXIntegrator hcxIntegrator = new HCXIntegrator();
-        hcxIntegrator.setConfig(ConfigFactory.parseMap(configMap));
-        if(hcxIntegrator.getConfig() == null)
-            throw new Exception("Please initialize the configuration variables, in order to initialize the SDK");
-        validateConfig(hcxIntegrator);
+        hcxIntegrator.setConfig(config);
         return hcxIntegrator;
     }
 
@@ -143,7 +135,7 @@ public class HCXIntegrator {
      * </ol>
      */
     public boolean processOutgoing(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output) {
-        return new HCXOutgoingRequest().generate(fhirPayload, operation, recipientCode, apiCallId, correlationId, output, config);
+        return new HCXOutgoingRequest().generate(fhirPayload, operation, recipientCode, apiCallId, correlationId, output, getConfig());
     }
 
     /**
@@ -202,72 +194,7 @@ public class HCXIntegrator {
      * </ol>
      */
     public boolean processOutgoing(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output) {
-        return new HCXOutgoingRequest().generate(fhirPayload, operation, apiCallId, correlationId, actionJwe, onActionStatus, output, config);
-    }
-
-    private static void validateConfig(HCXIntegrator hcxIntegrator) throws Exception {
-        List<String> props = Arrays.asList(Constants.PROTOCOL_BASE_PATH, Constants.PARTICIPANT_CODE, Constants.AUTH_BASE_PATH, Constants.USERNAME, Constants.PASSWORD, Constants.ENCRYPTION_PRIVATE_KEY, Constants.IG_URL);
-        for(String prop: props){
-            if(!hcxIntegrator.getConfig().hasPathOrNull(prop) || StringUtils.isEmpty(hcxIntegrator.getConfig().getString(prop)))
-                throw new Exception(prop + " is missing or has empty value, please add to the configuration.");
-        }
-    }
-
-    /**
-     * This method is to get the hcx protocol base path.
-     */
-    public String getHCXProtocolBasePath() {
-        return config.getString(Constants.PROTOCOL_BASE_PATH);
-    }
-
-    /**
-     * This method is to get the participant code.
-     */
-    public String getParticipantCode() {
-        return config.getString(Constants.PARTICIPANT_CODE);
-    }
-
-    /**
-     * This method is to get the authorization base path.
-     */
-    public String getAuthBasePath() {
-        return config.getString(Constants.AUTH_BASE_PATH);
-    }
-
-    /**
-     * This method is to get the username.
-     */
-    public String getUsername() {
-        return config.getString(Constants.USERNAME);
-    }
-
-    /**
-     * This method is to get the password.
-     */
-    public String getPassword() {
-        return config.getString(Constants.PASSWORD);
-    }
-
-    /**
-     * This method is to get the encryption private key.
-     */
-    public String getPrivateKey() {
-        return config.getString(Constants.ENCRYPTION_PRIVATE_KEY);
-    }
-
-    /**
-     * This method is to get the implementation guide url.
-     */
-    public String getIGUrl() {
-        return config.getString(Constants.IG_URL);
-    }
-
-    private void setConfig(Config config){
-        this.config = config;
-    }
-
-    private Config getConfig(){
-        return this.config;
+        return new HCXOutgoingRequest().generate(fhirPayload, operation, apiCallId, correlationId, actionJwe, onActionStatus, output, getConfig());
     }
 
 }
