@@ -2,11 +2,16 @@ package io.hcxprotocol.init;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.impl.HCXIncomingRequest;
 import io.hcxprotocol.impl.HCXOutgoingRequest;
+import io.hcxprotocol.interfaces.IncomingRequest;
+import io.hcxprotocol.interfaces.OutgoingRequest;
 import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.Operations;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +21,8 @@ import java.util.Map;
  * This class contains the methods to initialize configuration variables, process incoming and outgoing requests.
  */
 public class HCXIntegrator extends BaseIntegrator {
+
+    private static Logger logger = LoggerFactory.getLogger(HCXIntegrator.class);
 
     /**
      * This method is to initialize config factory by passing the configuration as Map.
@@ -77,7 +84,7 @@ public class HCXIntegrator extends BaseIntegrator {
      *
      */
     public boolean processIncoming(String jwePayload, Operations operation, Map<String, Object> output) throws Exception {
-        return new HCXIncomingRequest().process(jwePayload, operation, getPrivateKey(), output);
+        return getIncomingRequest().process(jwePayload, operation, getPrivateKey(), output);
     }
 
     /**
@@ -134,8 +141,8 @@ public class HCXIntegrator extends BaseIntegrator {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    public boolean processOutgoing(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output) {
-        return new HCXOutgoingRequest().generate(fhirPayload, operation, recipientCode, apiCallId, correlationId, output, getConfig());
+    public boolean processOutgoing(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output) throws ClientException {
+        return getOutgoingRequest().generate(fhirPayload, operation, recipientCode, apiCallId, correlationId, output, getConfig());
     }
 
     /**
@@ -193,8 +200,40 @@ public class HCXIntegrator extends BaseIntegrator {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    public boolean processOutgoing(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output) {
-        return new HCXOutgoingRequest().generate(fhirPayload, operation, apiCallId, correlationId, actionJwe, onActionStatus, output, getConfig());
+    public boolean processOutgoing(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output) throws ClientException {
+        return getOutgoingRequest().generate(fhirPayload, operation, apiCallId, correlationId, actionJwe, onActionStatus, output, getConfig());
+    }
+
+    private IncomingRequest getIncomingRequest() throws ClientException {
+        if (getConfig().hasPathOrNull(("incomingRequestClass"))) {
+            String className = getConfig().getString("incomingRequestClass");
+            try {
+                Class<?> clazz = Class.forName(className);
+                Object instance = clazz.newInstance();
+                logger.info("Incoming request class provided in the config exists :: class name: " + className);
+                return (IncomingRequest) instance;
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                logger.error("Incoming request class provided in the config map does not exist :: class name: " + className);
+                throw new ClientException("Incoming request class provided in the config map does not exist :: class name: " + className);
+            }
+        }
+        return new HCXIncomingRequest();
+    }
+
+    private OutgoingRequest getOutgoingRequest() throws ClientException {
+        if (getConfig().hasPathOrNull(("outgoingRequestClass"))) {
+            String className = getConfig().getString("outgoingRequestClass");
+            try {
+                Class<?> clazz = Class.forName(className);
+                Object instance = clazz.newInstance();
+                logger.info("Outgoing request class provided in the config exists :: class name: " + className);
+                return (OutgoingRequest) instance;
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                logger.error("Outgoing request class provided in the config map does not exist :: class name: " + className);
+                throw new ClientException("Outgoing request class provided in the config map does not exist :: class name: " + className);
+            }
+        }
+        return new HCXOutgoingRequest();
     }
 
 }
