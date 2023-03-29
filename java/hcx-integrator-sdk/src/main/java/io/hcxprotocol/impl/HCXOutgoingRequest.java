@@ -61,8 +61,8 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     }
 
     @Override
-    public boolean generate(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, Config config){
-        return process(fhirPayload, operation, "", apiCallId, correlationId, actionJwe, onActionStatus, output, config);
+    public boolean generate(String fhirPayload, String apiCallId, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output, Config config){
+        return process(fhirPayload, operation, "", apiCallId, "", actionJwe, onActionStatus, output, config);
     }
 
     private boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, Config config){

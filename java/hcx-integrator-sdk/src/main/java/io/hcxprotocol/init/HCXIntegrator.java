@@ -153,8 +153,6 @@ public class HCXIntegrator extends BaseIntegrator {
      * @param operation The HCX operation or action defined by specs to understand the functional behaviour.
      * @param apiCallId The unique id for each request, to use the custom identifier, pass the same or else
      *                  pass empty string("") and method will generate a UUID and uses it.
-     * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
-     *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
      * @param actionJwe The JWE Payload from the incoming request for which the response JWE Payload created here.
      * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JEW Payload.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
@@ -193,8 +191,8 @@ public class HCXIntegrator extends BaseIntegrator {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    public boolean processOutgoing(String fhirPayload, Operations operation, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output) {
-        return new HCXOutgoingRequest().generate(fhirPayload, operation, apiCallId, correlationId, actionJwe, onActionStatus, output, getConfig());
+    public boolean processOutgoing(String fhirPayload, String apiCallId, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output) {
+        return new HCXOutgoingRequest().generate(fhirPayload, apiCallId, operation, actionJwe, onActionStatus, output, getConfig());
     }
 
 }
