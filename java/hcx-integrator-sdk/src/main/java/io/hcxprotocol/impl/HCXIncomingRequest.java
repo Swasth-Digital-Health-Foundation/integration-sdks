@@ -37,7 +37,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     private static final Logger logger = LoggerFactory.getLogger(HCXIncomingRequest.class);
 
     @Override
-    public boolean process(String jwePayload, Operations operation, String privateKey, Map<String, Object> output) throws JsonProcessingException {
+    public boolean process(String jwePayload, Operations operation, String privateKey, Map<String, Object> output) throws Exception {
         Map<String, Object> error = new HashMap<>();
         boolean result = false;
         jwePayload = formatPayload(jwePayload);
@@ -60,7 +60,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     }
 
     @Override
-    public boolean decryptPayload(String jwePayload, String privateKey, Map<String, Object> output) {
+    public boolean decryptPayload(String jwePayload, String privateKey, Map<String, Object> output) throws Exception {
         try {
             JweRequest jweRequest = new JweRequest(JSONUtils.deserialize(jwePayload, Map.class));
             jweRequest.decryptRequest(privateKey);
@@ -69,9 +69,9 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             logger.info("Request is decrypted successfully");
             return true;
         } catch (Exception e) {
+            logger.error("Error while decrypting the payload: {}", e.getMessage());
             e.printStackTrace();
-            output.put(ErrorCodes.ERR_INVALID_ENCRYPTION.toString(), e.getMessage());
-            return false;
+            throw new Exception("Error while decrypting the payload: " + e.getMessage());
         }
     }
 

@@ -59,7 +59,7 @@ public interface IncomingRequest {
      *
      * @throws com.fasterxml.jackson.core.JsonProcessingException
      */
-    boolean process(String jwePayload, Operations operation, String privateKey, Map<String,Object> output) throws JsonProcessingException;
+    boolean process(String jwePayload, Operations operation, String privateKey, Map<String,Object> output) throws Exception;
 
     /**
      * Validates the HCX Protocol Headers from the JWE Payload.
@@ -107,7 +107,7 @@ public interface IncomingRequest {
      *     <li>false - Decryption is failure.</li>
      * </ol>
      */
-    boolean decryptPayload(String jwePayload, String privateKey, Map<String,Object> output);
+    boolean decryptPayload(String jwePayload, String privateKey, Map<String,Object> output) throws Exception;
 
     /**
      * Validates the FHIR Object structure and required attributes using HCX FHIR IG.

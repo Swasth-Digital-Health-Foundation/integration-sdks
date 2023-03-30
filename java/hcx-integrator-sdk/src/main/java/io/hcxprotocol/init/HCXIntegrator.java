@@ -1,15 +1,9 @@
 package io.hcxprotocol.init;
 
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import io.hcxprotocol.impl.HCXIncomingRequest;
 import io.hcxprotocol.impl.HCXOutgoingRequest;
-import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.Operations;
-import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -134,8 +128,8 @@ public class HCXIntegrator extends BaseIntegrator {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    public boolean processOutgoing(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output) {
-        return new HCXOutgoingRequest().generate(fhirPayload, operation, recipientCode, apiCallId, correlationId, output, getConfig());
+    public boolean processOutgoingRequest(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> domainHeaders, Map<String,Object> output) {
+        return new HCXOutgoingRequest().generateOutgoingRequest(fhirPayload, operation, recipientCode, apiCallId, correlationId, domainHeaders, output, getConfig());
     }
 
     /**
@@ -191,8 +185,8 @@ public class HCXIntegrator extends BaseIntegrator {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    public boolean processOutgoing(String fhirPayload, String apiCallId, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output) {
-        return new HCXOutgoingRequest().generate(fhirPayload, apiCallId, operation, actionJwe, onActionStatus, output, getConfig());
+    public boolean processOutgoingCallback(String fhirPayload, Operations operation, String apiCallId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output) {
+        return new HCXOutgoingRequest().generateOutgoingCallback(fhirPayload, operation, apiCallId, actionJwe, onActionStatus, domainHeaders, output, getConfig());
     }
 
 }
