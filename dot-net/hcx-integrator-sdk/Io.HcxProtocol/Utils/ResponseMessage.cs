@@ -1,5 +1,12 @@
 ﻿namespace Io.HcxProtocol.Utils
 {
+    /**
+     * Library  : Io.Hcx.Protocol
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     /// All the error messages used in HCX Integrator SDK.
     /// </summary>

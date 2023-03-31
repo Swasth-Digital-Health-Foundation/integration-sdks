@@ -4,10 +4,17 @@ using System.Text;
 
 namespace Io.HcxProtocol.Utils
 {
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
-    /// The JSON Utils to convert a Java object to JSON string and vise versa.
+    /// The JSON Utils to convert a .net Type object to JSON string and vise versa.
     /// </summary>
-    public class JSONUtils
+    public static class JSONUtils
     {
         public static T DecodeBase64String<T>(string encodedString)
         {

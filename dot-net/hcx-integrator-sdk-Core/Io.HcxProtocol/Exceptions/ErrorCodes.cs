@@ -1,5 +1,12 @@
 ﻿namespace Io.HcxProtocol.Exceptions
 {
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     /// The ENUM containing all the Error Codes defined in HCX Gateway.
     /// </summary>

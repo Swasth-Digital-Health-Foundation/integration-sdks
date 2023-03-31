@@ -13,6 +13,13 @@ using System.Security.Cryptography;
 
 namespace Io.HcxProtocol.Impl
 {
+    /**
+     * Library  : Io.Hcx.Protocol
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     ///     The <b>HCX Outgoing Request</b> class provide the methods to help in creating the JWE Payload and send the request to the sender system from HCX Gateway.
     /// </summary>
@@ -38,7 +45,7 @@ namespace Io.HcxProtocol.Impl
     ///         </item>
     ///     </list>
     /// </remarks>
-    public class HCXOutgoingRequest : FhirPayload, IOutgoingRequest
+    public class HCXOutgoingRequest : FhirPayload, IOutgoingRequest, IDisposable
     {
         public HCXOutgoingRequest() { }
 
@@ -149,5 +156,30 @@ namespace Io.HcxProtocol.Impl
             return hcxResponse.Status == 202;
         }
 
+        private bool disposedValue;
+        protected virtual void Dispose(bool disposing)
+        {
+            // check if already disposed
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // free managed objects here
+                }
+
+                // free unmanaged objects here
+
+                // set the bool value to true
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~HCXOutgoingRequest() { Dispose(disposing: false); }
     }
 }

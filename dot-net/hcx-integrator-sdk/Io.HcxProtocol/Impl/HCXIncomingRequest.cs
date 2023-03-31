@@ -13,6 +13,13 @@ using System.Security.Cryptography;
 
 namespace Io.HcxProtocol.Impl
 {
+    /**
+     * Library  : Io.Hcx.Protocol
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     ///     The <b>HCX Incoming Request</b> class provide the methods to help in processing the JWE Payload and extract FHIR Object.
     /// </summary>
@@ -26,7 +33,7 @@ namespace Io.HcxProtocol.Impl
     ///                  These methods are available for the integrator(s) to use them based on different scenario(s) or use cases.</item>
     ///     </list>
     /// </remarks>
-    public class HCXIncomingRequest : FhirPayload, IIncomingRequest
+    public class HCXIncomingRequest : FhirPayload, IIncomingRequest, IDisposable
     {
         public HCXIncomingRequest() { }
 
@@ -72,7 +79,7 @@ namespace Io.HcxProtocol.Impl
             }
             catch (Exception ex)
             {
-                output.Add(ErrorCodes.ERR_INVALID_ENCRYPTION.ToString(), "[Decryption error.] " + ex.Message.ToString());
+                output.Add(ErrorCodes.ERR_INVALID_ENCRYPTION.ToString(), "[Decryption error.] " + ex.ToString());
 
                 return false;
             }
@@ -99,5 +106,32 @@ namespace Io.HcxProtocol.Impl
             output.Add(Constants.RESPONSE_OBJ, responseObj);
             return result;
         }
+
+
+        private bool disposedValue;
+        protected virtual void Dispose(bool disposing)
+        {
+            // check if already disposed
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // free managed objects here
+                }
+
+                // free unmanaged objects here
+
+                // set the bool value to true
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+        ~HCXIncomingRequest() { Dispose(disposing: false); }
+
     }
 }

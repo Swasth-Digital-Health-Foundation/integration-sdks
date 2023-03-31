@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace Io.HcxProtocol.Interfaces
 {
+    /**
+     * Library  : Io.Hcx.Protocol
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     ///     The <b>Outgoing Request</b> Interface provide the methods to help in creating the JWE Payload and send the request to the sender system from HCX Gateway.
     /// </summary>

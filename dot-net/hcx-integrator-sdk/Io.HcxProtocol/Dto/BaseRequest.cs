@@ -1,4 +1,5 @@
 ﻿using Io.HcxProtocol.Exceptions;
+using Io.HcxProtocol.Interfaces;
 using Io.HcxProtocol.Utils;
 using System;
 using System.Collections.Generic;
@@ -6,10 +7,17 @@ using System.Linq;
 
 namespace Io.HcxProtocol.Dto
 {
+    /**
+     * Library  : Io.Hcx.Protocol
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
-    /// This is base class to extract the protocol headers from the jwe/json payload.
+    /// This is base class to extract the protocol headers from the jwe/json payload and Validate Headers Data.
     /// </summary>
-    public class BaseRequest
+    public class BaseRequest : IBaseRequest, IDisposable
     {
         private Dictionary<string, object> Payload { get; set; }
         public Dictionary<string, object> ProtocolHeaders { get; set; }
@@ -113,13 +121,13 @@ namespace Io.HcxProtocol.Dto
                 return true;
             }
             // Validate Header values
-            if (ValidateCondition(!UUIDUtils.IsUUID(GetApiCallId()), error, ErrorCodes.ERR_INVALID_API_CALL_ID.ToString(), ResponseMessage.INVALID_API_CALL_ID_ERR_MSG))
+            if (ValidateCondition(!GetApiCallId().IsUUID(), error, ErrorCodes.ERR_INVALID_API_CALL_ID.ToString(), ResponseMessage.INVALID_API_CALL_ID_ERR_MSG))
                 return true;
-            if (ValidateCondition(!UUIDUtils.IsUUID(GetCorrelationId()), error, ErrorCodes.ERR_INVALID_CORRELATION_ID.ToString(), ResponseMessage.INVALID_CORRELATION_ID_ERR_MSG))
+            if (ValidateCondition(!GetCorrelationId().IsUUID(), error, ErrorCodes.ERR_INVALID_CORRELATION_ID.ToString(), ResponseMessage.INVALID_CORRELATION_ID_ERR_MSG))
                 return true;
-            if (ValidateCondition(!DateTimeUtils.ValidTimestamp(GetTimestamp()), error, ErrorCodes.ERR_INVALID_TIMESTAMP.ToString(), ResponseMessage.INVALID_TIMESTAMP_ERR_MSG))
+            if (ValidateCondition(!GetTimestamp().IsValidTimestamp(), error, ErrorCodes.ERR_INVALID_TIMESTAMP.ToString(), ResponseMessage.INVALID_TIMESTAMP_ERR_MSG))
                 return true;
-            if (ValidateCondition(ProtocolHeaders.ContainsKey(Constants.WORKFLOW_ID) && !UUIDUtils.IsUUID(GetWorkflowId()), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.ToString(), ResponseMessage.INVALID_WORKFLOW_ID_ERR_MSG))
+            if (ValidateCondition(ProtocolHeaders.ContainsKey(Constants.WORKFLOW_ID) && !GetWorkflowId().IsUUID(), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.ToString(), ResponseMessage.INVALID_WORKFLOW_ID_ERR_MSG))
                 return true;
             //validating optional headers
             ValidateOptionalHeaders(error);
@@ -232,5 +240,33 @@ namespace Io.HcxProtocol.Dto
             }
             return false;
         }
+
+        private bool disposedValue;
+        protected virtual void Dispose(bool disposing)
+        {
+            // check if already disposed
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    // free managed objects here
+                    Payload = null;
+                    ProtocolHeaders = null;
+                }
+
+                // free unmanaged objects here
+
+                // set the bool value to true
+                disposedValue = true;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
+        }
+
+        ~BaseRequest() { Dispose(disposing: false); }
     }
 }

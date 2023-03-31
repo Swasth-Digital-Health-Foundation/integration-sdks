@@ -1,11 +1,17 @@
 ﻿using Io.HcxProtocol.Dto;
-using Io.HcxProtocol.Exceptions;
 using Io.HcxProtocol.Init;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Io.HcxProtocol.Utils
 {
+    /**
+     * Library  : Io.Hcx.Protocol
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     /// The common utils functionality used in HCX Integrator SDK.
     /// </summary>
@@ -29,7 +35,7 @@ namespace Io.HcxProtocol.Utils
                 {"grant_type", "password"}
             };
             HttpResponse response = HttpUtils.Post(HCXIntegrator.config.AuthBasePath, headers, fields);
-            var responseBody = JSONUtils.Deserialize<Dictionary<string, string>>(response.Body);//JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Body);
+            var responseBody = JSONUtils.Deserialize<Dictionary<string, string>>(response.Body);
             return responseBody["access_token"];
         }
 
@@ -47,7 +53,7 @@ namespace Io.HcxProtocol.Utils
             }
             else
             {
-                throw new ServerException("Error in fetching the participant details" + response.Status);
+                throw new System.Exception("Error in fetching the participant details" + response.Status);
             }
             return details.Any() ? details.FirstOrDefault() : new Dictionary<string, object>();
         }

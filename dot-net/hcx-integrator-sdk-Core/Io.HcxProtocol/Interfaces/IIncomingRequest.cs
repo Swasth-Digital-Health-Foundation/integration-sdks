@@ -3,6 +3,13 @@ using System.Collections.Generic;
 
 namespace Io.HcxProtocol.Interfaces
 {
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     /// The <b>Incoming Request</b> Interface provide the methods to help in processing the JWE Payload and extract FHIR Object.
     /// </summary>

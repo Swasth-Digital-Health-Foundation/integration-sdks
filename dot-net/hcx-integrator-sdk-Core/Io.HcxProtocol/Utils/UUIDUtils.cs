@@ -2,12 +2,19 @@
 
 namespace Io.HcxProtocol.Utils
 {
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     /// The UUID Util to validate its format.
     /// </summary>
-    public class UUIDUtils
+    public static class UUIDUtils
     {
-        public static bool IsUUID(string s)
+        public static bool IsUUID(this string s)
         {
             var pattern = "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$";
             return Regex.IsMatch(s, pattern);

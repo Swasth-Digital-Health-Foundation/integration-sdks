@@ -9,11 +9,25 @@ using System.Collections.Generic;
 
 namespace Io.HcxProtocol.Helper
 {
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     /// Implementation of FHIR validation using HCX FHIR IG.
     /// </summary>
     public abstract class FhirPayload
     {
+        /// <summary>
+        /// ValidatePayload method used to validate the FHIR Json object using HCX FHIR IG.
+        /// </summary>
+        /// <param name="fhirPayloadJson">FHIR Payload Json String</param>
+        /// <param name="operation">Which operation is being processed</param>
+        /// <param name="error">Holds any validation errors</param>
+        /// <returns>Return true if validation is successful.</returns>
         public bool ValidatePayload(string fhirPayloadJson, Operations operation, Dictionary<string, object> error)
         {
             Resource resource;
@@ -57,7 +71,7 @@ namespace Io.HcxProtocol.Helper
             }
             catch (Exception ex)
             {
-                error.Add(ErrorCodes.ERR_INVALID_DOMAIN_PAYLOAD.ToString(), ex.Message.ToString());
+                error.Add(ErrorCodes.ERR_INVALID_DOMAIN_PAYLOAD.ToString(), ex.ToString());
                 return false;
             }
 

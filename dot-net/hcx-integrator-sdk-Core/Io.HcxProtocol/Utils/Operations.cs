@@ -1,43 +1,15 @@
-﻿using System;
-using System.Reflection;
-
-namespace Io.HcxProtocol.Utils
+﻿namespace Io.HcxProtocol.Utils
 {
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
-    /// The Operations of HCX Gateway to handle claims processing.
+    /// Enum class for the Operations of HCX Gateway to handle claims processing.
     /// </summary>
-    class OperationsAttr : Attribute
-    {
-        internal OperationsAttr(string _operation, string _fhirResourceType)
-        {
-            this.operation = _operation;
-            this.fhirResourceType = _fhirResourceType;
-        }
-
-        public string operation { get; private set; }
-        public string fhirResourceType { get; private set; }
-    }
-
-    public static class Operation
-    {
-        public static string getOperation(this Operations p)
-        {
-            return GetAttr(p).operation;
-        }
-        public static string getFhirResourceType(this Operations p)
-        {
-            return GetAttr(p).fhirResourceType;
-        }
-        private static OperationsAttr GetAttr(Operations p)
-        {
-            return (OperationsAttr)Attribute.GetCustomAttribute(ForValue(p), typeof(OperationsAttr));
-        }
-        private static MemberInfo ForValue(Operations p)
-        {
-            return typeof(Operations).GetField(Enum.GetName(typeof(Operations), p));
-        }
-    }
-
     public enum Operations
     {
         [OperationsAttr("/coverageeligibility/check", "Bundle")] COVERAGE_ELIGIBILITY_CHECK,
@@ -51,7 +23,7 @@ namespace Io.HcxProtocol.Utils
         [OperationsAttr("/hcx/status", "StatusRequest")] HCX_STATUS,
         [OperationsAttr("/hcx/on_status", "StatusResponse")] HCX_ON_STATUS,
         [OperationsAttr("/communication/request", "CommunicationRequest")] COMMUNICATION_REQUEST,
-        [OperationsAttr("/communication/on_request", "Communication")] COMMUNICATION_ON_REQUEST,
+        [OperationsAttr("/communication/on_request", "Bundle")] COMMUNICATION_ON_REQUEST,
         [OperationsAttr("/predetermination/submit", "Bundle")] PREDETERMINATION_SUBMIT,
         [OperationsAttr("/predetermination/on_submit", "Bundle")] PREDETERMINATION_ON_SUBMIT
     }
