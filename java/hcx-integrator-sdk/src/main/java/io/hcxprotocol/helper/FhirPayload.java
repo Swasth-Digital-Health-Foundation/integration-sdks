@@ -4,8 +4,10 @@ import ca.uhn.fhir.validation.FhirValidator;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ca.uhn.fhir.validation.ValidationResult;
+import com.typesafe.config.Config;
 import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.impl.HCXIncomingRequest;
+import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
 import io.hcxprotocol.validator.HCXFHIRValidator;
@@ -24,10 +26,10 @@ public abstract class FhirPayload {
 
     private static final Logger logger = LoggerFactory.getLogger(FhirPayload.class);
 
-    public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error) {
+    public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
         boolean returnBool = true;
         try {
-            FhirValidator validator = HCXFHIRValidator.getValidator();
+            FhirValidator validator = HCXFHIRValidator.getValidator(config.getString(Constants.HCX_IG_BASE_PATH), config.getString(Constants.NRCES_IG_BASE_PATH));
             ValidationResult result = validator.validateWithResult(fhirPayload);
             List<SingleValidationMessage> messages = result.getMessages();
             Map<String, Object> map = JSONUtils.deserialize(fhirPayload, Map.class);

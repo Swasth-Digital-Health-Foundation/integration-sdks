@@ -1,6 +1,7 @@
 package io.hcxprotocol.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.typesafe.config.Config;
 import io.hcxprotocol.dto.ResponseError;
 import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.helper.FhirPayload;
@@ -37,16 +38,16 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     private static final Logger logger = LoggerFactory.getLogger(HCXIncomingRequest.class);
 
     @Override
-    public boolean process(String jwePayload, Operations operation, String privateKey, Map<String, Object> output) throws JsonProcessingException {
+    public boolean process(String jwePayload, Operations operation, Map<String, Object> output, Config config) throws Exception {
         Map<String, Object> error = new HashMap<>();
         boolean result = false;
         jwePayload = formatPayload(jwePayload);
         logger.info("Processing incoming request has started :: operation: {}", operation);
         if (!validateRequest(jwePayload, operation, error)) {
             sendResponse(error, output);
-        } else if (!decryptPayload(jwePayload, privateKey, output)) {
+        } else if (!decryptPayload(jwePayload, config.getString(Constants.ENCRYPTION_PRIVATE_KEY), output)) {
             sendResponse(output, output);
-        } else if (!validatePayload((String) output.get(Constants.FHIR_PAYLOAD), operation, error)) {
+        } else if (!validatePayload((String) output.get(Constants.FHIR_PAYLOAD), operation, error, config)) {
             sendResponse(error, output);
         } else {
             if (sendResponse(error, output)) result = true;
@@ -60,7 +61,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     }
 
     @Override
-    public boolean decryptPayload(String jwePayload, String privateKey, Map<String, Object> output) {
+    public boolean decryptPayload(String jwePayload, String privateKey, Map<String, Object> output) throws Exception {
         try {
             JweRequest jweRequest = new JweRequest(JSONUtils.deserialize(jwePayload, Map.class));
             jweRequest.decryptRequest(privateKey);
@@ -69,9 +70,9 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             logger.info("Request is decrypted successfully");
             return true;
         } catch (Exception e) {
+            logger.error("Error while decrypting the payload: {}", e.getMessage());
             e.printStackTrace();
-            output.put(ErrorCodes.ERR_INVALID_ENCRYPTION.toString(), e.getMessage());
-            return false;
+            throw new Exception("Error while decrypting the payload: " + e.getMessage());
         }
     }
 

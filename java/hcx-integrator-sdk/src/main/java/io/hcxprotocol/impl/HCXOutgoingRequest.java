@@ -56,23 +56,23 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     private static final Logger logger = LoggerFactory.getLogger(HCXOutgoingRequest.class);
 
     @Override
-    public boolean generate(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output, Config config){
-        return process(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", "", output, config);
+    public boolean generateOutgoingRequest(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> domainHeaders, Map<String,Object> output, Config config){
+        return process(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", "", domainHeaders, output, config);
     }
 
     @Override
-    public boolean generate(String fhirPayload, String apiCallId, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output, Config config){
-        return process(fhirPayload, operation, "", apiCallId, "", actionJwe, onActionStatus, output, config);
+    public boolean generateOutgoingCallback(String fhirPayload, Operations operation, String apiCallId, String actionJwe, String onActionStatus, Map<String, Object> domainHeaders, Map<String, Object> output, Config config){
+        return process(fhirPayload, operation, "", apiCallId, "", actionJwe, onActionStatus, domainHeaders, output, config);
     }
 
-    private boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> output, Config config){
+    private boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output, Config config){
         boolean result = false;
         try {
             Map<String, Object> error = new HashMap<>();
-            Map<String, Object> headers = new HashMap<>();
             Map<String, Object> response = new HashMap<>();
+            Map<String, Object> headers = new HashMap<>(domainHeaders);
             logger.info("Processing outgoing request has started :: operation: {}", operation);
-            if (!validatePayload(fhirPayload, operation, error)) {
+            if (!validatePayload(fhirPayload, operation, error, config)) {
                 output.putAll(error);
             } else if (!createHeader(config.getString(Constants.PARTICIPANT_CODE), recipientCode, apiCallId, correlationId, actionJwe, onActionStatus, headers, error)) {
                 output.putAll(error);
@@ -103,6 +103,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             if (StringUtils.isEmpty(apiCallId))
                 apiCallId = UUID.randomUUID().toString();
             headers.put(Constants.HCX_API_CALL_ID, apiCallId);
+            System.out.println("recipient key: " + recipientCode);
             if (!StringUtils.isEmpty(recipientCode)) {
                 headers.put(Constants.HCX_SENDER_CODE, senderCode);
                 headers.put(Constants.HCX_RECIPIENT_CODE, recipientCode);
@@ -128,7 +129,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     }
 
     @Override
-    public boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output, Config config) {
+    public boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output, Config config) throws Exception {
         try {
             String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH));
             String publicKeyUrl = (String) Utils.searchRegistry(headers.get(Constants.HCX_RECIPIENT_CODE).toString(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
@@ -142,9 +143,9 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             logger.info("Payload is encrypted successfully");
             return true;
         } catch (Exception e) {
+            logger.error("Error while encrypting the payload: {}", e.getMessage());
             e.printStackTrace();
-            output.put(Constants.ERROR, e.getMessage());
-            return false;
+            throw new Exception("Error while encrypting the payload: " + e.getMessage());
         }
     }
 

@@ -31,6 +31,7 @@ public interface OutgoingRequest {
      *                  pass an empty string("") and method will generate a UUID and uses it.
      * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
      *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
+     * @param domainHeaders The domain headers to use while creating the JWE Payload.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
      * @param config The config instance to get config variables.
      * <ol>
@@ -68,7 +69,7 @@ public interface OutgoingRequest {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean generate(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> output, Config config);
+    boolean generateOutgoingRequest(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> domainHeaders, Map<String,Object> output, Config config);
 
     /**
      * Generates the JWE Payload using FHIR Object, Operation and other parameters part of input. This method is used to handle the on_action API request.
@@ -82,11 +83,12 @@ public interface OutgoingRequest {
      *     <li>Trigger HCX Gateway REST API based on operation.</li>
      * </ul>
      * @param fhirPayload The FHIR object created by the participant system.
+     * @param operation The HCX operation or action defined by specs to understand the functional behaviour.
      * @param apiCallId The unique id for each request, to use the custom identifier, pass the same or else
      *                  pass empty string("") and method will generate a UUID and uses it.
-     * @param operation The HCX operation or action defined by specs to understand the functional behaviour.
      * @param actionJwe The JWE Payload from the incoming request for which the response JWE Payload created here.
-     * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JEW Payload.
+     * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JWE Payload.
+     * @param domainHeaders The domain headers to use while creating the JWE Payload.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
      * @param config The config instance to get config variables.
      * <ol>
@@ -124,7 +126,7 @@ public interface OutgoingRequest {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    boolean generate(String fhirPayload, String apiCallId, Operations operation, String actionJwe, String onActionStatus, Map<String,Object> output, Config config);
+    boolean generateOutgoingCallback(String fhirPayload, Operations operation, String apiCallId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output, Config config);
 
     /**
      * Validates the FHIR Object structure and required attributes using HCX FHIR IG.
@@ -142,7 +144,7 @@ public interface OutgoingRequest {
      *      <li>false - Validation is failure.</li>
      *  </ol>
      */
-    boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error);
+    boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config);
 
     /**
      * Creates the HCX Protocol Headers using the input parameters.
@@ -192,7 +194,7 @@ public interface OutgoingRequest {
      *     <li>false - It is failure.</li>
      * </ol>
      */
-    boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output, Config config);
+    boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output, Config config) throws Exception;
 
     /**
      * Uses the input parameters and the SDK configuration to call HCX Gateway REST API based on the operation.

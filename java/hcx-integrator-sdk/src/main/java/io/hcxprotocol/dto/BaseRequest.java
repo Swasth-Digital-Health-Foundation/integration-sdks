@@ -97,6 +97,7 @@ public class BaseRequest {
     }
 
     public boolean validateHeadersData(List<String> mandatoryHeaders, Operations operation, Map<String, Object> error) {
+        boolean result = false;
         List<String> missingHeaders = mandatoryHeaders.stream().filter(key -> !protocolHeaders.containsKey(key)).collect(Collectors.toList());
         if (!missingHeaders.isEmpty()) {
             error.put(ErrorCodes.ERR_MANDATORY_HEADER_MISSING.toString(), MessageFormat.format(INVALID_MANDATORY_ERR_MSG, missingHeaders));
@@ -112,10 +113,10 @@ public class BaseRequest {
         if (validateCondition(protocolHeaders.containsKey(WORKFLOW_ID) && !isString(getHeaders().get(WORKFLOW_ID)), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.toString(), INVALID_WORKFLOW_ID_ERR_MSG))
             return true;
         //validating option headers
-        validateOptionalHeaders(error);
+        result = validateOptionalHeaders(error);
         // validating onAction headers
-        validateOnAction(operation,error);
-        return false;
+        result = validateOnAction(operation,error);
+        return result;
 
     }
     public boolean validateJwePayload(Map<String, Object> error, String[] payloadArr) {

@@ -1,6 +1,7 @@
 package io.hcxprotocol.interfaces;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.typesafe.config.Config;
 import io.hcxprotocol.utils.Operations;
 
 import java.util.Map;
@@ -19,8 +20,8 @@ public interface IncomingRequest {
      * </ol>
      * @param jwePayload The JWE payload from the incoming API request body.
      * @param operation The HCX operation name.
-     * @param privateKey The Private Key in String format.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload processing.
+     * @param config The config instance to get config variables.
      * <ol>
      *    <li>output -
      *    <pre>
@@ -59,7 +60,7 @@ public interface IncomingRequest {
      *
      * @throws com.fasterxml.jackson.core.JsonProcessingException
      */
-    boolean process(String jwePayload, Operations operation, String privateKey, Map<String,Object> output) throws JsonProcessingException;
+    boolean process(String jwePayload, Operations operation, Map<String,Object> output, Config config) throws Exception;
 
     /**
      * Validates the HCX Protocol Headers from the JWE Payload.
@@ -107,7 +108,7 @@ public interface IncomingRequest {
      *     <li>false - Decryption is failure.</li>
      * </ol>
      */
-    boolean decryptPayload(String jwePayload, String privateKey, Map<String,Object> output);
+    boolean decryptPayload(String jwePayload, String privateKey, Map<String,Object> output) throws Exception;
 
     /**
      * Validates the FHIR Object structure and required attributes using HCX FHIR IG.
@@ -125,7 +126,7 @@ public interface IncomingRequest {
      *     <li>false - Validation is failure.</li>
      * </ol>
      */
-    boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error);
+    boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config);
 
     /**
      * Generates the HCX Protocol API response using validation errors and the output object.
