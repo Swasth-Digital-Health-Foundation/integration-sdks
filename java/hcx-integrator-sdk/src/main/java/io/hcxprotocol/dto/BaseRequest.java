@@ -4,7 +4,6 @@ import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.utils.DateTimeUtils;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
-import io.hcxprotocol.utils.UUIDUtils;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -73,6 +72,10 @@ public class BaseRequest {
         return (Map<String, Object>) protocolHeaders.getOrDefault(key, new HashMap<>());
     }
 
+    public Map<String, Object> getHeaders(){
+        return this.protocolHeaders;
+    }
+
     private void setHeaderMap(String key, Object value) {
         protocolHeaders.put(key, value);
     }
@@ -94,25 +97,26 @@ public class BaseRequest {
     }
 
     public boolean validateHeadersData(List<String> mandatoryHeaders, Operations operation, Map<String, Object> error) {
+        boolean result = false;
         List<String> missingHeaders = mandatoryHeaders.stream().filter(key -> !protocolHeaders.containsKey(key)).collect(Collectors.toList());
         if (!missingHeaders.isEmpty()) {
             error.put(ErrorCodes.ERR_MANDATORY_HEADER_MISSING.toString(), MessageFormat.format(INVALID_MANDATORY_ERR_MSG, missingHeaders));
             return true;
         }
         // Validate Header values
-        if (validateCondition(!UUIDUtils.isUUID(getApiCallId()), error, ErrorCodes.ERR_INVALID_API_CALL_ID.toString(), INVALID_API_CALL_ID_ERR_MSG))
+        if (validateCondition(!isString(getHeaders().get(HCX_API_CALL_ID)), error, ErrorCodes.ERR_INVALID_API_CALL_ID.toString(), INVALID_API_CALL_ID_ERR_MSG))
             return true;
-        if (validateCondition(!UUIDUtils.isUUID(getCorrelationId()), error, ErrorCodes.ERR_INVALID_CORRELATION_ID.toString(), INVALID_CORRELATION_ID_ERR_MSG))
+        if (validateCondition(!isString(getHeaders().get(HCX_CORRELATION_ID)), error, ErrorCodes.ERR_INVALID_CORRELATION_ID.toString(), INVALID_CORRELATION_ID_ERR_MSG))
             return true;
         if (validateCondition(!DateTimeUtils.validTimestamp(getTimestamp()), error, ErrorCodes.ERR_INVALID_TIMESTAMP.toString(), INVALID_TIMESTAMP_ERR_MSG))
             return true;
-        if (validateCondition(protocolHeaders.containsKey(WORKFLOW_ID) && !UUIDUtils.isUUID(getWorkflowId()), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.toString(), INVALID_WORKFLOW_ID_ERR_MSG))
+        if (validateCondition(protocolHeaders.containsKey(WORKFLOW_ID) && !isString(getHeaders().get(WORKFLOW_ID)), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.toString(), INVALID_WORKFLOW_ID_ERR_MSG))
             return true;
         //validating option headers
-        validateOptionalHeaders(error);
+        result = validateOptionalHeaders(error);
         // validating onAction headers
-        validateOnAction(operation,error);
-        return false;
+        result = validateOnAction(operation,error);
+        return result;
 
     }
     public boolean validateJwePayload(Map<String, Object> error, String[] payloadArr) {
@@ -137,6 +141,10 @@ public class BaseRequest {
             return true;
         }
         return false;
+    }
+
+    public boolean isString(Object value) {
+        return value instanceof String && !StringUtils.isEmpty((String) value);
     }
 
     public boolean validateDetails(Map<String, Object> inputMap, Map<String, Object> error, String errorKey, String msg, List<String> rangeValues, String rangeMsg) {

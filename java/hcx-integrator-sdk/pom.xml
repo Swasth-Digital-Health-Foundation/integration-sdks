@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.hcxprotocol</groupId>
     <artifactId>hcx-integrator-sdk</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <packaging>jar</packaging>
     <name>HCX Integrator SDK</name>
     <description>The SDK for HCX Participant System to help in integrating with HCX Gateway easily.</description>
@@ -43,6 +43,18 @@
         <developerConnection>scm:git:ssh://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git</developerConnection>
         <url>https://github.com/Swasth-Digital-Health-Foundation/integration-sdks/tree/main</url>
     </scm>
+<properties>
+    <repository.owner>saurabh-singh-17</repository.owner>
+    <sonar.organization>swasth-digital-health-foundation</sonar.organization>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>     
+</properties>
+    <repositories>
+        <repository>
+            <id>github</id>
+            <name>GitHub Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/${repository.owner}}/*</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.typesafe</groupId>

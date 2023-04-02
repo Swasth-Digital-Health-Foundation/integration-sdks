@@ -52,5 +52,14 @@ public class Constants {
     public static final String CODE = "code";
     public static final String MESSAGE = "message";
     public static final String PARTICIPANTS = "participants";
+    public static final String PROTOCOL_BASE_PATH = "protocolBasePath";
+    public static final String PARTICIPANT_CODE = "participantCode";
+    public static final String AUTH_BASE_PATH = "authBasePath";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
+    public static final String ENCRYPTION_PRIVATE_KEY = "encryptionPrivateKey";
+    public static final String HCX_IG_BASE_PATH = "hcxIGBasePath";
+    public static final String NRCES_IG_BASE_PATH = "nrcesIGBasePath";
+
 
 }

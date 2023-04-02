@@ -1,6 +1,7 @@
-package io.hcxprotocol.fhirexamples;
-
 import org.hl7.fhir.r4.model.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HCXCoverage {
 
@@ -14,7 +15,7 @@ public class HCXCoverage {
         cov.setStatus(Coverage.CoverageStatus.ACTIVE);
         cov.getIdentifier().add(new Identifier().setValue("policy-RVH1003").setSystem("https://www.gicofIndia.in/policies"));
         cov.getSubscriber().setReference("Patient/RVH1003");
-        cov.setSubscriberId("SN-RVH1003");
+        cov.setSubscriberId("2XX8971");
         cov.getBeneficiary().setReference( "Patient/RVH1003");
         cov.setRelationship(new CodeableConcept(new Coding().setSystem("http://terminology.hl7.org/CodeSystem/subscriber-relationship").setCode("self")));
         cov.getPayor().add(new Reference("Organization/GICOFINDIA"));

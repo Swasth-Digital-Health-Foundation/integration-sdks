@@ -1,13 +1,13 @@
-package io.hcxprotocol.fhirexamples;
-
 import org.hl7.fhir.r4.model.*;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class HCXCommunicationRequest {
 
     public static CommunicationRequest communicationRequestExample(){
         CommunicationRequest comReq = new CommunicationRequest();
+        comReq.setId(UUID.randomUUID().toString());
         Meta meta = new Meta();
         meta.getProfile().add(new CanonicalType("https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-CommunicationRequest.html"));
         meta.setLastUpdated(new Date());
@@ -22,6 +22,7 @@ public class HCXCommunicationRequest {
 
     public static Communication communicationExample(){
         Communication comm =  new Communication();
+        comm.setId(UUID.randomUUID().toString());
         Meta meta = new Meta();
         meta.getProfile().add(new CanonicalType("https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-Communication.html"));
         meta.setLastUpdated(new Date());

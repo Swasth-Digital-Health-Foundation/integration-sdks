@@ -15,7 +15,7 @@ public enum Operations {
     HCX_STATUS("/hcx/status","StatusRequest"),
     HCX_ON_STATUS("/hcx/on_status","StatusResponse"),
     COMMUNICATION_REQUEST("/communication/request","CommunicationRequest"),
-    COMMUNICATION_ON_REQUEST("/communication/on_request","Communication"),
+    COMMUNICATION_ON_REQUEST("/communication/on_request","Bundle"),
     PREDETERMINATION_SUBMIT("/predetermination/submit","Bundle"),
     PREDETERMINATION_ON_SUBMIT("/predetermination/on_submit","Bundle");
 

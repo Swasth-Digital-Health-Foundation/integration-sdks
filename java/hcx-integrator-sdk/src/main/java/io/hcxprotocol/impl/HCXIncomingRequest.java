@@ -1,25 +1,20 @@
 package io.hcxprotocol.impl;
 
-import io.hcxprotocol.init.HCXIntegrator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.typesafe.config.Config;
 import io.hcxprotocol.dto.ResponseError;
 import io.hcxprotocol.exception.ErrorCodes;
-import io.hcxprotocol.helper.ValidateHelper;
 import io.hcxprotocol.helper.FhirPayload;
+import io.hcxprotocol.helper.ValidateHelper;
 import io.hcxprotocol.interfaces.IncomingRequest;
 import io.hcxprotocol.jwe.JweRequest;
 import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
-import org.bouncycastle.util.io.pem.PemObject;
-import org.bouncycastle.util.io.pem.PemReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-
-import java.io.*;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,20 +35,19 @@ import java.util.Map;
  */
 public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
 
-    private final HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance();
-
-    public HCXIncomingRequest() throws Exception {
-    }
+    private static final Logger logger = LoggerFactory.getLogger(HCXIncomingRequest.class);
 
     @Override
-    public boolean process(String jwePayload, Operations operation, Map<String, Object> output) {
+    public boolean process(String jwePayload, Operations operation, Map<String, Object> output, Config config) throws Exception {
         Map<String, Object> error = new HashMap<>();
         boolean result = false;
+        jwePayload = formatPayload(jwePayload);
+        logger.info("Processing incoming request has started :: operation: {}", operation);
         if (!validateRequest(jwePayload, operation, error)) {
             sendResponse(error, output);
-        } else if (!decryptPayload(jwePayload, output)) {
+        } else if (!decryptPayload(jwePayload, config.getString(Constants.ENCRYPTION_PRIVATE_KEY), output)) {
             sendResponse(output, output);
-        } else if (!validatePayload((String) output.get(Constants.FHIR_PAYLOAD), operation, error)) {
+        } else if (!validatePayload((String) output.get(Constants.FHIR_PAYLOAD), operation, error, config)) {
             sendResponse(error, output);
         } else {
             if (sendResponse(error, output)) result = true;
@@ -67,27 +61,19 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     }
 
     @Override
-    public boolean decryptPayload(String jwePayload, Map<String, Object> output) {
+    public boolean decryptPayload(String jwePayload, String privateKey, Map<String, Object> output) throws Exception {
         try {
             JweRequest jweRequest = new JweRequest(JSONUtils.deserialize(jwePayload, Map.class));
-            jweRequest.decryptRequest(getRsaPrivateKey(hcxIntegrator.getPrivateKey()));
+            jweRequest.decryptRequest(privateKey);
             output.put(Constants.HEADERS, jweRequest.getHeaders());
             output.put(Constants.FHIR_PAYLOAD, JSONUtils.serialize(jweRequest.getPayload()));
+            logger.info("Request is decrypted successfully");
             return true;
         } catch (Exception e) {
-            output.put(ErrorCodes.ERR_INVALID_ENCRYPTION.toString(), e.getMessage());
-            return false;
+            logger.error("Error while decrypting the payload: {}", e.getMessage());
+            e.printStackTrace();
+            throw new Exception("Error while decrypting the payload: " + e.getMessage());
         }
-    }
-
-    private static RSAPrivateKey getRsaPrivateKey(String privateKey) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        InputStream stream = new ByteArrayInputStream(privateKey.getBytes());
-        Reader fileReader = new InputStreamReader(stream);
-        PemReader pemReader = new PemReader(fileReader);
-        PemObject pemObject = pemReader.readPemObject();
-        PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(pemObject.getContent());
-        KeyFactory factory = KeyFactory.getInstance("RSA");
-        return (RSAPrivateKey) factory.generatePrivate(privateKeySpec);
     }
 
     @Override
@@ -99,13 +85,24 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             Map<String, Object> headers = (Map<String, Object>) output.get(Constants.HEADERS);
             responseObj.put(Constants.API_CALL_ID, headers.get(Constants.HCX_API_CALL_ID));
             responseObj.put(Constants.CORRELATION_ID, headers.get(Constants.HCX_CORRELATION_ID));
+            logger.info("Processing incoming request has completed :: response: {}", responseObj);
             result = true;
         } else {
+            logger.error("Error while processing the request: {}", error);
             // Fetching only the first error and constructing the error object
             String code = (String) error.keySet().toArray()[0];
-            responseObj.put(Constants.ERROR, new ResponseError(code, (String) error.get(code), ""));
+            String message =  error.get(code).toString();
+            responseObj.put(Constants.ERROR, new ResponseError(code, message, "").toString());
         }
         output.put(Constants.RESPONSE_OBJ, responseObj);
         return result;
+    }
+
+    private String formatPayload(String payload) throws JsonProcessingException {
+        if (payload.contains(Constants.PAYLOAD) || payload.contains(Constants.HCX_API_CALL_ID)){
+            return payload;
+        } else {
+            return JSONUtils.serialize(Collections.singletonMap(Constants.PAYLOAD, payload));
+        }
     }
 }
