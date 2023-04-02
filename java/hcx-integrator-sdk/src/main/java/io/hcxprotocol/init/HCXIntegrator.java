@@ -1,6 +1,5 @@
 package io.hcxprotocol.init;
 
-import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.impl.HCXIncomingRequest;
 import io.hcxprotocol.impl.HCXOutgoingRequest;
 import io.hcxprotocol.utils.Operations;
@@ -72,7 +71,7 @@ public class HCXIntegrator extends BaseIntegrator {
      *
      */
     public boolean processIncoming(String jwePayload, Operations operation, Map<String, Object> output) throws Exception {
-        return getIncomingRequest().process(jwePayload, operation, output, getConfig());
+        return new HCXIncomingRequest().process(jwePayload, operation, output, getConfig());
     }
 
     /**
@@ -129,8 +128,8 @@ public class HCXIntegrator extends BaseIntegrator {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    public boolean processOutgoingRequest(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> domainHeaders, Map<String,Object> output) throws ClientException {
-        return getOutgoingRequest().generateOutgoingRequest(fhirPayload, operation, recipientCode, apiCallId, correlationId, domainHeaders, output, getConfig());
+    public boolean processOutgoingRequest(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> domainHeaders, Map<String,Object> output) {
+        return new HCXOutgoingRequest().generateOutgoingRequest(fhirPayload, operation, recipientCode, apiCallId, correlationId, domainHeaders, output, getConfig());
     }
 
     /**
@@ -186,8 +185,8 @@ public class HCXIntegrator extends BaseIntegrator {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    public boolean processOutgoingCallback(String fhirPayload, Operations operation, String apiCallId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output) throws ClientException {
-        return getOutgoingRequest().generateOutgoingCallback(fhirPayload, operation, apiCallId, actionJwe, onActionStatus, domainHeaders, output, getConfig());
+    public boolean processOutgoingCallback(String fhirPayload, Operations operation, String apiCallId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output) {
+        return new HCXOutgoingRequest().generateOutgoingCallback(fhirPayload, operation, apiCallId, actionJwe, onActionStatus, domainHeaders, output, getConfig());
     }
 
 }
