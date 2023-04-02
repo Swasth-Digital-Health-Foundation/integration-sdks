@@ -2,6 +2,11 @@ package io.hcxprotocol.init;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import io.hcxprotocol.exception.ClientException;
+import io.hcxprotocol.impl.HCXIncomingRequest;
+import io.hcxprotocol.impl.HCXOutgoingRequest;
+import io.hcxprotocol.interfaces.IncomingRequest;
+import io.hcxprotocol.interfaces.OutgoingRequest;
 import io.hcxprotocol.utils.Constants;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,6 +40,38 @@ public class BaseIntegrator {
 
     protected Config getConfig(){
         return this.config;
+    }
+
+    protected IncomingRequest getIncomingRequest() throws ClientException {
+        if (getConfig().hasPathOrNull(("incomingRequestClass"))) {
+            String className = getConfig().getString("incomingRequestClass");
+            try {
+                Class<?> clazz = Class.forName(className);
+                Object instance = clazz.newInstance();
+                logger.info("Incoming request class provided in the config exists :: class name: " + className);
+                return (IncomingRequest) instance;
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                logger.error("Incoming request class provided in the config map does not exist :: class name: " + className);
+                throw new ClientException("Incoming request class provided in the config map does not exist :: class name: " + className);
+            }
+        }
+        return new HCXIncomingRequest();
+    }
+
+    protected OutgoingRequest getOutgoingRequest() throws ClientException {
+        if (getConfig().hasPathOrNull(("outgoingRequestClass"))) {
+            String className = getConfig().getString("outgoingRequestClass");
+            try {
+                Class<?> clazz = Class.forName(className);
+                Object instance = clazz.newInstance();
+                logger.info("Outgoing request class provided in the config exists :: class name: " + className);
+                return (OutgoingRequest) instance;
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                logger.error("Outgoing request class provided in the config map does not exist :: class name: " + className);
+                throw new ClientException("Outgoing request class provided in the config map does not exist :: class name: " + className);
+            }
+        }
+        return new HCXOutgoingRequest();
     }
 
     /**
