@@ -144,7 +144,7 @@ public interface OutgoingRequest {
      *      <li>false - Validation is failure.</li>
      *  </ol>
      */
-    boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error);
+    boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config);
 
     /**
      * Creates the HCX Protocol Headers using the input parameters.

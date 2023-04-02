@@ -72,7 +72,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             Map<String, Object> response = new HashMap<>();
             Map<String, Object> headers = new HashMap<>(domainHeaders);
             logger.info("Processing outgoing request has started :: operation: {}", operation);
-            if (!validatePayload(fhirPayload, operation, error)) {
+            if (!validatePayload(fhirPayload, operation, error, config)) {
                 output.putAll(error);
             } else if (!createHeader(config.getString(Constants.PARTICIPANT_CODE), recipientCode, apiCallId, correlationId, actionJwe, onActionStatus, headers, error)) {
                 output.putAll(error);

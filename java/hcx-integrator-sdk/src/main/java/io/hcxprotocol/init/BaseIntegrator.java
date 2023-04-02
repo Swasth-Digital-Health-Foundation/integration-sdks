@@ -20,7 +20,7 @@ public class BaseIntegrator {
         logger.debug("Integrator SDK configuration.", getConfig());
         if(config == null)
             throw new Exception("Please initialize the configuration variables, in order to initialize the SDK");
-        List<String> props = Arrays.asList(Constants.PROTOCOL_BASE_PATH, Constants.PARTICIPANT_CODE, Constants.AUTH_BASE_PATH, Constants.USERNAME, Constants.PASSWORD, Constants.ENCRYPTION_PRIVATE_KEY, Constants.IG_URL);
+        List<String> props = config.getStringList("configKeys");
         for(String prop: props){
             if(!config.hasPathOrNull(prop) || StringUtils.isEmpty(config.getString(prop)))
                 throw new Exception(prop + " is missing or has empty value, please add to the configuration.");
@@ -28,7 +28,8 @@ public class BaseIntegrator {
     }
 
     protected void setConfig(Map<String, Object> map) throws Exception {
-        this.config = ConfigFactory.parseMap(map);
+        Config fallbackConfig = ConfigFactory.load();
+        this.config = ConfigFactory.parseMap(map).withFallback(fallbackConfig);
         validateConfig();
     }
 
@@ -79,9 +80,16 @@ public class BaseIntegrator {
     }
 
     /**
-     * This method is to get the implementation guide url.
+     * This method is to get the HCX implementation guide base path.
      */
-    public String getIGUrl() {
-        return config.getString(Constants.IG_URL);
+    public String getHCXIGBasePath() {
+        return config.getString(Constants.HCX_IG_BASE_PATH);
+    }
+
+    /**
+     * This method is to get the NRCES implementation guide base path.
+     */
+    public String getNRCESIGBasePath() {
+        return config.getString(Constants.NRCES_IG_BASE_PATH);
     }
 }

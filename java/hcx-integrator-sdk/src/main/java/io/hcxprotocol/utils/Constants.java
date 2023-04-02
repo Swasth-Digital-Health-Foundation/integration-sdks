@@ -58,7 +58,8 @@ public class Constants {
     public static final String USERNAME = "username";
     public static final String PASSWORD = "password";
     public static final String ENCRYPTION_PRIVATE_KEY = "encryptionPrivateKey";
-    public static final String IG_URL = "igUrl";
+    public static final String HCX_IG_BASE_PATH = "hcxIGBasePath";
+    public static final String NRCES_IG_BASE_PATH = "nrcesIGBasePath";
 
 
 }

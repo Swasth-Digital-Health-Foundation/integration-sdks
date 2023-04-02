@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         configMap.put("username", "participant@gmail.com");
         configMap.put("password", "12345");
         configMap.put("encryptionPrivateKey", "Mz-VPPyU4RlcuYv1IwIvzw");
-        configMap.put("igUrl", "http://localhost:8090");
+        configMap.put("hcxIGBasePath", "https://ig.hcxprotocol.io/v0.7/");
 
         HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance(configMap);
 
@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         assertEquals("participant@gmail.com", hcxIntegrator.getUsername());
         assertEquals("12345", hcxIntegrator.getPassword());
         assertEquals("Mz-VPPyU4RlcuYv1IwIvzw", hcxIntegrator.getPrivateKey());
-        assertEquals("http://localhost:8090", hcxIntegrator.getIGUrl());
+        assertEquals("https://ig.hcxprotocol.io/v0.7/", hcxIntegrator.getHCXIGBasePath());
         System.out.println("password 1 " + hcxIntegrator.getPassword());
 
         Map<String,Object> configMap1 = new HashMap<>();
@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         configMap1.put("username", "participant@gmail.com");
         configMap1.put("password", "67890");
         configMap1.put("encryptionPrivateKey", "Mz-VPPyU4RlcuYv1IwIvzw");
-        configMap1.put("igUrl", "http://localhost:8090");
+        configMap1.put("hcxIGBasePath", "https://ig.hcxprotocol.io/v0.7/");
         HCXIntegrator hcxIntegrator1 = HCXIntegrator.getInstance(configMap1);
 
         assertEquals("67890", hcxIntegrator1.getPassword());
