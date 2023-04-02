@@ -1,16 +1,40 @@
 ﻿using Hl7.Fhir.Specification.Source;
-using Io.HcxProtocol.Utils;
 using Hl7.Fhir.Validation;
-using System.IO.Compression;
-using System.IO;
+using Io.HcxProtocol.Utils;
 using System;
+using System.IO;
+using System.IO.Compression;
 
 namespace Io.HcxProtocol.Validation
 {
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
+    /// <summary>
+    /// HCXFhirValidator provides an instance which is having the HCX IG specification definitions to validate the FHIR object.
+    /// </summary>
+
     public class HCXFhirValidator
     {
         private static HCXFhirValidator instance = null;
         private Validator validator = null;
+
+        private static HCXFhirValidator GetInstance()
+        {
+            if (instance == null)
+                instance = new HCXFhirValidator();
+
+            return instance;
+        }
+
+        public static Validator GetFhirValidator()
+        {
+            return GetInstance().validator;
+        }
 
         private HCXFhirValidator()
         {
@@ -20,6 +44,7 @@ namespace Io.HcxProtocol.Validation
 
             CopySpecifiationZipToBin();
             DownloadProfileDirectory(profileDirectory);
+            DownloadNRCESProfileDirectory(profileDirectory);
 
             // create a cached resolver for resource validation
             IResourceResolver resolver = new CachedResolver(
@@ -41,22 +66,9 @@ namespace Io.HcxProtocol.Validation
             });
         }
 
-        private static HCXFhirValidator GetInstance()
-        {
-            if (instance == null)
-                instance = new HCXFhirValidator();
-
-            return instance;
-        }
-
-        public static Validator GetFhirValidator()
-        {
-            return GetInstance().validator;
-        }
-
         private bool DownloadProfileDirectory(string profileDirPath)
         {
-            string fileSourceUrl = "https://ig.hcxprotocol.io/v0.7/definitions.json.zip";
+            string fileSourceUrl = "https://ig.hcxprotocol.io/v0.7.1/definitions.json.zip";
             string profileFileName = "definitions.json.zip";
             string fullPathToFile = Path.Combine(profileDirPath, profileFileName);
             try
@@ -74,7 +86,34 @@ namespace Io.HcxProtocol.Validation
             }
             catch (System.Exception ex)
             {
-                throw new System.Exception("Unable to download Profile Directory File." + "\n" + ex.Message.ToString());
+                throw new System.Exception("Unable to download Profile Directory File." + "\n" + ex.ToString());
+            }
+
+            return true;
+        }
+
+        private bool DownloadNRCESProfileDirectory(string profileDirPath)
+        {
+            string profileDirPathNrces = Path.Combine(profileDirPath, "definitions_nrces");
+            string fileSourceUrl = "https://nrces.in/ndhm/fhir/r4/definitions.json.zip";
+            string profileFileName = "definitions_nrces.json.zip";
+            string fullPathToFile = Path.Combine(profileDirPathNrces, profileFileName);
+            try
+            {
+                if (!Directory.Exists(profileDirPathNrces))
+                {
+                    Directory.CreateDirectory(profileDirPathNrces);
+                }
+                ClearProfileDirectory(profileDirPathNrces);
+
+                HttpUtils.DownloadFile(fileSourceUrl, fullPathToFile);
+
+                string zipFilePath = fullPathToFile;
+                ZipFile.ExtractToDirectory(zipFilePath, profileDirPathNrces);
+            }
+            catch (System.Exception ex)
+            {
+                throw new System.Exception("Unable to download NRCES Profile Directory File." + "\n" + ex.ToString());
             }
 
             return true;
@@ -98,20 +137,21 @@ namespace Io.HcxProtocol.Validation
 
         static void CopySpecifiationZipToBin()
         {
-            //Used If specification.zip is not copied to local by hl7.fhir.specification.r4 itself.
-            string specificationFile = "specification.zip";
-
-            // Package Path from User Profile Directory
-            string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string packagePathUserProfile = Path.Combine(userProfilePath, ".nuget\\packages\\hl7.fhir.specification.r4\\4.3.0\\contentFiles\\any\\any", specificationFile);
-            string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, specificationFile);
-
-            // Package Path from Project Directory
-            string projectDirPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
-            string packagePathfromProject = Path.Combine(projectDirPath, "packages\\Hl7.Fhir.Specification.R4.4.3.0\\contentFiles\\any\\any", specificationFile);
-
             try
             {
+
+                //Used If specification.zip is not copied to local by hl7.fhir.specification.r4 itself.
+                string specificationFile = "specification.zip";
+
+                // Package Path from User Profile Directory
+                string userProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+                string packagePathUserProfile = Path.Combine(userProfilePath, ".nuget\\packages\\hl7.fhir.specification.r4\\4.3.0\\contentFiles\\any\\any", specificationFile);
+                string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, specificationFile);
+
+                // Package Path from Project Directory
+                string projectDirPath = Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName;
+                string packagePathfromProject = Path.Combine(projectDirPath, "packages\\Hl7.Fhir.Specification.R4.4.3.0\\contentFiles\\any\\any", specificationFile);
+
                 if (!File.Exists(basePath))
                 {
                     if (File.Exists(packagePathUserProfile))

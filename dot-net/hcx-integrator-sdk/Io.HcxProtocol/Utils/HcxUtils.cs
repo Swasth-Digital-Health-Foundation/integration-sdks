@@ -1,11 +1,17 @@
 ﻿using Io.HcxProtocol.Dto;
-using Io.HcxProtocol.Exceptions;
 using Io.HcxProtocol.Init;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Io.HcxProtocol.Utils
 {
+    /**
+     * Library  : Io.Hcx.Protocol
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     /// The common utils functionality used in HCX Integrator SDK.
     /// </summary>

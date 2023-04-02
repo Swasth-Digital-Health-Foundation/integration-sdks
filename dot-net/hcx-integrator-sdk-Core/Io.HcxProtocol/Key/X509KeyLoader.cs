@@ -7,15 +7,25 @@ using System.Text;
 
 namespace Io.HcxProtocol.Key
 {
-    public enum PemMode
-    {
-        FilePath,
-        FileText,
-        Url
-    }
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
+    /// <summary>
+    ///     X509KeyLoader class used to load RSA key from Public / Private x509 certificate.
+    /// </summary>
 
     public class X509KeyLoader
     {
+        /// <summary>
+        ///     This method used to load Public RSA Key from x509 certificate.
+        /// </summary>
+        /// <param name="pem">It is the source of x509 certificate data.</param>
+        /// <param name="pemDataMode">Provide the mode of certificate data as File, Text or Url.</param>
+        /// <returns>return Public RSA Key</returns>
         public static RSA GetRSAPublicKeyFromPem(string pem, PemMode pemDataMode)
         {
             string keyFileAllText = null;
@@ -42,6 +52,12 @@ namespace Io.HcxProtocol.Key
             return cert.GetRSAPublicKey();
         }
 
+        /// <summary>
+        ///     This method used to load Private RSA Key from x509 certificate.
+        /// </summary>
+        /// <param name="pem">It is the source of x509 certificate data.</param>
+        /// <param name="pemDataMode">Provide the mode of certificate data as File, Text or Url.</param>
+        /// <returns>return Private RSA Key</returns>
         public static RSA GetRSAPrivateKeyFromPem(string pem, PemMode pemDataMode)
         {
             string keyFileAllText = "";

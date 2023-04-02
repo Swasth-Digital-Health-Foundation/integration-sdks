@@ -2,12 +2,19 @@
 
 namespace Io.HcxProtocol.Utils
 {
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
-    /// The Date time Util to validate timestamp.
+    /// The Date time Util to validate timestamp and provide UniversalTime method.
     /// </summary>
-    public class DateTimeUtils
+    public static class DateTimeUtils
     {
-        public static bool ValidTimestamp(string timestamp)
+        public static bool IsValidTimestamp(this string timestamp)
         {
             try
             {

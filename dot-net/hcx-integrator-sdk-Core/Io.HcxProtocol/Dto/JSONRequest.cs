@@ -5,6 +5,13 @@ using System.Collections.Generic;
 
 namespace Io.HcxProtocol.Dto
 {
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     /// This is to handle json payload specific validations for error and redirect scenarios.
     /// </summary>
