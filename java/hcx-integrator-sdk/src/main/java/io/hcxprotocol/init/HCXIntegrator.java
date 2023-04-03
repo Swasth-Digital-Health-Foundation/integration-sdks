@@ -128,8 +128,9 @@ public class HCXIntegrator extends BaseIntegrator {
      * </ol>
      */
     public boolean processOutgoingRequest(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> domainHeaders, Map<String,Object> output) throws InstantiationException, IllegalAccessException {
-        return getOutgoingRequest().generateOutgoingRequest(fhirPayload, operation, recipientCode, apiCallId, correlationId, domainHeaders, output, getConfig());
+        return getOutgoingRequest().process(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", "", domainHeaders, output, getConfig());
     }
+
 
     /**
      * Generates the JWE Payload using FHIR Object, Operation and other parameters part of input. This method is used to handle the on_action API request.
@@ -186,7 +187,7 @@ public class HCXIntegrator extends BaseIntegrator {
      * </ol>
      */
     public boolean processOutgoingCallback(String fhirPayload, Operations operation, String apiCallId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output) throws InstantiationException, IllegalAccessException {
-        return getOutgoingRequest().generateOutgoingCallback(fhirPayload, operation, apiCallId, actionJwe, onActionStatus, domainHeaders, output, getConfig());
+        return getOutgoingRequest().process(fhirPayload, operation, "", apiCallId, "", actionJwe, onActionStatus, domainHeaders, output, getConfig());
     }
 
 }
