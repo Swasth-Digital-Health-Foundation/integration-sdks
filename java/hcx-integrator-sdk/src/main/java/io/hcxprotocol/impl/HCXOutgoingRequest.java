@@ -86,6 +86,11 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     }
 
     @Override
+    public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
+        return validateFHIR(fhirPayload, operation, error, config);
+    }
+
+    @Override
     public boolean createHeader(String senderCode, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error) {
         try {
             headers.put(Constants.ALG, Constants.A256GCM);

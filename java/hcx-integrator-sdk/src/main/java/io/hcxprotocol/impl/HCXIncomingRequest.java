@@ -76,6 +76,11 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     }
 
     @Override
+    public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
+        return validateFHIR(fhirPayload, operation, error, config);
+    }
+
+    @Override
     public boolean sendResponse(Map<String,Object> error, Map<String,Object> output) {
         Map<String, Object> responseObj = new HashMap<>();
         responseObj.put(Constants.TIMESTAMP, System.currentTimeMillis());
