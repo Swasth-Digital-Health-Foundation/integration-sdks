@@ -69,7 +69,7 @@ public class HCXIntegrator extends BaseIntegrator {
      *
      */
     public boolean processIncoming(String jwePayload, Operations operation, Map<String, Object> output) throws Exception {
-        return new HCXIncomingRequest().process(jwePayload, operation, output, getConfig());
+        return getIncomingRequest().process(jwePayload, operation, output, getConfig());
     }
 
     /**
