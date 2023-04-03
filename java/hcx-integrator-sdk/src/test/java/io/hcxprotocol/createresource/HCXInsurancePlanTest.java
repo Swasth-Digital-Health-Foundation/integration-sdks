@@ -37,21 +37,23 @@ class HCXInsurancePlanTest {
         hcxIntegrator = HCXIntegrator.getInstance(configMap);
     }
 
-//    @Test
-//    void validateInsurancePlanObject() throws Exception {
-//        FhirValidator validator = HCXFHIRValidator.getValidator(hcxIntegrator.getHCXIGBasePath(), hcxIntegrator.getNRCESIGBasePath());
-//
-//
-//        HCXInsurancePlan ip = createInsurancePlan();
-//        printFHIRObject(ip);
-//
-//        ValidationResult result = validator.validateWithResult(ip);
-//        assertTrue(result.isSuccessful());
-//
-//        List<SingleValidationMessage> messages = result.getMessages();
-//        assertEquals(4, messages.size());
-//        messages.forEach(message -> System.out.println(message.getSeverity() + " -- " + message.getLocationString() + " -- " + message.getMessage()));
-//    }
+    @Test
+    void validateInsurancePlanObject() throws Exception {
+        FhirValidator validator = HCXFHIRValidator.getValidator(hcxIntegrator.getHCXIGBasePath(), hcxIntegrator.getNRCESIGBasePath());
+
+
+        HCXInsurancePlan ip = createInsurancePlan();
+        printFHIRObject(ip);
+
+        ValidationResult result = validator.validateWithResult(ip);
+        System.out.println("Result " + result);
+        assertTrue(result.isSuccessful());
+
+        List<SingleValidationMessage> messages = result.getMessages();
+        System.out.println("messages " + messages);
+        assertEquals(4, messages.size());
+        messages.forEach(message -> System.out.println(message.getSeverity() + " -- " + message.getLocationString() + " -- " + message.getMessage()));
+    }
 
     private void printFHIRObject(IBaseResource ip) {
         IParser p = FhirContext.forR4().newJsonParser().setPrettyPrint(true);

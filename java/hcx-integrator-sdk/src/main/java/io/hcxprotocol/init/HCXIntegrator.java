@@ -1,8 +1,5 @@
 package io.hcxprotocol.init;
 
-import io.hcxprotocol.exception.ClientException;
-import io.hcxprotocol.impl.HCXIncomingRequest;
-import io.hcxprotocol.impl.HCXOutgoingRequest;
 import io.hcxprotocol.utils.Operations;
 
 import java.util.Map;
@@ -93,6 +90,7 @@ public class HCXIntegrator extends BaseIntegrator {
      *                  pass an empty string("") and method will generate a UUID and uses it.
      * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
      *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
+     * @param domainHeaders The domain headers to use while creating the JWE Payload.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
      * <ol>
      *    <li>output -
@@ -129,7 +127,7 @@ public class HCXIntegrator extends BaseIntegrator {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    public boolean processOutgoingRequest(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> domainHeaders, Map<String,Object> output) throws ClientException {
+    public boolean processOutgoingRequest(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> domainHeaders, Map<String,Object> output) throws InstantiationException, IllegalAccessException {
         return getOutgoingRequest().generateOutgoingRequest(fhirPayload, operation, recipientCode, apiCallId, correlationId, domainHeaders, output, getConfig());
     }
 
@@ -150,6 +148,7 @@ public class HCXIntegrator extends BaseIntegrator {
      *                  pass empty string("") and method will generate a UUID and uses it.
      * @param actionJwe The JWE Payload from the incoming request for which the response JWE Payload created here.
      * @param onActionStatus The HCX Protocol header status (x-hcx-status) value to use while creating the JEW Payload.
+     * @param domainHeaders The domain headers to use while creating the JWE Payload.
      * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
      * <ol>
      *    <li>output -
@@ -186,7 +185,7 @@ public class HCXIntegrator extends BaseIntegrator {
      *      <li>false - It is failure.</li>
      * </ol>
      */
-    public boolean processOutgoingCallback(String fhirPayload, Operations operation, String apiCallId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output) throws ClientException {
+    public boolean processOutgoingCallback(String fhirPayload, Operations operation, String apiCallId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output) throws InstantiationException, IllegalAccessException {
         return getOutgoingRequest().generateOutgoingCallback(fhirPayload, operation, apiCallId, actionJwe, onActionStatus, domainHeaders, output, getConfig());
     }
 

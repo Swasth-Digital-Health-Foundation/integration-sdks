@@ -3,20 +3,23 @@ package io.hcxprotocol.createresource;
 import ca.uhn.fhir.model.api.annotation.*;
 import ca.uhn.fhir.model.api.annotation.Extension;
 import ca.uhn.fhir.util.ElementUtil;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 import org.hl7.fhir.r4.model.*;
 
 import java.util.Collections;
 import java.util.UUID;
 
-@ResourceDef(name="InsurancePlan", profile="https://ig.hcxprotocol.io/v0.7/StructureDefinition-HCXInsurancePlan.html")
+@ResourceDef(name="InsurancePlan", profile="https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-HCXInsurancePlan.html")
 public class HCXInsurancePlan extends InsurancePlan {
 
-    public HCXInsurancePlan() {}
+    public HCXInsurancePlan() {
+    }
 
     public HCXInsurancePlan(String identifier, Enumerations.PublicationStatus status, String name) {
         this.setId(UUID.randomUUID().toString());
         Meta meta = new Meta();
-        meta.setProfile(Collections.singletonList(new CanonicalType("https://ig.hcxprotocol.io/v0.7/StructureDefinition-HCXInsurancePlan.html")));
+        meta.setProfile(Collections.singletonList(new CanonicalType("https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-HCXInsurancePlan.html")));
         this.setMeta(meta);
         this.getIdentifier().add(new Identifier().setValue(identifier));
         this.setStatus(status);
@@ -32,12 +35,12 @@ public class HCXInsurancePlan extends InsurancePlan {
         }
 
         @Child(name="HCXProofOfIdentificationExtension")
-        @Extension(url="https://ig.hcxprotocol.io/v0.7/StructureDefinition-HCXProofOfIdentificationExtension.html", definedLocally=false, isModifier=false)
+        @Extension(url="https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-HCXProofOfIdentificationExtension.html", definedLocally=false, isModifier=false)
         @Description(shortDefinition="Adding Proof of Identification as extension to base InsuracncePlan SD")
         protected IdentificationExtension identificationExtension;
 
         @Child(name="HCXProofOfPresenceExtension")
-        @Extension(url="https://ig.hcxprotocol.io/v0.7/StructureDefinition-HCXProofOfPresenceExtension.html", definedLocally=false, isModifier=false)
+        @Extension(url="https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-HCXProofOfPresenceExtension.html", definedLocally=false, isModifier=false)
         @Description(shortDefinition="Adding Proof of Presence as extension to base InsuracncePlan SD")
         protected PresenceExtension presenceExtension;
 
@@ -274,7 +277,7 @@ public class HCXInsurancePlan extends InsurancePlan {
         }
 
         @Child(name="HCXDiagnosticDocumentsExtension")
-        @Extension(url="https://ig.hcxprotocol.io/v0.7/StructureDefinition-HCXDiagnosticDocumentsExtension.html", definedLocally=false, isModifier=false)
+        @Extension(url="https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-HCXDiagnosticDocumentsExtension.html", definedLocally=false, isModifier=false)
         @Description(shortDefinition="List of documents to be submitted to claim the benefit.")
         protected DiagnosticDocumentsExtension diagnosticDocumentsExtension;
 
@@ -287,7 +290,7 @@ public class HCXInsurancePlan extends InsurancePlan {
         }
 
         @Child(name="HCXInformationalMessagesExtension")
-        @Extension(url="https://ig.hcxprotocol.io/v0.7/StructureDefinition-HCXInformationalMessagesExtension.html", definedLocally=false, isModifier=false)
+        @Extension(url="https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-HCXInformationalMessagesExtension.html", definedLocally=false, isModifier=false)
         @Description(shortDefinition="\tMessages related to the benefit.")
         protected InformationalMessagesExtension informationalMessagesExtension;
 
@@ -300,7 +303,7 @@ public class HCXInsurancePlan extends InsurancePlan {
         }
 
         @Child(name="HCXQuestionnairesExtension")
-        @Extension(url="https://ig.hcxprotocol.io/v0.7/StructureDefinition-HCXQuestionnairesExtension.html", definedLocally=false, isModifier=false)
+        @Extension(url="https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-HCXQuestionnairesExtension.html", definedLocally=false, isModifier=false)
         @Description(shortDefinition="Questionnaires to be answered to claim the benefit.")
         protected QuestionnairesExtension questionnairesExtension;
 
