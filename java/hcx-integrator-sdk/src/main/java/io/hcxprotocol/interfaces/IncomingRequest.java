@@ -115,6 +115,7 @@ public interface IncomingRequest {
      * @param fhirPayload The FHIR object extracted from the incoming JWE Payload.
      * @param operation The HCX operation or action defined by specs to understand the functional behaviour.
      * @param error A wrapper map to collect the errors from the FHIR Payload validation.
+     * @param config The config instance to get config variables.
      * <pre>
      *    {@code {
      *       "error_code": "error_message"

@@ -26,7 +26,7 @@ public abstract class FhirPayload {
 
     private static final Logger logger = LoggerFactory.getLogger(FhirPayload.class);
 
-    public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
+    public boolean validateFHIR(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
         boolean returnBool = true;
         try {
             FhirValidator validator = HCXFHIRValidator.getValidator(config.getString(Constants.HCX_IG_BASE_PATH), config.getString(Constants.NRCES_IG_BASE_PATH));
