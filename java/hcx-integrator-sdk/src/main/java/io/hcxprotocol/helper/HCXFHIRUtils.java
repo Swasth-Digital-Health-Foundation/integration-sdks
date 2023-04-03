@@ -6,8 +6,10 @@ import ca.uhn.fhir.validation.FhirValidator;
 import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ca.uhn.fhir.validation.ValidationResult;
+import com.typesafe.config.Config;
 import io.hcxprotocol.dto.ResponseError;
 import io.hcxprotocol.exception.ErrorCodes;
+import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.validator.HCXFHIRValidator;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.hl7.fhir.r4.model.*;
@@ -38,7 +40,7 @@ public class HCXFHIRUtils {
         return false;
     }
 
-    public static Bundle resourceToBundle(DomainResource res, List<DomainResource> referencedResource, Bundle.BundleType type, String bundleURL) throws Exception {
+    public static Bundle resourceToBundle(DomainResource res, List<DomainResource> referencedResource, Bundle.BundleType type, String bundleURL, String hcxIGBasePath, String nrcesIGBasePath) throws Exception {
 
         //checking for bundle version. We support bundle version v0.7.1 and above
         ResponseError err = new ResponseError();
@@ -70,7 +72,7 @@ public class HCXFHIRUtils {
         }
 
         //validating the bundle
-        FhirValidator validator = HCXFHIRValidator.getValidator();
+        FhirValidator validator = HCXFHIRValidator.getValidator(hcxIGBasePath, nrcesIGBasePath);
         ValidationResult result = validator.validateWithResult(bundle);
         List<SingleValidationMessage> messages = result.getMessages();
         List<String> errMessages = new ArrayList<>();
