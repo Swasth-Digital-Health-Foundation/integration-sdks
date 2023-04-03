@@ -7,18 +7,13 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import ca.uhn.fhir.validation.SingleValidationMessage;
 import ca.uhn.fhir.validation.ValidationResult;
 import io.hcxprotocol.dto.ResponseError;
-import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.validator.HCXFHIRValidator;
 import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.hl7.fhir.r4.model.*;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class HCXFHIRUtils {
 
@@ -32,13 +27,10 @@ public class HCXFHIRUtils {
         System.out.println("bundledef" + bundleDef);
         ComparableVersion versionBundle = new ComparableVersion(bundleDef.getVersion());
         ComparableVersion versionBase = new ComparableVersion("0.7");
-        if (versionBundle.compareTo(versionBase) > 0) {
-            return true;
-        }
-        return false;
+        return versionBundle.compareTo(versionBase) > 0;
     }
 
-    public static Bundle resourceToBundle(DomainResource res, List<DomainResource> referencedResource, Bundle.BundleType type, String bundleURL) throws Exception {
+    public static Bundle resourceToBundle(DomainResource res, List<DomainResource> referencedResource, Bundle.BundleType type, String bundleURL, String hcxIGBasePath, String nrcesIGBasePath) throws Exception {
 
         //checking for bundle version. We support bundle version v0.7.1 and above
         ResponseError err = new ResponseError();
@@ -70,7 +62,7 @@ public class HCXFHIRUtils {
         }
 
         //validating the bundle
-        FhirValidator validator = HCXFHIRValidator.getValidator();
+        FhirValidator validator = HCXFHIRValidator.getValidator(hcxIGBasePath, nrcesIGBasePath);
         ValidationResult result = validator.validateWithResult(bundle);
         List<SingleValidationMessage> messages = result.getMessages();
         List<String> errMessages = new ArrayList<>();
@@ -91,7 +83,7 @@ public class HCXFHIRUtils {
         for(int i=0; i<newBundle.getEntry().size(); i++){
             Bundle.BundleEntryComponent par = newBundle.getEntry().get(i);
             DomainResource dm = (DomainResource) par.getResource();
-            if (dm.getMeta().getProfile().get(0).getValue() == resourceURL){
+            if (Objects.equals(dm.getMeta().getProfile().get(0).getValue(), resourceURL)){
                 return dm;
             }
         }
@@ -101,8 +93,7 @@ public class HCXFHIRUtils {
     public static DomainResource getPrimaryResource(Bundle resource){
         Bundle newBundle = resource.copy();
         Bundle.BundleEntryComponent par = newBundle.getEntry().get(0);
-        DomainResource dm = (DomainResource) par.getResource();
-        return dm;
+        return (DomainResource) par.getResource();
     }
 
 
@@ -112,7 +103,7 @@ public class HCXFHIRUtils {
         for(int i=0; i<newBundle.getEntry().size(); i++){
             Bundle.BundleEntryComponent par = newBundle.getEntry().get(i);
             DomainResource dm = (DomainResource) par.getResource();
-            if (dm.getMeta().getProfile().get(0).getValue() != resourceURL){
+            if (!Objects.equals(dm.getMeta().getProfile().get(0).getValue(), resourceURL)){
                 dmList.add(dm);
             }
         }
