@@ -62,7 +62,7 @@ public class BaseIntegrator {
         }
         return defaultClass.newInstance();
     }
-
+    
     /**
      * This method is to get the hcx protocol base path.
      */

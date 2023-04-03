@@ -29,6 +29,7 @@ It expects the below details as configuration to set the context in the integrat
 | encryptionPrivateKey | The private key of the integrator to use it for encryption.|
 | igUrl	|The HCX instance FHIR IG URL to access the FHIR bundles for validation.|
 
+
 Please use the “init” static method from HCXIntegrator class by passing the configuration to set the context. The SDK won’t work as expected without calling this method with required configuration details. It throws an exception when we access the SDK without initializing it.
 
 Below is the sample code snippet to initialise the SDK.
@@ -51,6 +52,7 @@ HCXIntegrator.init(configDictionary);
 ## Processing An Incoming Request:
 
 The participant system implements the HCX Protocol API Specification. The incoming request payload from other participants via HCX instance will have the FHIR object. It requires validation, decryption and other steps top process it. Below is the SDK method which will help in executing these steps easily
+
 ```
 //Processing an incoming request to extract the FHIR object.
 

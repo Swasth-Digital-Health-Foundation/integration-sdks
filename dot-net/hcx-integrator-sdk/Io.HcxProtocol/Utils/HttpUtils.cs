@@ -8,8 +8,15 @@ using System.Text;
 
 namespace Io.HcxProtocol.Utils
 {
+    /**
+     * Library  : Io.Hcx.Protocol
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
-    /// The REST API Util using Unirest library.
+    /// The REST API Utility to make http request.
     /// </summary>
     public class HttpUtils
     {

@@ -6,6 +6,13 @@ using System.Collections.Generic;
 
 namespace Io.HcxProtocol.Helper
 {
+    /**
+     * Library  : Io.Hcx.Protocol.Core
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
     /// <summary>
     /// This is to validate the incoming request protocol headers.
     /// </summary>
@@ -73,7 +80,7 @@ namespace Io.HcxProtocol.Helper
             }
             catch (Exception ex)
             {
-                error.Add(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ex.Message.ToString());
+                error.Add(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ex.ToString());
                 return false;
             }
             return true;

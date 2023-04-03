@@ -5,6 +5,17 @@ using System.Security.Cryptography;
 
 namespace Io.HcxProtocol.Jwe
 {
+    /**
+     * Library  : Io.Hcx.Protocol
+     * Author   : WalkingTree Technologies
+     * Date     : 15-Mar-2023
+     * All Rights Reserved. WalkingTree Technologies.
+     **/
+
+    /// <summary>
+    ///     The <b>Jwe Request</b> class provide the methods to help to Encrypt & Decrypt the payload with RSA Key and return Encrypted payload / Decrypted FHIR object & Headers..
+    /// </summary>
+
     public class JweRequest: IJweRequest
     {
         public static JweAlgorithm KEY_MANAGEMENT_ALGORITHM = JweAlgorithm.RSA_OAEP_256;

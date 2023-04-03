@@ -8,6 +8,8 @@
 		<Version>1.0.0</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Description>HCX Integration Library provides a simplified way to access the HCX platform and process the outgoing and incoming request.</Description>
+		<Authors>WalkingTree Technologies</Authors>
 	</PropertyGroup>
 
 	<ItemGroup>
