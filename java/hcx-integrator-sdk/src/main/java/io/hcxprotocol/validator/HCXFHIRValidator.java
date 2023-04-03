@@ -23,7 +23,7 @@ public class HCXFHIRValidator {
 
     private HCXFHIRValidator(String hcxIGBasePath, String nrcesIGBasePath) throws Exception {
         FhirContext fhirContext = FhirContext.forR4();
-        fhirContext.setDefaultTypeForProfile("https://ig.hcxprotocol.io/v0.7/StructureDefinition-HCXInsurancePlan.html", HCXInsurancePlan.class);
+        fhirContext.setDefaultTypeForProfile(hcxIGBasePath + "StructureDefinition-HCXInsurancePlan.html", HCXInsurancePlan.class);
         // Create a chain that will hold the validation modules
         System.out.println("we have started");
         ValidationSupportChain supportChain = new ValidationSupportChain();

@@ -3,7 +3,6 @@ package io.hcxprotocol.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.typesafe.config.Config;
 import io.hcxprotocol.dto.ResponseError;
-import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.helper.FhirPayload;
 import io.hcxprotocol.helper.ValidateHelper;
 import io.hcxprotocol.interfaces.IncomingRequest;
