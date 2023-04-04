@@ -39,29 +39,6 @@ public class BaseIntegrator {
     protected Config getConfig(){
         return this.config;
     }
-
-    protected IncomingRequest getIncomingRequest() throws InstantiationException, IllegalAccessException {
-        return getProcessRequest(Constants.INCOMING_REQUEST_CLASS, HCXIncomingRequest.class);
-    }
-
-    protected OutgoingRequest getOutgoingRequest() throws InstantiationException, IllegalAccessException {
-        return getProcessRequest(Constants.OUTGOING_REQUEST_CLASS, HCXOutgoingRequest.class);
-    }
-
-    private <T> T getProcessRequest(String configKey, Class<T> defaultClass) throws InstantiationException, IllegalAccessException {
-        if (getConfig().hasPathOrNull(configKey)) {
-            String className = getConfig().getString(configKey);
-            try {
-                Class<?> clazz = Class.forName(className);
-                Object instance = clazz.newInstance();
-                logger.info("Request class {} provided in the config exists.", className);
-                return (T) instance;
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
-                logger.error("Request class {} provided in the config map does not exist, hence default {} is used.", className, defaultClass);
-            }
-        }
-        return defaultClass.newInstance();
-    }
     
     /**
      * This method is to get the hcx protocol base path.
