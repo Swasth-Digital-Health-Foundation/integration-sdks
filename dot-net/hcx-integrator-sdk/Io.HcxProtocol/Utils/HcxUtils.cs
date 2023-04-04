@@ -43,11 +43,11 @@ namespace Io.HcxProtocol.Utils
             }
             else if (response.Status == 401)
             {
-                throw new ClientException("Error while generating API access token: Invalid credentials");
+                throw new System.Exception("Error while generating API access token: Invalid credentials");
             }
             else
             {
-                throw new ServerException("Error while generating API access token :: status: " + response.Status + " :: message: " + responseBody);
+                throw new System.Exception("Error while generating API access token :: status: " + response.Status + " :: message: " + responseBody);
             }
             return token;
         }
@@ -66,7 +66,7 @@ namespace Io.HcxProtocol.Utils
             }
             else
             {
-                throw new ServerException("Error while fetching the participant details from the registry :: status: " + response.Status + " :: " + response.Body);
+                throw new System.Exception("Error while fetching the participant details from the registry :: status: " + response.Status + " :: " + response.Body);
             }
             return details.Any() ? details.FirstOrDefault() : new Dictionary<string, object>();
         }
