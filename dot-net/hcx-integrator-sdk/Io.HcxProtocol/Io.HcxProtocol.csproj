@@ -4,7 +4,7 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 
 		<RootNamespace>Io.HcxProtocol</RootNamespace>
-		<AssemblyName>Io.HcxProtocol</AssemblyName>
+		<AssemblyName>Io.Hcx.Protocol</AssemblyName>
 		<Version>1.0.1</Version>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
