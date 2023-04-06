@@ -75,7 +75,7 @@ namespace Io.HcxProtocol.Interfaces
         ///         <item>false - It is failure.</item>
         ///     </list>
         /// </returns>
-        bool Generate(string fhirPayload, Operations operation, string recipientCode, Dictionary<string, object> output);
+        bool Generate(string fhirPayload, string correlationId, Operations operation, string recipientCode, Dictionary<string, object> output);
 
         /// <summary>
         ///     Generates the JWE Payload using FHIR Object, Operation and other parameters part of input. This method is used to handle the on_action API request.
@@ -181,7 +181,7 @@ namespace Io.HcxProtocol.Interfaces
         ///         <item>false - It is failure.</item>
         ///     </list>
         /// </returns>
-        bool CreateHeader(string recipientCode, string actionJwe, string onActionStatus, Dictionary<string, object> headers);
+        bool CreateHeader(string correlationId, string recipientCode, string actionJwe, string onActionStatus, Dictionary<string, object> headers);
 
         /// <summary>
         ///     It generates JWE Payload using the HCX Protocol Headers and FHIR object. The JWE Payload follows RFC7516.

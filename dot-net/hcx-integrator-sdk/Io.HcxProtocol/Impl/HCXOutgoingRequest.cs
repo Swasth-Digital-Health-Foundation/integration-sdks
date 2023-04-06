@@ -49,17 +49,17 @@ namespace Io.HcxProtocol.Impl
     {
         public HCXOutgoingRequest() { }
 
-        public bool Generate(string fhirPayload, Operations operation, string recipientCode, Dictionary<string, object> output)
+        public bool Generate(string fhirPayload, string correaltionId, Operations operation, string recipientCode, Dictionary<string, object> output)
         {
-            return Process(fhirPayload, operation, recipientCode, "", "", output);
+            return Process(fhirPayload, correaltionId, operation, recipientCode, "", "", output);
         }
 
         public bool Generate(string fhirPayload, Operations operation, string actionJwe, string onActionStatus, Dictionary<string, object> output)
         {
-            return Process(fhirPayload, operation, "", actionJwe, onActionStatus, output);
+            return Process(fhirPayload, "", operation, "", actionJwe, onActionStatus, output);
         }
 
-        private bool Process(string fhirPayload, Operations operation, string recipientCode, string actionJwe, string onActionStatus, Dictionary<string, object> output)
+        private bool Process(string fhirPayload, string correaltionId, Operations operation, string recipientCode, string actionJwe, string onActionStatus, Dictionary<string, object> output)
         {
             bool result = false;
             try
@@ -73,7 +73,7 @@ namespace Io.HcxProtocol.Impl
                 {
                     foreach (var err in error) output.Add(err.Key, err.Value);
                 }
-                else if (!CreateHeader(recipientCode, actionJwe, onActionStatus, headers))
+                else if (!CreateHeader(correaltionId, recipientCode, actionJwe, onActionStatus, headers))
                 {
                     foreach (var err in headers) output.Add(err.Key, err.Value);
                 }
@@ -96,7 +96,7 @@ namespace Io.HcxProtocol.Impl
             }
         }
 
-        public bool CreateHeader(string recipientCode, string actionJwe, string onActionStatus, Dictionary<string, object> headers)
+        public bool CreateHeader(string correlationId, string recipientCode, string actionJwe, string onActionStatus, Dictionary<string, object> headers)
         {
             try
             {
@@ -107,7 +107,9 @@ namespace Io.HcxProtocol.Impl
                 {
                     headers.Add(Constants.HCX_SENDER_CODE, HCXIntegrator.config.ParticipantCode);
                     headers.Add(Constants.HCX_RECIPIENT_CODE, recipientCode);
-                    headers.Add(Constants.HCX_CORRELATION_ID, Guid.NewGuid().ToString());
+                    if (string.IsNullOrEmpty(correlationId))
+                        correlationId = Guid.NewGuid().ToString();
+                    headers.Add(Constants.HCX_CORRELATION_ID, correlationId);
                 }
                 else
                 {
