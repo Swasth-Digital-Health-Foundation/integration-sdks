@@ -35,8 +35,21 @@ namespace Io.HcxProtocol.Utils
                 {"grant_type", "password"}
             };
             HttpResponse response = HttpUtils.Post(HCXIntegrator.config.AuthBasePath, headers, fields);
-            var responseBody = JSONUtils.Deserialize<Dictionary<string, string>>(response.Body);
-            return responseBody["access_token"];
+            var responseBody = JSONUtils.Deserialize<Dictionary<string, string>>(response.Body);//JsonConvert.DeserializeObject<Dictionary<string, string>>(response.Body);
+            string token;
+            if (response.Status == 200)
+            {
+               token = responseBody["access_token"];
+            }
+            else if (response.Status == 401)
+            {
+               throw new System.Exception("Error while generating API access token: Invalid credentials");
+            }
+            else
+             {
+                 throw new System.Exception("Error while generating API access token :: status: " + response.Status + " :: message: " + responseBody);
+             }
+             return token;
         }
 
         public static Dictionary<string, object> SearchRegistry(object participantCode)
