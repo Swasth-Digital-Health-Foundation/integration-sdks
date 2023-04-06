@@ -66,7 +66,7 @@ namespace Io.HcxProtocol.Utils
             }
             else
             {
-                throw new System.Exception("Error in fetching the participant details" + response.Status);
+              throw new System.Exception("Error while fetching the participant details from the registry :: status: " + response.Status + " :: " + response.Body);
             }
             return details.Any() ? details.FirstOrDefault() : new Dictionary<string, object>();
         }
