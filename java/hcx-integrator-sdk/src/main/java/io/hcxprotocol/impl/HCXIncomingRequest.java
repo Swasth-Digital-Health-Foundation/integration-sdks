@@ -37,7 +37,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     private static final Logger logger = LoggerFactory.getLogger(HCXIncomingRequest.class);
 
     @Override
-    public boolean process(String jwePayload, Operations operation, Map<String, Object> output, Config config) throws Exception {
+    final public boolean process(String jwePayload, Operations operation, Map<String, Object> output, Config config) throws Exception {
         Map<String, Object> error = new HashMap<>();
         boolean result = false;
         jwePayload = formatPayload(jwePayload);
