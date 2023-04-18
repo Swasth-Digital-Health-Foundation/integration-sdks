@@ -4,7 +4,6 @@ import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.RSADecrypter;
 import com.nimbusds.jose.crypto.RSAEncrypter;
 import com.nimbusds.jose.util.Base64URL;
-import io.hcxprotocol.interfaces.IJweRequest;
 import org.bouncycastle.util.io.pem.PemObject;
 import org.bouncycastle.util.io.pem.PemReader;
 
@@ -19,7 +18,7 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class JweRequest implements IJweRequest {
+public class JweRequest {
 
     public static final JWEAlgorithm KEY_MANAGEMENT_ALGORITHM = JWEAlgorithm.RSA_OAEP_256;
     public static final EncryptionMethod CONTENT_ENCRYPTION_ALGORITHM = EncryptionMethod.A256GCM;
