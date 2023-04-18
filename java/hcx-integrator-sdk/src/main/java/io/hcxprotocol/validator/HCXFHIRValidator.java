@@ -83,7 +83,7 @@ public class HCXFHIRValidator {
         StructureDefinition sdHCXDiagnosticDocumentsExtension_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXDiagnosticDocumentsExtension.json").openStream());
         StructureDefinition sdHCXInformationalMessagesExtension_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXInformationalMessagesExtension.json").openStream());
         StructureDefinition sdHCXQuestionnairesExtension_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXQuestionnairesExtension.json").openStream());
-        StructureDefinition sdHCXCoverageEleComp_v071 = (StructureDefinition) parser.parseResource(new URL("https://ig.hcxprotocol.io/v0.7.1/StructureDefinition-CoverageEligibilityRequestBundle.json").openStream());
+        StructureDefinition sdHCXCoverageEleComp_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CoverageEligibilityRequestBundle.json").openStream());
 
         /**
          * Adding the valusets from v0.7.1
