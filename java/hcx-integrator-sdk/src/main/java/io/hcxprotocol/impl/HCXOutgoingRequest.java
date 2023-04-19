@@ -56,7 +56,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     private static final Logger logger = LoggerFactory.getLogger(HCXOutgoingRequest.class);
 
     @Override
-    final public boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output, Config config){
+    public boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output, Config config){
         boolean result = false;
         try {
             Map<String, Object> error = new HashMap<>();
