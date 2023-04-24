@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class HCXFHIRValidator {
+public class HCXFHIRValidator{
 
     private static final Logger logger = LoggerFactory.getLogger(HCXFHIRValidator.class);
     private static HCXFHIRValidator instance = null;
@@ -82,25 +82,16 @@ public class HCXFHIRValidator {
     }
 
     public void downloadZip(URL url, String outputDir) throws Exception {
-        URLConnection conn;
-        InputStream in = null;
-        FileOutputStream out = null;
-        try {
-            conn = url.openConnection();
-            in = conn.getInputStream();
-            out = new FileOutputStream(outputDir);
+        URLConnection conn = url.openConnection();
+        try(FileOutputStream out = new FileOutputStream(outputDir);
+            InputStream in = conn.getInputStream()){
             byte[] b = new byte[1024];
             int count;
             while ((count = in.read(b)) >= 0) {
                 out.write(b, 0, count);
             }
-        } catch (Exception e){
-           throw new Exception("Error while Downloading the zip file");
-        }finally {
-            if(out!=null) {
-                out.flush();
-                out.close();}
-            if(in!=null) in.close();
+        }catch (Exception e){
+            throw new Exception("Error while Downloading the zip file");
         }
     }
 
