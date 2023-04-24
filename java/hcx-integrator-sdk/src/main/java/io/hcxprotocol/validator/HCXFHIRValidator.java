@@ -116,7 +116,7 @@ public class HCXFHIRValidator {
                     prePopulatedSupport.addStructureDefinition(parser.parseResource(new FileReader(file)));
                 } else if (file.getName().startsWith("ValueSet")) {
                     prePopulatedSupport.addValueSet(parser.parseResource(new FileReader(file)));
-                } else if(file.getName().startsWith("StructureDefinition-HCXInsurancePlan")){
+                } else if(file.getName().contains("StructureDefinition-HCXInsurancePlan.json")){
                     fhirContext.setDefaultTypeForProfile(file.toString(),HCXInsurancePlan.class);
                 }
             }
