@@ -55,12 +55,13 @@ public class HCXFHIRValidator {
 
         // Create a PrePopulatedValidationSupport which can be used to load custom definitions.
         PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(fhirContext);
-        logger.info("Before loading Profiles "  + prePopulatedSupport.fetchAllConformanceResources().toString());
+        logger.info("Before loading ::  profiles : {}", prePopulatedSupport.fetchAllConformanceResources().toString());
+
 
         loadProfiles(prePopulatedSupport, parser, "nrces_definitions",fhirContext);
         loadProfiles(prePopulatedSupport, parser, "hcx_definitions",fhirContext);
 
-        logger.info("after loading Profiles "  + prePopulatedSupport.fetchAllConformanceResources().toString());
+        logger.info("After loading ::  profiles : {}", prePopulatedSupport.fetchAllConformanceResources().toString());
         supportChain.addValidationSupport(prePopulatedSupport);
         CachingValidationSupport cache = new CachingValidationSupport(supportChain);
 
@@ -94,9 +95,11 @@ public class HCXFHIRValidator {
                 out.write(b, 0, count);
             }
         } finally {
-            out.flush();
-            out.close();
-            in.close();
+            if(out!=null) {
+                out.flush();
+                out.close();
+                in.close();
+            }
         }
     }
 
