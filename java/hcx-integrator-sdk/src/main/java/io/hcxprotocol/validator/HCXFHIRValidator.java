@@ -81,10 +81,13 @@ public class HCXFHIRValidator {
     }
 
     public void downloadZip(URL url, String outputDir) throws IOException {
-        URLConnection conn = url.openConnection();
-        InputStream in = conn.getInputStream();
-        FileOutputStream out = new FileOutputStream(outputDir);
+        URLConnection conn;
+        InputStream in = null;
+        FileOutputStream out = null;
         try {
+            conn = url.openConnection();
+            in = conn.getInputStream();
+            out = new FileOutputStream(outputDir);
             byte[] b = new byte[1024];
             int count;
             while ((count = in.read(b)) >= 0) {
@@ -131,8 +134,8 @@ public class HCXFHIRValidator {
         return newDirectory;
     }
 
-    public boolean isPresent(Path Directory){
-        File file = new File(Directory.toString());
+    public boolean isPresent(Path directoryExist){
+        File file = new File(directoryExist.toString());
         return !file.exists() && !file.isDirectory();
     }
 
