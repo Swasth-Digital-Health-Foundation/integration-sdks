@@ -100,8 +100,7 @@ public class HCXFHIRValidator {
             if(out!=null) {
                 out.flush();
                 out.close();}
-            if(in!=null){
-                in.close();}
+            if(in!=null) in.close();
         }
     }
 
