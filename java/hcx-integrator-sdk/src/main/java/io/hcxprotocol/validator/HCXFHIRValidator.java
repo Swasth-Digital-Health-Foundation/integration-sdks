@@ -81,7 +81,7 @@ public class HCXFHIRValidator {
         return getInstance(hcxIGBasePath, nrcesIGBasePath).validator;
     }
 
-    public void downloadZip(URL url, String outputDir) throws IOException {
+    public void downloadZip(URL url, String outputDir) throws Exception {
         URLConnection conn;
         InputStream in = null;
         FileOutputStream out = null;
@@ -94,12 +94,14 @@ public class HCXFHIRValidator {
             while ((count = in.read(b)) >= 0) {
                 out.write(b, 0, count);
             }
-        } finally {
+        } catch (Exception e){
+           throw new Exception("Error while Downloading the zip file");
+        }finally {
             if(out!=null) {
                 out.flush();
-                out.close();
-                in.close();
-            }
+                out.close();}
+            if(in!=null){
+                in.close();}
         }
     }
 
@@ -142,7 +144,7 @@ public class HCXFHIRValidator {
         return !file.exists() && !file.isDirectory();
     }
 
-    public void downloadAndExtractZip(String type , String url, String zipFileName) throws IOException {
+    public void downloadAndExtractZip(String type , String url, String zipFileName) throws Exception {
         String currentDir = System.getProperty("user.dir") + "/";
         Path newDir = Paths.get(currentDir, type);
         downloadZip(new URL(url),currentDir + zipFileName);
