@@ -22,7 +22,7 @@ import java.util.zip.ZipInputStream;
 
 public class HCXFHIRValidator {
 
-    private static final Logger logger = LoggerFactory.getLogger(HCXIncomingRequest.class);
+    private static final Logger logger = LoggerFactory.getLogger(HCXFHIRValidator.class);
     private static HCXFHIRValidator instance = null;
 
     private FhirValidator validator = null;
