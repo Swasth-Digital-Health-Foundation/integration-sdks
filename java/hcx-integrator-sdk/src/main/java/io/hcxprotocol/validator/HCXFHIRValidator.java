@@ -108,7 +108,7 @@ public class HCXFHIRValidator {
     }
 
     public void loadProfiles(PrePopulatedValidationSupport prePopulatedSupport, IParser parser, String type) throws FileNotFoundException {
-        File dir = new File(System.getProperty("user.dir") + "\\" + type);
+        File dir = new File(System.getProperty("user.dir") + type);
         File[] directoryList = dir.listFiles();
         if (directoryList != null) {
             for (File file : directoryList) {
