@@ -5,10 +5,8 @@ import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.validation.FhirValidator;
 import io.hcxprotocol.createresource.HCXInsurancePlan;
-import io.hcxprotocol.utils.JSONUtils;
 import org.hl7.fhir.common.hapi.validation.support.*;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
-import org.hl7.fhir.r4.model.*;
 
 import java.io.*;
 import java.net.URL;
@@ -16,7 +14,6 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -41,29 +38,17 @@ public class HCXFHIRValidator {
         Path newDirNRCES = Paths.get(currentDir, "nrces_definitions");
         Path newDirHCX = Paths.get(currentDir, "hcx_definitions");
 
-        File nrcesFile = new File(newDirNRCES.toString());
-        boolean isPresentNRCESPath = nrcesFile.exists() && nrcesFile.isDirectory();
-        if (!isPresentNRCESPath) {
-            Files.createDirectory(newDirNRCES);
-        }
-
-        File hcxFile = new File(newDirHCX.toString());
-        boolean isPresentHCXPath = hcxFile.exists() && hcxFile.isDirectory();
-        if (!isPresentHCXPath) {
-            Files.createDirectory(newDirHCX);
-        }
-
+        // Download zip files
         downloadZip(new URL(hcxIGBasePath), currentDir + "hcx_definitions.zip");
         downloadZip(new URL(nrcesIGBasePath), currentDir + "nrces_definitions.zip");
 
-       // extract zip files
-        if (!isPresentNRCESPath) {
-            decompressZIP(Paths.get(currentDir, "nrces_definitions.zip"), newDirNRCES);
+        // extract zip files
+        if(isPresent(newDirNRCES)) {
+            decompressZIP(Paths.get(currentDir, "nrces_definitions.zip"), isDirExists(newDirNRCES));
         }
-        if (!isPresentHCXPath) {
-            decompressZIP(Paths.get(currentDir, "hcx_definitions.zip"), newDirHCX);
+        if(isPresent(newDirHCX)) {
+            decompressZIP(Paths.get(currentDir, "hcx_definitions.zip"), isDirExists(newDirHCX));
         }
-
         // DefaultProfileValidationSupport supplies base FHIR definitions. This is generally required
         // even if we are using custom profiles, since those profiles will derive from the base
         // definitions.
@@ -84,7 +69,6 @@ public class HCXFHIRValidator {
         loadProfiles(prePopulatedSupport, parser, "hcx_definitions");
         supportChain.addValidationSupport(prePopulatedSupport);
         CachingValidationSupport cache = new CachingValidationSupport(supportChain);
-        System.out.println(prePopulatedSupport.fetchAllConformanceResources());
 
         // Create a validator using the FhirInstanceValidator module.
         FhirInstanceValidator validatorModule = new FhirInstanceValidator(cache);
@@ -125,15 +109,13 @@ public class HCXFHIRValidator {
             }
             zipInputStream.closeEntry();
         }
-//        File file = new File(zipFile.toUri());
-//        boolean deleted = file.delete();
     }
 
     public void loadProfiles(PrePopulatedValidationSupport prePopulatedSupport, IParser parser, String type) throws FileNotFoundException {
         File dir = new File(System.getProperty("user.dir") + "\\" + type);
-        File[] directoryListing = dir.listFiles();
-        if (directoryListing != null) {
-            for (File file : directoryListing) {
+        File[] directoryList = dir.listFiles();
+        if (directoryList != null) {
+            for (File file : directoryList) {
                 if (file.getName().startsWith("StructureDefinition")) {
                     prePopulatedSupport.addStructureDefinition(parser.parseResource(new FileReader(file)));
                 } else if (file.getName().startsWith("ValueSet")) {
@@ -141,5 +123,17 @@ public class HCXFHIRValidator {
                 }
             }
         }
+    }
+
+    public Path isDirExists(Path newDirectory) throws IOException {
+        if(isPresent(newDirectory)){
+            Files.createDirectory(newDirectory);
+        }
+        return newDirectory;
+    }
+
+    public boolean isPresent(Path Directory){
+        File file = new File(Directory.toString());
+        return !file.exists() && !file.isDirectory();
     }
 }
