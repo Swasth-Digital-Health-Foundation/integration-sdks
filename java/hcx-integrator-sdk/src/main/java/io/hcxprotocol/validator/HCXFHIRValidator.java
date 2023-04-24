@@ -5,8 +5,11 @@ import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.validation.FhirValidator;
 import io.hcxprotocol.createresource.HCXInsurancePlan;
+import io.hcxprotocol.impl.HCXIncomingRequest;
 import org.hl7.fhir.common.hapi.validation.support.*;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.URL;
@@ -19,6 +22,7 @@ import java.util.zip.ZipInputStream;
 
 public class HCXFHIRValidator {
 
+    private static final Logger logger = LoggerFactory.getLogger(HCXIncomingRequest.class);
     private static HCXFHIRValidator instance = null;
 
     private FhirValidator validator = null;
@@ -31,24 +35,12 @@ public class HCXFHIRValidator {
         FhirContext fhirContext = FhirContext.forR4();
         fhirContext.setDefaultTypeForProfile(hcxIGBasePath + "StructureDefinition-HCXInsurancePlan.html", HCXInsurancePlan.class);
         //   Create a chain that will hold the validation modules
-        System.out.println("we have started");
+        logger.info("we have started");
         ValidationSupportChain supportChain = new ValidationSupportChain();
-        String currentDir = System.getProperty("user.dir") + "\\";
 
-        Path newDirNRCES = Paths.get(currentDir, "nrces_definitions");
-        Path newDirHCX = Paths.get(currentDir, "hcx_definitions");
+        downloadAndExtractZip("nrces_definitions",nrcesIGBasePath,"nrces_definitions.zip");
+        downloadAndExtractZip("hcx_definitions",hcxIGBasePath,"hcx_definitions.zip");
 
-        // Download zip files
-        downloadZip(new URL(hcxIGBasePath), currentDir + "hcx_definitions.zip");
-        downloadZip(new URL(nrcesIGBasePath), currentDir + "nrces_definitions.zip");
-
-        // extract zip files
-        if(isPresent(newDirNRCES)) {
-            decompressZIP(Paths.get(currentDir, "nrces_definitions.zip"), isDirExists(newDirNRCES));
-        }
-        if(isPresent(newDirHCX)) {
-            decompressZIP(Paths.get(currentDir, "hcx_definitions.zip"), isDirExists(newDirHCX));
-        }
         // DefaultProfileValidationSupport supplies base FHIR definitions. This is generally required
         // even if we are using custom profiles, since those profiles will derive from the base
         // definitions.
@@ -65,8 +57,12 @@ public class HCXFHIRValidator {
 
         // Create a PrePopulatedValidationSupport which can be used to load custom definitions.
         PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(fhirContext);
+        logger.info("Before loading Profiles "  + prePopulatedSupport.fetchAllConformanceResources().toString());
+
         loadProfiles(prePopulatedSupport, parser, "nrces_definitions");
         loadProfiles(prePopulatedSupport, parser, "hcx_definitions");
+
+        logger.info("after loading Profiles "  + prePopulatedSupport.fetchAllConformanceResources().toString());
         supportChain.addValidationSupport(prePopulatedSupport);
         CachingValidationSupport cache = new CachingValidationSupport(supportChain);
 
@@ -135,5 +131,14 @@ public class HCXFHIRValidator {
     public boolean isPresent(Path Directory){
         File file = new File(Directory.toString());
         return !file.exists() && !file.isDirectory();
+    }
+
+    public void downloadAndExtractZip(String type , String url, String zipFileName) throws IOException {
+        String currentDir = System.getProperty("user.dir") + "\\";
+        Path newDir = Paths.get(currentDir, type);
+        downloadZip(new URL(url),currentDir + zipFileName);
+        if(isPresent(newDir)){
+            decompressZIP(Paths.get(currentDir,zipFileName),isDirExists(newDir));
+        }
     }
 }
