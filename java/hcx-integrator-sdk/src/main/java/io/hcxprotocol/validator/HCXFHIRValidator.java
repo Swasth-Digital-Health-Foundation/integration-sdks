@@ -5,8 +5,6 @@ import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.validation.FhirValidator;
 import io.hcxprotocol.createresource.HCXInsurancePlan;
-import io.hcxprotocol.impl.HCXIncomingRequest;
-import io.hcxprotocol.utils.JSONUtils;
 import org.hl7.fhir.common.hapi.validation.support.*;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.slf4j.Logger;
@@ -86,14 +84,17 @@ public class HCXFHIRValidator {
         URLConnection conn = url.openConnection();
         InputStream in = conn.getInputStream();
         FileOutputStream out = new FileOutputStream(outputDir);
-        byte[] b = new byte[1024];
-        int count;
-        while ((count = in.read(b)) >= 0) {
-            out.write(b, 0, count);
+        try {
+            byte[] b = new byte[1024];
+            int count;
+            while ((count = in.read(b)) >= 0) {
+                out.write(b, 0, count);
+            }
+        } finally {
+            out.flush();
+            out.close();
+            in.close();
         }
-        out.flush();
-        out.close();
-        in.close();
     }
 
     public void decompressZIP(Path zipFile, Path outputDir) throws IOException {
