@@ -81,7 +81,7 @@ public class HCXFHIRValidator{
         return getInstance(hcxIGBasePath, nrcesIGBasePath).validator;
     }
 
-    public void downloadZip(URL url, String outputDir) throws Exception {
+    public void downloadZip(URL url, String outputDir) throws IOException {
         URLConnection conn = url.openConnection();
         try(FileOutputStream out = new FileOutputStream(outputDir);
             InputStream in = conn.getInputStream()){
@@ -90,8 +90,6 @@ public class HCXFHIRValidator{
             while ((count = in.read(b)) >= 0) {
                 out.write(b, 0, count);
             }
-        }catch (Exception e){
-            throw new Exception("Error while Downloading the zip file");
         }
     }
 
