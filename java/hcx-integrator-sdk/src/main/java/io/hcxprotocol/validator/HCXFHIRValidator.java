@@ -132,7 +132,7 @@ public class HCXFHIRValidator{
         return !file.exists() && !file.isDirectory();
     }
 
-    public void downloadAndExtractZip(String type , String url, String zipFileName) throws Exception {
+    public void downloadAndExtractZip(String type , String url, String zipFileName) throws IOException {
         String currentDir = System.getProperty("user.dir") + "/";
         Path newDir = Paths.get(currentDir, type);
         downloadZip(new URL(url),currentDir + zipFileName);
