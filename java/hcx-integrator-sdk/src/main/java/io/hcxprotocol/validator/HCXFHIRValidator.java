@@ -6,6 +6,7 @@ import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.validation.FhirValidator;
 import io.hcxprotocol.createresource.HCXInsurancePlan;
 import io.hcxprotocol.impl.HCXIncomingRequest;
+import io.hcxprotocol.utils.JSONUtils;
 import org.hl7.fhir.common.hapi.validation.support.*;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.slf4j.Logger;
@@ -33,7 +34,6 @@ public class HCXFHIRValidator {
 
     private HCXFHIRValidator(String hcxIGBasePath, String nrcesIGBasePath) throws Exception {
         FhirContext fhirContext = FhirContext.forR4();
-        fhirContext.setDefaultTypeForProfile(hcxIGBasePath + "StructureDefinition-HCXInsurancePlan.html", HCXInsurancePlan.class);
         //   Create a chain that will hold the validation modules
         logger.info("we have started");
         ValidationSupportChain supportChain = new ValidationSupportChain();
@@ -59,8 +59,8 @@ public class HCXFHIRValidator {
         PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(fhirContext);
         logger.info("Before loading Profiles "  + prePopulatedSupport.fetchAllConformanceResources().toString());
 
-        loadProfiles(prePopulatedSupport, parser, "nrces_definitions");
-        loadProfiles(prePopulatedSupport, parser, "hcx_definitions");
+        loadProfiles(prePopulatedSupport, parser, "nrces_definitions",fhirContext);
+        loadProfiles(prePopulatedSupport, parser, "hcx_definitions",fhirContext);
 
         logger.info("after loading Profiles "  + prePopulatedSupport.fetchAllConformanceResources().toString());
         supportChain.addValidationSupport(prePopulatedSupport);
@@ -107,8 +107,8 @@ public class HCXFHIRValidator {
         }
     }
 
-    public void loadProfiles(PrePopulatedValidationSupport prePopulatedSupport, IParser parser, String type) throws FileNotFoundException {
-        File dir = new File(System.getProperty("user.dir") + type);
+    public void loadProfiles(PrePopulatedValidationSupport prePopulatedSupport, IParser parser, String type,FhirContext fhirContext) throws FileNotFoundException {
+        File dir = new File(System.getProperty("user.dir") + "\\" + type);
         File[] directoryList = dir.listFiles();
         if (directoryList != null) {
             for (File file : directoryList) {
@@ -116,6 +116,8 @@ public class HCXFHIRValidator {
                     prePopulatedSupport.addStructureDefinition(parser.parseResource(new FileReader(file)));
                 } else if (file.getName().startsWith("ValueSet")) {
                     prePopulatedSupport.addValueSet(parser.parseResource(new FileReader(file)));
+                } else if(file.getName().startsWith("StructureDefinition-HCXInsurancePlan")){
+                    fhirContext.setDefaultTypeForProfile(file.toString(),HCXInsurancePlan.class);
                 }
             }
         }
