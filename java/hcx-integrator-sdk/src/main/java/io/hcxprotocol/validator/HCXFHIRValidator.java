@@ -139,5 +139,6 @@ public class HCXFHIRValidator{
         if(isPresent(newDir)){
             decompressZIP(Paths.get(currentDir,zipFileName),isDirExists(newDir));
         }
+        Files.deleteIfExists(Paths.get(currentDir + zipFileName));
     }
 }
