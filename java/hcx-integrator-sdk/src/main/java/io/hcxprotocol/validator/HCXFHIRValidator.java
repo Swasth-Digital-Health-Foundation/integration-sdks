@@ -7,12 +7,21 @@ import ca.uhn.fhir.validation.FhirValidator;
 import io.hcxprotocol.createresource.HCXInsurancePlan;
 import org.hl7.fhir.common.hapi.validation.support.*;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
-import org.hl7.fhir.r4.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-public class HCXFHIRValidator {
+public class HCXFHIRValidator{
 
+    private static final Logger logger = LoggerFactory.getLogger(HCXFHIRValidator.class);
     private static HCXFHIRValidator instance = null;
 
     private FhirValidator validator = null;
@@ -23,10 +32,12 @@ public class HCXFHIRValidator {
 
     private HCXFHIRValidator(String hcxIGBasePath, String nrcesIGBasePath) throws Exception {
         FhirContext fhirContext = FhirContext.forR4();
-        fhirContext.setDefaultTypeForProfile(hcxIGBasePath + "StructureDefinition-HCXInsurancePlan.html", HCXInsurancePlan.class);
-        // Create a chain that will hold the validation modules
-        System.out.println("we have started");
+        //   Create a chain that will hold the validation modules
+        logger.info("we have started");
         ValidationSupportChain supportChain = new ValidationSupportChain();
+
+        downloadAndExtractZip("nrces_definitions",nrcesIGBasePath,"nrces_definitions.zip");
+        downloadAndExtractZip("hcx_definitions",hcxIGBasePath,"hcx_definitions.zip");
 
         // DefaultProfileValidationSupport supplies base FHIR definitions. This is generally required
         // even if we are using custom profiles, since those profiles will derive from the base
@@ -41,102 +52,16 @@ public class HCXFHIRValidator {
         supportChain.addValidationSupport(new InMemoryTerminologyServerValidationSupport(fhirContext));
 
         IParser parser = fhirContext.newJsonParser();
-        // test: load HL7 base definition
-        //StructureDefinition sdCoverageEligibilityRequest = (StructureDefinition) parser.parseResource(new URL("http://hl7.org/fhir/R4/coverageeligibilityrequest.profile.json").openStream());
-         /**
-         *adding the nrces profiles
-         */
-        StructureDefinition sdNRCESPatient = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Patient.json").openStream());
-        StructureDefinition sdNRCESOrganization = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Organization.json").openStream());
-        StructureDefinition sdNRCESPractitioner = (StructureDefinition) parser.parseResource(new URL(nrcesIGBasePath + "StructureDefinition-Practitioner.json").openStream());
-        StructureDefinition sdNRCESPractitionerRole = (StructureDefinition) parser.parseResource(new URL( nrcesIGBasePath+ "StructureDefinition-PractitionerRole.json").openStream());
-        StructureDefinition sdNRCESCondition = (StructureDefinition) parser.parseResource(new URL( nrcesIGBasePath+ "StructureDefinition-Condition.json").openStream());
-
-
-        /**
-         * Adding the Bundles resource from v0.7.1
-         */
-        StructureDefinition sdCoverageEligibilityRequestDoc_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CoverageEligibilityRequestBundle.json").openStream());
-        StructureDefinition sdCoverageEligibilityResponseDoc_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CoverageEligibilityResponseBundle.json").openStream());
-        StructureDefinition sdClaimRequestDoc_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-ClaimRequestBundle.json").openStream());
-        StructureDefinition sdClaimResponseDoc_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-ClaimResponseBundle.json").openStream());
-        StructureDefinition sdCommunicationDoc_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CommunicationBundle.json").openStream());
-
-
-        /**
-         * Adding the Resource Profiles
-         * Following extensions to base FHIR profiles: resource from v0.7.1
-         */
-
-        StructureDefinition sdCoverageEligibilityRequest_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CoverageEligibilityRequest.json").openStream());
-        StructureDefinition sdCoverageEligibilityResponse_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CoverageEligibilityResponse.json").openStream());
-        StructureDefinition sdClaim_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-Claim.json").openStream());
-        StructureDefinition sdClaimResponse_v071= (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-ClaimResponse.json").openStream());
-        StructureDefinition sdCommunicationRequest_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CommunicationRequest.json").openStream());
-        StructureDefinition sdCommunication_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-Communication.json").openStream());
-        StructureDefinition sdPaymentReconciliation_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-PaymentReconciliation.json").openStream());
-        StructureDefinition sdCoverage_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-Coverage.json").openStream());
-        StructureDefinition sdPaymentNotice_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-PaymentNotice.json").openStream());
-        StructureDefinition sdInsurancePlan_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXInsurancePlan.json").openStream());
-        StructureDefinition sdHCXProofOfIdentificationExtension_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXProofOfIdentificationExtension.json").openStream());
-        StructureDefinition sdHCXProofOfPresenceExtension_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXProofOfPresenceExtension.json").openStream());
-        StructureDefinition sdHCXDiagnosticDocumentsExtension_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXDiagnosticDocumentsExtension.json").openStream());
-        StructureDefinition sdHCXInformationalMessagesExtension_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXInformationalMessagesExtension.json").openStream());
-        StructureDefinition sdHCXQuestionnairesExtension_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-HCXQuestionnairesExtension.json").openStream());
-        StructureDefinition sdHCXCoverageEleComp_v071 = (StructureDefinition) parser.parseResource(new URL(hcxIGBasePath + "StructureDefinition-CoverageEligibilityRequestBundle.json").openStream());
-
-        /**
-         * Adding the valusets from v0.7.1
-         */
-        ValueSet vsProofOfIdentity_v071 = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-proof-of-identity-codes.json").openStream());
-        ValueSet vsProofOfPresence_v071 = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-proof-of-presence-codes.json").openStream());
-        ValueSet vsClinicalDiagnostics_v071 = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-clinical-diagnostics-document-codes.json").openStream());
-        ValueSet vsInformationalMessages_v071 = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-informational-messages-codes.json").openStream());
-        ValueSet vsClaimServiceCodes_v071 = (ValueSet) parser.parseResource(new URL(hcxIGBasePath + "ValueSet-claim-service-codes.json").openStream());
-
-
 
         // Create a PrePopulatedValidationSupport which can be used to load custom definitions.
         PrePopulatedValidationSupport prePopulatedSupport = new PrePopulatedValidationSupport(fhirContext);
-        prePopulatedSupport.addStructureDefinition(sdNRCESPatient);
-        prePopulatedSupport.addStructureDefinition(sdNRCESOrganization);
-        prePopulatedSupport.addStructureDefinition(sdNRCESPractitioner);
-        prePopulatedSupport.addStructureDefinition(sdNRCESPractitionerRole);
-        prePopulatedSupport.addStructureDefinition(sdNRCESCondition);
+        logger.info("Before loading ::  profiles : {}", prePopulatedSupport.fetchAllConformanceResources());
 
 
-        /**
-         * adding v0.7.1 profiles to prePopulatedSupport for validation chain
-         */
+        loadProfiles(prePopulatedSupport, parser, "nrces_definitions",fhirContext);
+        loadProfiles(prePopulatedSupport, parser, "hcx_definitions",fhirContext);
 
-        prePopulatedSupport.addStructureDefinition(sdCoverageEligibilityRequest_v071);
-        prePopulatedSupport.addStructureDefinition(sdCoverageEligibilityResponse_v071);
-        prePopulatedSupport.addStructureDefinition(sdClaimResponse_v071);
-        prePopulatedSupport.addStructureDefinition(sdCommunication_v071);
-        prePopulatedSupport.addStructureDefinition(sdCoverageEligibilityRequestDoc_v071);
-        prePopulatedSupport.addStructureDefinition(sdCoverageEligibilityResponseDoc_v071);
-        prePopulatedSupport.addStructureDefinition(sdClaimRequestDoc_v071);
-        prePopulatedSupport.addStructureDefinition(sdClaimResponseDoc_v071);
-        prePopulatedSupport.addStructureDefinition(sdCoverage_v071);
-        prePopulatedSupport.addStructureDefinition(sdPaymentNotice_v071);
-        prePopulatedSupport.addStructureDefinition(sdPaymentReconciliation_v071);
-        prePopulatedSupport.addStructureDefinition(sdClaim_v071);
-        prePopulatedSupport.addStructureDefinition(sdCommunicationRequest_v071);
-        prePopulatedSupport.addStructureDefinition(sdCommunicationDoc_v071);
-        prePopulatedSupport.addStructureDefinition(sdInsurancePlan_v071);
-        prePopulatedSupport.addStructureDefinition(sdHCXProofOfIdentificationExtension_v071);
-        prePopulatedSupport.addStructureDefinition(sdHCXProofOfPresenceExtension_v071);
-        prePopulatedSupport.addStructureDefinition(sdHCXDiagnosticDocumentsExtension_v071);
-        prePopulatedSupport.addStructureDefinition(sdHCXInformationalMessagesExtension_v071);
-        prePopulatedSupport.addStructureDefinition(sdHCXQuestionnairesExtension_v071);
-
-        prePopulatedSupport.addValueSet(vsClinicalDiagnostics_v071);
-        prePopulatedSupport.addValueSet(vsInformationalMessages_v071);
-        prePopulatedSupport.addValueSet(vsProofOfPresence_v071);
-        prePopulatedSupport.addValueSet(vsProofOfIdentity_v071);
-        prePopulatedSupport.addValueSet(vsClaimServiceCodes_v071);
-
-        // Add the custom definitions to the chain
+        logger.info("After loading ::  profiles : {}", prePopulatedSupport.fetchAllConformanceResources());
         supportChain.addValidationSupport(prePopulatedSupport);
         CachingValidationSupport cache = new CachingValidationSupport(supportChain);
 
@@ -156,4 +81,64 @@ public class HCXFHIRValidator {
         return getInstance(hcxIGBasePath, nrcesIGBasePath).validator;
     }
 
+    public void downloadZip(URL url, String outputDir) throws IOException {
+        URLConnection conn = url.openConnection();
+        try(FileOutputStream out = new FileOutputStream(outputDir);
+            InputStream in = conn.getInputStream()){
+            byte[] b = new byte[1024];
+            int count;
+            while ((count = in.read(b)) >= 0) {
+                out.write(b, 0, count);
+            }
+        }
+    }
+
+    public void decompressZIP(Path zipFile, Path outputDir) throws IOException {
+        try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(zipFile))) {
+            ZipEntry entry;
+            while ((entry = zipInputStream.getNextEntry()) != null) {
+                Path outputFile = outputDir.resolve(entry.getName());
+                Files.copy(zipInputStream, outputFile);
+            }
+            zipInputStream.closeEntry();
+        }
+    }
+
+    public void loadProfiles(PrePopulatedValidationSupport prePopulatedSupport, IParser parser, String type,FhirContext fhirContext) throws FileNotFoundException {
+        File dir = new File(System.getProperty("user.dir") + "/" + type);
+        File[] directoryList = dir.listFiles();
+        if (directoryList != null) {
+            for (File file : directoryList) {
+                if (file.getName().startsWith("StructureDefinition")) {
+                    prePopulatedSupport.addStructureDefinition(parser.parseResource(new FileReader(file)));
+                } else if (file.getName().startsWith("ValueSet")) {
+                    prePopulatedSupport.addValueSet(parser.parseResource(new FileReader(file)));
+                } else if(file.getName().contains("StructureDefinition-HCXInsurancePlan.json")){
+                    fhirContext.setDefaultTypeForProfile(file.toString(),HCXInsurancePlan.class);
+                }
+            }
+        }
+    }
+
+    public Path isDirExists(Path newDirectory) throws IOException {
+        if(isPresent(newDirectory)){
+            Files.createDirectory(newDirectory);
+        }
+        return newDirectory;
+    }
+
+    public boolean isPresent(Path directoryExist){
+        File file = new File(directoryExist.toString());
+        return !file.exists() && !file.isDirectory();
+    }
+
+    public void downloadAndExtractZip(String type , String url, String zipFileName) throws IOException {
+        String currentDir = System.getProperty("user.dir") + "/";
+        Path newDir = Paths.get(currentDir, type);
+        downloadZip(new URL(url),currentDir + zipFileName);
+        if(isPresent(newDir)){
+            decompressZIP(Paths.get(currentDir,zipFileName),isDirExists(newDir));
+        }
+        Files.deleteIfExists(Paths.get(currentDir + zipFileName));
+    }
 }
