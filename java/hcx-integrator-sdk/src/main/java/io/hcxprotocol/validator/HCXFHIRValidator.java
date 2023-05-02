@@ -125,6 +125,8 @@ public class HCXFHIRValidator {
     public Path isDirExists(Path newDirectory) throws IOException {
         if(isPresent(newDirectory)){
             Files.createDirectory(newDirectory);
+            newDirectory.toFile().setWritable(true);
+            newDirectory.toFile().setReadable(true);
         }
         return newDirectory;
     }
