@@ -4,7 +4,9 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.support.DefaultProfileValidationSupport;
 import ca.uhn.fhir.parser.IParser;
 import ca.uhn.fhir.validation.FhirValidator;
+import com.typesafe.config.Config;
 import io.hcxprotocol.createresource.HCXInsurancePlan;
+import io.hcxprotocol.utils.Constants;
 import org.hl7.fhir.common.hapi.validation.support.*;
 import org.hl7.fhir.common.hapi.validation.validator.FhirInstanceValidator;
 import org.slf4j.Logger;
@@ -19,7 +21,7 @@ import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-public class HCXFHIRValidator{
+public class HCXFHIRValidator {
 
     private static final Logger logger = LoggerFactory.getLogger(HCXFHIRValidator.class);
     private static HCXFHIRValidator instance = null;
@@ -77,8 +79,8 @@ public class HCXFHIRValidator{
         return instance;
     }
 
-    public static FhirValidator getValidator(String hcxIGBasePath, String nrcesIGBasePath) throws Exception {
-        return getInstance(hcxIGBasePath, nrcesIGBasePath).validator;
+    public static FhirValidator getValidator(Config config) throws Exception {
+        return getInstance(config.getString(Constants.HCX_IG_BASE_PATH), config.getString(Constants.NRCES_IG_BASE_PATH)).validator;
     }
 
     public void downloadZip(URL url, String outputDir) throws IOException {

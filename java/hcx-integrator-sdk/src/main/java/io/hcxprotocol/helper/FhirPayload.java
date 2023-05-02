@@ -29,7 +29,7 @@ public abstract class FhirPayload {
     public boolean validateFHIR(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
         boolean returnBool = true;
         try {
-            FhirValidator validator = HCXFHIRValidator.getValidator(config.getString(Constants.HCX_IG_BASE_PATH), config.getString(Constants.NRCES_IG_BASE_PATH));
+            FhirValidator validator = HCXFHIRValidator.getValidator(config);
             ValidationResult result = validator.validateWithResult(fhirPayload);
             List<SingleValidationMessage> messages = result.getMessages();
             Map<String, Object> map = JSONUtils.deserialize(fhirPayload, Map.class);

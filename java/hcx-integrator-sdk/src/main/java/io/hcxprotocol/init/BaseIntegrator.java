@@ -36,7 +36,7 @@ public class BaseIntegrator {
         validateConfig();
     }
 
-    protected Config getConfig(){
+    public Config getConfig(){
         return this.config;
     }
 

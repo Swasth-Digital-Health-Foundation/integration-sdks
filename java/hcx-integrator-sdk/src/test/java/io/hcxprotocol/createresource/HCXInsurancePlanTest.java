@@ -39,7 +39,7 @@ class HCXInsurancePlanTest {
 
     @Test
     void validateInsurancePlanObject() throws Exception {
-        FhirValidator validator = HCXFHIRValidator.getValidator(hcxIntegrator.getHCXIGBasePath(), hcxIntegrator.getNRCESIGBasePath());
+        FhirValidator validator = HCXFHIRValidator.getValidator(hcxIntegrator.getConfig());
 
 
         HCXInsurancePlan ip = createInsurancePlan();
