@@ -1,5 +1,6 @@
 package io.hcxprotocol.interfaces;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.typesafe.config.Config;
 import io.hcxprotocol.utils.Operations;
 
@@ -165,6 +166,6 @@ public interface IncomingRequest {
      *
      * @return It is a boolean value to understand the final status is successful or failure.
      */
-    boolean sendResponse(Map<String,Object> error, Map<String,Object> output);
+    boolean sendResponse(Map<String,Object> error, Map<String,Object> output) throws JsonProcessingException;
 
 }

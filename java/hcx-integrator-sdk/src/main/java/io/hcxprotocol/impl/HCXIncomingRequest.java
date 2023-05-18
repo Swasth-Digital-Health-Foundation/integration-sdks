@@ -81,7 +81,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     }
 
     @Override
-    public boolean sendResponse(Map<String,Object> error, Map<String,Object> output) {
+    public boolean sendResponse(Map<String,Object> error, Map<String,Object> output) throws JsonProcessingException {
         Map<String, Object> responseObj = new HashMap<>();
         responseObj.put(Constants.TIMESTAMP, System.currentTimeMillis());
         boolean result = false;
@@ -96,7 +96,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             // Fetching only the first error and constructing the error object
             String code = (String) error.keySet().toArray()[0];
             String message =  error.get(code).toString();
-            responseObj.put(Constants.ERROR, new ResponseError(code, message, "").toString());
+            responseObj.put(Constants.ERROR, JSONUtils.serialize(new ResponseError(code, message, "")));
         }
         output.put(Constants.RESPONSE_OBJ, responseObj);
         return result;
