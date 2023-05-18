@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.hcxprotocol</groupId>
     <artifactId>hcx-integrator-sdk</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <packaging>jar</packaging>
     <name>HCX Integrator SDK</name>
     <description>The SDK for HCX Participant System to help in integrating with HCX Gateway easily.</description>
