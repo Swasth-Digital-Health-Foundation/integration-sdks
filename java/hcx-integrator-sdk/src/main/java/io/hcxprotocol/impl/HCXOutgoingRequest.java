@@ -87,7 +87,9 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     @Override
     public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
-        return validateFHIR(fhirPayload, operation, error, config);
+        if (config.getBoolean(Constants.FHIR_VALIDATION_ENABLED))
+            return validateFHIR(fhirPayload, operation, error, config);
+        else return true;
     }
 
     @Override

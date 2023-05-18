@@ -118,4 +118,11 @@ public class BaseIntegrator {
     public String getNRCESIGBasePath() {
         return config.getString(Constants.NRCES_IG_BASE_PATH);
     }
+
+    /**
+     * This method is to get the FHIR Validation Enabled.
+     */
+    public boolean getFHIRValidationEnabled() {
+        return config.getBoolean(Constants.FHIR_VALIDATION_ENABLED);
+    }
 }

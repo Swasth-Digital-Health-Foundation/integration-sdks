@@ -60,6 +60,8 @@ public class Constants {
     public static final String ENCRYPTION_PRIVATE_KEY = "encryptionPrivateKey";
     public static final String HCX_IG_BASE_PATH = "hcxIGBasePath";
     public static final String NRCES_IG_BASE_PATH = "nrcesIGBasePath";
+
+    public static final String FHIR_VALIDATION_ENABLED = "fhirValidationEnabled";
     public static final String INCOMING_REQUEST_CLASS = "incomingRequestClass";
     public static final String OUTGOING_REQUEST_CLASS = "outgoingRequestClass";
 
