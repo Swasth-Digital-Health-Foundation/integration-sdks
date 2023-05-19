@@ -11,7 +11,7 @@ The hcx-integrator-sdk is published to [maven central repository](https://mvnrep
 <dependency>
   <groupId>io.hcxprotocol</groupId>
   <artifactId>hcx-integrator-sdk</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
 </dependency>
 ```
 
@@ -30,6 +30,7 @@ It expects the below details as configuration to set the context in the integrat
 |encryptionPrivateKey|yes|The private key of the integrator to use it for encryption.|
 |incomingRequestClass|no|To override any incoming request process methods, implement a custom class and provide the class name here. By default, it will use HCXIncomingRequest class.|
 |outgoingRequestClass|no|To override any outgoing request process methods, implement a custom class and provide the class name here. By default, it will use HCXOutgoingRequest class.|
+|fhirValidationEnabled|no|Flag to enable/disable FHIR validations. By default, the flag will be set to true.|
 
 Please use the “getInstance” static method from HCXIntegrator class by passing the configuration to set the context. The SDK won’t work as expected without calling this method with required configuration details. It throws an exception when we access the SDK without initializing it.
 
