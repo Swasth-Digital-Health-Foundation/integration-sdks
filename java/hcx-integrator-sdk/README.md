@@ -1,12 +1,14 @@
 ### **Introduction:**
-The HCX Platform providing the REST API interface to integrate and access the platform. But, it requires knowledge of the API Specification, process to generate the authorization token, refresh the token and use it in each API etc,.
+The HCX Platform provides a REST API interface to integrate and access the platform. However, working with the API requires knowledge of the API Specification, token generation process, token refresh, and token usage for each API call.
 
-The HCX Integration SDK abstract most of these operations and make it simple for the participants to work with the HCX Platform.
+The HCX Integration SDK abstracts most of these operations making it easier for the participants to work with the HCX Platform.
+
 ### **About HCX Integration SDK:**
-The SDK implemented using Java programming language and accessible as a jar file. The Javadocs also attached along with the release in github repository for the developers to understand the details about each function of the SDK.
-### **How to use:**
+The HCX Integration SDK is implemented in Java and is available as a JAR file. The GitHub repository also includes Javadocs, which provide detailed information about each function of the SDK.
 
-The hcx-integrator-sdk is published to [maven central repository](https://mvnrepository.com/artifact/io.hcxprotocol/hcx-integrator-sdk) and available for consumption. To use the sdk, add the below dependency in the pom file:
+### **How to use:**
+To use the SDK, add the following dependency to your pom.xml file from the [Maven Central Repository](https://mvnrepository.com/artifact/io.hcxprotocol/hcx-integrator-sdk):
+
 ```xml                 
 <dependency>
   <groupId>io.hcxprotocol</groupId>
@@ -15,10 +17,9 @@ The hcx-integrator-sdk is published to [maven central repository](https://mvnrep
 </dependency>
 ```
 
-The SDK expect configuration of the HCX Instance and the participant details to initialise and set the context to use it. The configuration can be given as a Java Map or JSON String. 
+The SDK expects configuration of the HCX Instance and participant details to initialize and set the context for usage. The configuration can be provided as a Java Map or a JSON string.
 
-It expects the below details as configuration to set the context in the integration environment to use the APIs within the SDK.
-
+The following configuration details are required to set the context in the integration environment for using the SDK:
 
 |**Config Variable Name**|**Mandatory**|**Details**|
 | :-: | :-: | :-: |
@@ -49,14 +50,15 @@ HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance(configMap);
 ```
 
 ### **Processing An Incoming Request:**
-The participant system implements the HCX Protocol API Specification. The incoming request payload from other participants via HCX instance will have the FHIR object. It requires validation, decryption and other steps top process it. Below is the SDK method which will help in executing these steps easily.
+The participant system implements the HCX Protocol API Specification. The incoming request payload from other participants via HCX instance will contain a FHIR object, which needs to undergo validation, decryption, and other processing steps. To simplify these steps, the SDK provides a method for processing incoming requests:
 
 ```java
 //Processing an incoming request to extract the FHIR object.
 HCXIntegrator.getInstance(configMap).processIncoming(String jwePayload, Operations operation, Map<String, Object> output);
+```
 
-
-Sample code for processing an incoming request. For reference, a sample JWE payload is also provided.
+Here's a sample code snippet that demonstrates how to process an incoming request using the SDK. For reference, a sample JWE payload is also provided:
+```java
 //Processing an incoming request
 HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance(configMap);
 Map<String, Object> output = new HashMap<>();
@@ -72,19 +74,24 @@ Please use the Javadocs to understand the input parameters and response from the
 
 ### **Generating An Outgoing Request:**
 
-The participant system generate a request payload and send it to other participants of the HCX instance. There are multiple steps involved in generating the final request payload using a FHIR object. The outgoing request payload generated in two scenarios. They are,
+The participant system generates a request payload and send it to other participants of the HCX instance. The process involves multiple steps using a FHIR object. There are two scenarios for generating the outgoing request payload:
 
 1. Initialising a new request for a workflow.
-1. Responding to the incoming request.
+2. Responding to the incoming request.
 
 Below are the SDK methods which will help in executing these steps easily.
+
 ```java
 // Initialising a new request for a workflow
 HCXIntegrator.getInstance(configMap).processOutgoingRequest(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, Map<String,Object> domainHeaders, Map<String,Object> output);
 
 // Responding to the incoming request
 HCXIntegrator.getInstance(configMap).processOutgoingCallback(String fhirPayload, Operations operation, String apiCallId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output);
+```
 
+Here's an example of using these methods:
+
+```java
 //Sample code
 HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance(configMap);
 Map<String, Object> domainHeaders = new HashMap<>();
@@ -102,7 +109,7 @@ System.out.println("generated payload "+ outmap);
 Please use the Javadocs to understand the input parameters and response from the method.
 
 ### **Overriding SDK Methods:**
-Following are the methods in the SDK that can be overriden to customize.
+The SDK provides several methods that can be overridden for customization purposes:
 
 **HCXIncomingRequest Methods:**
 1. process - This is main wrapper class, which processes the JWE Payload based on the Operation to validate and extract the FHIR Object.
@@ -146,5 +153,4 @@ configMap.put("incomingRequestClass", "org.example.impl.CustomIncomingRequest");
 HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance(configMap);
 ```
 
-Similarly, we can override the methods in HCXOutgoingRequest.
- 
+Similarly, you can override methods in HCXOutgoingRequest to customize their behavior. 
