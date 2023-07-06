@@ -42,7 +42,7 @@ Below is the sample code snippet to initialise the SDK.
 Map<String, Object> configMap = new HashMap<>();
 configMap.put("protocolBasePath", "http://staging-hcx.swasth.app/api/v0.7");
 configMap.put("participantCode", "<Participant code shared with you>");
-configMap.put("authBasePath", "http://a9dd63de91ee94d59847a1225da8b111-273954130.ap-south-1.elb.amazonaws.com:8080/auth/realms/swasth-health-claim-exchange/protocol/openid-connect/token");
+configMap.put("authBasePath", "http://staging-hcx.swasth.app/auth/realms/swasth-health-claim-exchange/protocol/openid-connect/token");
 configMap.put("username", "<Email ID used for registration>");
 configMap.put("password", "<Your Password>");
 configMap.put("encryptionPrivateKey", "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEF=\n-----END PRIVATE KEY-----");
@@ -145,7 +145,7 @@ To use the customized class in process the incoming request, we have to define t
 Map<String, Object> configMap = new HashMap<>();
 configMap.put("protocolBasePath", "http://staging-hcx.swasth.app/api/v0.7");
 configMap.put("participantCode", "<Participant code shared with you>");
-configMap.put("authBasePath", "http://a9dd63de91ee94d59847a1225da8b111-273954130.ap-south-1.elb.amazonaws.com:8080/auth/realms/swasth-health-claim-exchange/protocol/openid-connect/token");
+configMap.put("authBasePath", "http://staging-hcx.swasth.app/auth/realms/swasth-health-claim-exchange/protocol/openid-connect/token");
 configMap.put("username", "<Email ID used for registration>");
 configMap.put("password", "<Your Password>");
 configMap.put("encryptionPrivateKey", "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEF=\n-----END PRIVATE KEY-----");
