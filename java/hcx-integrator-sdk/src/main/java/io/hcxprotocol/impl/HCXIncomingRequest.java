@@ -5,7 +5,6 @@ import com.typesafe.config.Config;
 import io.hcxprotocol.dto.NotificationRequest;
 import io.hcxprotocol.dto.ResponseError;
 import io.hcxprotocol.exception.ClientException;
-import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.helper.FhirPayload;
 import io.hcxprotocol.helper.ValidateHelper;
 import io.hcxprotocol.interfaces.IncomingRequest;
@@ -14,7 +13,6 @@ import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
 import io.hcxprotocol.utils.Utils;
-import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

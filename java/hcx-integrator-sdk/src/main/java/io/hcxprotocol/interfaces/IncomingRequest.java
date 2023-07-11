@@ -2,6 +2,7 @@ package io.hcxprotocol.interfaces;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.typesafe.config.Config;
+import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.utils.Operations;
 
 import java.util.Map;
