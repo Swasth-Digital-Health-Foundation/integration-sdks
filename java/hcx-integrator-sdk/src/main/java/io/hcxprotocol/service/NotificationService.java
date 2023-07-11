@@ -30,7 +30,7 @@ public class NotificationService {
 
     private static String getMessage(NotificationRequest notificationRequest,Map<String, Object> output, String message) throws Exception {
         Map<String, Object> searchRequest = Map.of("filters", new HashMap<>());
-        if (message.isEmpty()) {
+        if (!notificationRequest.getTemplateParams().isEmpty()) {
             Map<String, Object> responseMap = new HashMap<>();
             Utils.initializeHCXCall(JSONUtils.serialize(searchRequest), Operations.NOTIFICATION_LIST, responseMap, notificationRequest.getConfig());
             output.putAll(responseMap);

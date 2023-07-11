@@ -44,7 +44,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     public boolean process(String jwePayload, Operations operation, Map<String, Object> output, Config config) throws Exception {
         Map<String, Object> error = new HashMap<>();
         boolean result = false;
-        jwePayload = formatPayload(jwePayload);
+        jwePayload = deserializePayload(jwePayload);
         logger.info("Processing incoming request has started :: operation: {}", operation);
         if (!validateRequest(jwePayload, operation, error)) {
             sendResponse(error, output);
@@ -108,7 +108,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
         return result;
     }
 
-    private String formatPayload(String payload) throws JsonProcessingException {
+    private String deserializePayload(String payload) throws JsonProcessingException {
         if (payload.contains(Constants.PAYLOAD) || payload.contains(Constants.HCX_API_CALL_ID)){
             return payload;
         } else {
@@ -118,7 +118,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
 
     @Override
     public Map<String, Object> receiveNotification(String jwsPayload, Map<String, Object> output, Config config) throws Exception {
-        jwsPayload = formatPayload(jwsPayload);
+        jwsPayload = deserializePayload(jwsPayload);
         Map<String,Object> requestPayload = JSONUtils.deserialize(jwsPayload,Map.class);
         NotificationRequest notificationRequest = new NotificationRequest((String) requestPayload.get(Constants.PAYLOAD));
         if (notificationRequest.getJwsPayload().isEmpty()) {

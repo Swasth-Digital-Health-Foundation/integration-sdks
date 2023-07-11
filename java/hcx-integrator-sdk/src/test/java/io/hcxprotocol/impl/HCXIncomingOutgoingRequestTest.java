@@ -10,6 +10,7 @@ import org.junit.jupiter.api.*;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -183,7 +184,7 @@ class HCXIncomingOutgoingRequestTest {
         Map<String, String> templateParams = new HashMap<>();
         templateParams.put("version_code", "v0.8");
         templateParams.put("participant_name", "test-provider");
-        HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", List.of("payor"), "", templateParams, output);
+        HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", List.of("payor"), "hi iam getting", templateParams, output);
         assertEquals("testprovider1.apollo@swasth-hcx-dev", configMap.get(Constants.PARTICIPANT_CODE));
     }
 
@@ -208,6 +209,47 @@ class HCXIncomingOutgoingRequestTest {
         String message = (String) ((Map<String, Object>) output.get(Constants.PAYLOAD)).get(Constants.MESSAGE);
         assertEquals(decodedPayload.get(Constants.TOPIC_CODE), topicCode);
         assertEquals(decodedPayload.get(Constants.MESSAGE), message);
+    }
+
+    @DisplayName("16")
+    @Test
+    void HcxSendNotificationTopicCodeEmpty() throws Exception {
+        Map<String, Object> output = new HashMap<>();
+        String topicCode = "";
+        String message = "Participant has upgraded to latest protocol version";
+        HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", List.of("payor"), message, new HashMap<>(), output);
+        assertEquals("Error while sending the notifications: Topic code cannot be empty" ,output.get("error"));
+    }
+
+    @DisplayName("17")
+    @Test
+    void HcxSendNotificationWithMessageEmpty() throws Exception {
+        Map<String, Object> output = new HashMap<>();
+        String topicCode = "notif-participant-new-protocol-version-support";
+        String message = "";
+        HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", List.of("payor"), message, new HashMap<>(), output);
+        assertEquals("Error while sending the notifications: Either the message or the template parameters are mandatory." ,output.get("error"));
+    }
+
+    @DisplayName("18")
+    @Test
+    void HcxSendNotificationWithRecipientEmpty() throws Exception {
+        initializingConfigMap();
+        Map<String, Object> output = new HashMap<>();
+        String topicCode = "notif-participant-new-protocol-version-support";
+        String message = "Participant has upgraded to latest protocol version";
+        HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", new ArrayList<>(), message, new HashMap<>(), output);
+        assertEquals("Error while sending the notifications: Recipients cannot be empty" ,output.get("error"));
+    }
+
+    @DisplayName("19")
+    @Test
+    void HcxSendNotificationWithRecipientTypeEmpty() throws Exception {
+        Map<String, Object> output = new HashMap<>();
+        String topicCode = "notif-participant-new-protocol-version-support";
+        String message = "Participant has upgraded to latest protocol version";
+        HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "", List.of("payor"), message, new HashMap<>(), output);
+        assertEquals("Error while sending the notifications: Recipient type cannot be empty" ,output.get("error"));
     }
 }
 
