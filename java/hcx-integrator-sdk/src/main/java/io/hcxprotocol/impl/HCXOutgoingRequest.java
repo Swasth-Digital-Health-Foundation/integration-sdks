@@ -2,11 +2,14 @@ package io.hcxprotocol.impl;
 
 import com.typesafe.config.Config;
 import io.hcxprotocol.dto.HttpResponse;
+import io.hcxprotocol.dto.NotificationRequest;
+import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.helper.FhirPayload;
 import io.hcxprotocol.interfaces.OutgoingRequest;
 import io.hcxprotocol.jwe.JweRequest;
 import io.hcxprotocol.key.PublicKeyLoader;
+import io.hcxprotocol.service.NotificationService;
 import io.hcxprotocol.utils.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -21,10 +24,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.interfaces.RSAPublicKey;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * The <b>HCX Outgoing Request</b> class provide the methods to help in creating the JWE Payload and send the request to the sender system from HCX Gateway.
@@ -55,8 +55,10 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HCXOutgoingRequest.class);
 
+    NotificationService notificationService;
+
     @Override
-    public boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String,Object> domainHeaders, Map<String,Object> output, Config config){
+    public boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> domainHeaders, Map<String, Object> output, Config config) {
         boolean result = false;
         try {
             Map<String, Object> error = new HashMap<>();
@@ -73,7 +75,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
                 result = initializeHCXCall(JSONUtils.serialize(output), operation, response, config);
                 output.putAll(response);
             }
-            if(output.containsKey(Constants.ERROR) || output.containsKey(ErrorCodes.ERR_DOMAIN_PROCESSING.toString()))
+            if (output.containsKey(Constants.ERROR) || output.containsKey(ErrorCodes.ERR_DOMAIN_PROCESSING.toString()))
                 logger.error("Error while processing the outgoing request: {}", output);
             return result;
         } catch (Exception ex) {
@@ -85,7 +87,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
         }
     }
 
-    @Override
+
     public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
         if (config.getBoolean(Constants.FHIR_VALIDATION_ENABLED))
             return validateFHIR(fhirPayload, operation, error, config);
@@ -97,7 +99,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
         try {
             headers.put(Constants.ALG, Constants.A256GCM);
             headers.put(Constants.ENC, Constants.RSA_OAEP);
-            headers.put(Constants.HCX_TIMESTAMP,  new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()));
+            headers.put(Constants.HCX_TIMESTAMP, new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").format(new Date()));
             if (StringUtils.isEmpty(apiCallId))
                 apiCallId = UUID.randomUUID().toString();
             headers.put(Constants.HCX_API_CALL_ID, apiCallId);
@@ -105,16 +107,16 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             if (!StringUtils.isEmpty(recipientCode)) {
                 headers.put(Constants.HCX_SENDER_CODE, senderCode);
                 headers.put(Constants.HCX_RECIPIENT_CODE, recipientCode);
-                if(StringUtils.isEmpty(correlationId))
+                if (StringUtils.isEmpty(correlationId))
                     correlationId = UUID.randomUUID().toString();
                 headers.put(Constants.HCX_CORRELATION_ID, correlationId);
             } else {
-                Map<String,Object> actionHeaders = JSONUtils.decodeBase64String(actionJwe.split("\\.")[0], Map.class);
-                headers.put(Constants.HCX_SENDER_CODE,  actionHeaders.get(Constants.HCX_RECIPIENT_CODE));
+                Map<String, Object> actionHeaders = JSONUtils.decodeBase64String(actionJwe.split("\\.")[0], Map.class);
+                headers.put(Constants.HCX_SENDER_CODE, actionHeaders.get(Constants.HCX_RECIPIENT_CODE));
                 headers.put(Constants.HCX_RECIPIENT_CODE, actionHeaders.get(Constants.HCX_SENDER_CODE));
                 headers.put(Constants.HCX_CORRELATION_ID, actionHeaders.get(Constants.HCX_CORRELATION_ID));
                 headers.put(Constants.STATUS, onActionStatus);
-                if(headers.containsKey(Constants.WORKFLOW_ID))
+                if (headers.containsKey(Constants.WORKFLOW_ID))
                     headers.put(Constants.WORKFLOW_ID, actionHeaders.get(Constants.WORKFLOW_ID));
             }
             logger.info("Request headers are created: " + headers);
@@ -127,7 +129,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     }
 
     @Override
-    public boolean encryptPayload(Map<String,Object> headers, String fhirPayload, Map<String,Object> output, Config config) throws Exception {
+    public boolean encryptPayload(Map<String, Object> headers, String fhirPayload, Map<String, Object> output, Config config) throws Exception {
         try {
             String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH));
             String publicKeyUrl = (String) Utils.searchRegistry(headers.get(Constants.HCX_RECIPIENT_CODE).toString(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
@@ -149,19 +151,34 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     // Exception is handled in processFunction method
     @Override
-    public boolean initializeHCXCall(String jwePayload, Operations operation, Map<String,Object> response, Config config) throws Exception {
-        Map<String,String> headers = new HashMap<>();
+    public boolean initializeHCXCall(String jwePayload, Operations operation, Map<String, Object> response, Config config) throws Exception {
+        Map<String, String> headers = new HashMap<>();
         headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH)));
         HttpResponse hcxResponse = HttpUtils.post(config.getString(Constants.PROTOCOL_BASE_PATH) + operation.getOperation(), headers, jwePayload);
         response.put(Constants.RESPONSE_OBJ, JSONUtils.deserialize(hcxResponse.getBody(), Map.class));
         int status = hcxResponse.getStatus();
         boolean result = false;
-        if(status == 202){
+        if (status == 202 || status == 200) {
             result = true;
             logger.info("Processing outgoing request has completed ::  response: {}", response.get(Constants.RESPONSE_OBJ));
         } else {
             logger.error("Error while processing the outgoing request :: status: {} :: response: {}", status, response.get(Constants.RESPONSE_OBJ));
         }
+        return result;
+    }
+
+    @Override
+    public boolean sendNotification(String topicCode, String recipientType, List<String> recipients, String message, Map<String, String> templateParams, String correlationId, Map<String, Object> output, Config config) throws Exception {
+        boolean result = false ;
+        NotificationRequest notificationRequest = new NotificationRequest(topicCode,message,templateParams,recipientType,recipients,correlationId,config);
+        NotificationService.validateNotificationRequest(notificationRequest);
+        Map<String,Object> requestBody = NotificationService.createNotificationRequest(notificationRequest,output,message);
+        Map<String, Object> response = new HashMap<>();
+        result = initializeHCXCall(JSONUtils.serialize(requestBody), Operations.NOTIFICATION_NOTIFY, response, config);
+        output.putAll(response);
+        if (output.containsKey(Constants.ERROR) || output.containsKey(ErrorCodes.ERR_DOMAIN_PROCESSING.toString()))
+            throw new ClientException("Error while sending notification to the participants " + output);
+        logger.info("Notification has been sent to the participants");
         return result;
     }
 }

@@ -64,6 +64,10 @@ public class Constants {
     public static final String FHIR_VALIDATION_ENABLED = "fhirValidationEnabled";
     public static final String INCOMING_REQUEST_CLASS = "incomingRequestClass";
     public static final String OUTGOING_REQUEST_CLASS = "outgoingRequestClass";
-
-
+    public static final String IS_SIGNATURE_VALID = "isSignatureValid";
+    public static final String RECIPIENT_TYPE =  "recipient_type";
+    public static final String RECIPIENTS = "recipients";
+    public static final String NOTIFICATION_HEADERS = "x-hcx-notification_headers";
+    public static final String TOPIC_CODE = "topic_code";
+    public static final String TEMPLATE = "template";
 }

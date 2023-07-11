@@ -2,7 +2,10 @@ package io.hcxprotocol.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.typesafe.config.Config;
+import io.hcxprotocol.dto.NotificationRequest;
 import io.hcxprotocol.dto.ResponseError;
+import io.hcxprotocol.exception.ClientException;
+import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.helper.FhirPayload;
 import io.hcxprotocol.helper.ValidateHelper;
 import io.hcxprotocol.interfaces.IncomingRequest;
@@ -10,12 +13,15 @@ import io.hcxprotocol.jwe.JweRequest;
 import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
+import io.hcxprotocol.utils.Utils;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 
 
 /**
@@ -111,4 +117,26 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             return JSONUtils.serialize(Collections.singletonMap(Constants.PAYLOAD, payload));
         }
     }
+
+    @Override
+    public Map<String, Object> receiveNotification(String jwsPayload, Map<String, Object> output, Config config) throws Exception {
+        jwsPayload = formatPayload(jwsPayload);
+        Map<String,Object> requestPayload = JSONUtils.deserialize(jwsPayload,Map.class);
+        NotificationRequest notificationRequest = new NotificationRequest((String) requestPayload.get(Constants.PAYLOAD));
+        if (notificationRequest.getJwsPayload().isEmpty()) {
+            throw new ClientException("JWS Token cannot be empty");
+        }
+        Map<String, Object> headers = notificationRequest.getHeaders();
+        Map<String, Object> payload = notificationRequest.getPayload();
+        Map<String, Object> headersMap = (Map<String, Object>) headers.get(Constants.NOTIFICATION_HEADERS);
+        String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH));
+        String publicKeyUrl = (String) Utils.searchRegistry(headersMap.get("sender_code").toString(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
+        boolean isSignatureValid = Utils.isValidSignature((String) requestPayload.get(Constants.PAYLOAD), publicKeyUrl);
+        output.put(Constants.HEADERS, headers);
+        output.put(Constants.PAYLOAD, payload);
+        output.put(Constants.IS_SIGNATURE_VALID, isSignatureValid);
+        return output;
+    }
+
+
 }

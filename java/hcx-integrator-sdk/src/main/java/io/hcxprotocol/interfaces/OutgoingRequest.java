@@ -3,8 +3,12 @@ package io.hcxprotocol.interfaces;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.typesafe.config.Config;
+import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.utils.Operations;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -177,5 +181,7 @@ public interface OutgoingRequest {
      * @throws JsonProcessingException The exception throws when it is having issues in parsing the JSON object.
      */
     boolean initializeHCXCall(String jwePayload, Operations operation, Map<String,Object> response, Config config) throws Exception;
+
+    boolean sendNotification(String topicCode, String recipientType, List<String> recipients, String message, Map<String,String> templateParams, String correlationID, Map<String,Object> output, Config config) throws Exception;
 
 }

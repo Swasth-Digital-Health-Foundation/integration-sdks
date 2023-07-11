@@ -1,12 +1,23 @@
 package io.hcxprotocol.utils;
 
+import com.typesafe.config.Config;
 import io.hcxprotocol.dto.HttpResponse;
 import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.exception.ServerException;
 import lombok.experimental.UtilityClass;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.PublicKey;
+import java.security.Signature;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,5 +80,34 @@ public class Utils {
         }
         return !details.isEmpty() ? details.get(0) : new HashMap<>();
     }
+    public static boolean isValidSignature(String payload, String publicKeyUrl) throws Exception {
+        String certificate = IOUtils.toString(new URL(publicKeyUrl), StandardCharsets.UTF_8.toString());
+        CertificateFactory cf = CertificateFactory.getInstance("X.509");
+        InputStream stream = new ByteArrayInputStream(certificate.getBytes()); //StandardCharsets.UTF_8
+        Certificate cert = cf.generateCertificate(stream);
+        PublicKey publicKey = cert.getPublicKey();
+        String[] parts = payload.split("\\.");
+        String data = parts[0] + "." + parts[1];
+        Signature sig = Signature.getInstance("SHA256withRSA");
+        sig.initVerify(publicKey);
+        sig.update(data.getBytes());
+        byte[] decodedSignature = Base64.getUrlDecoder().decode(parts[2]);
+        return sig.verify(decodedSignature);
+    }
 
+    public static boolean initializeHCXCall(String jwePayload, Operations operation, Map<String, Object> response, Config config) throws Exception {
+        Map<String,String> headers = new HashMap<>();
+        headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH)));
+        HttpResponse hcxResponse = HttpUtils.post(config.getString(Constants.PROTOCOL_BASE_PATH) + operation.getOperation(), headers, jwePayload);
+        response.put(Constants.RESPONSE_OBJ, JSONUtils.deserialize(hcxResponse.getBody(), Map.class));
+        int status = hcxResponse.getStatus();
+        boolean result = false;
+        if(status == 202 || status == 200){
+            result = true;
+            logger.info("Processing outgoing request has completed ::  response: {}", response.get(Constants.RESPONSE_OBJ));
+        } else {
+            logger.error("Error while processing the outgoing request :: status: {} :: response: {}", status, response.get(Constants.RESPONSE_OBJ));
+        }
+        return result;
+    }
 }

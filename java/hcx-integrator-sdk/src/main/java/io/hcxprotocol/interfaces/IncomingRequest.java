@@ -166,6 +166,8 @@ public interface IncomingRequest {
      *
      * @return It is a boolean value to understand the final status is successful or failure.
      */
+
     boolean sendResponse(Map<String,Object> error, Map<String,Object> output) throws JsonProcessingException;
+    Map<String,Object> receiveNotification(String requestBody, Map<String,Object> output, Config config) throws Exception;
 
 }

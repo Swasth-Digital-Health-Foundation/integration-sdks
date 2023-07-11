@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         configMap.put("password", "12345");
         configMap.put("encryptionPrivateKey", "Mz-VPPyU4RlcuYv1IwIvzw");
         configMap.put("hcxIGBasePath", "https://ig.hcxprotocol.io/v0.7/");
+        configMap.put("signingPrivateKey", "Mz-VPPyU4RlcuYv1IwIvzw");
 
         HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance(configMap);
 
@@ -40,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
         configMap1.put("password", "67890");
         configMap1.put("encryptionPrivateKey", "Mz-VPPyU4RlcuYv1IwIvzw");
         configMap1.put("hcxIGBasePath", "https://ig.hcxprotocol.io/v0.7/");
+        configMap1.put("signingPrivateKey", "Mz-VPPyU4RlcuYv1IwIvzw");
         HCXIntegrator hcxIntegrator1 = HCXIntegrator.getInstance(configMap1);
 
         assertEquals("67890", hcxIntegrator1.getPassword());

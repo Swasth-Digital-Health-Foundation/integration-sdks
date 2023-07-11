@@ -20,7 +20,7 @@ public class BaseIntegrator {
     private static Logger logger = LoggerFactory.getLogger(BaseIntegrator.class);
 
     private void validateConfig() throws Exception {
-        logger.debug("Integrator SDK configuration.", getConfig());
+        logger.debug("Integrator SDK configuration.{}", getConfig());
         if(config == null)
             throw new Exception("Please initialize the configuration variables, in order to initialize the SDK");
         List<String> props = config.getStringList("configKeys");
