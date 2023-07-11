@@ -180,10 +180,10 @@ class HCXIncomingOutgoingRequestTest {
     void HcxSendNotificationWithTemplateParams() throws Exception {
         Map<String, Object> output = new HashMap<>();
         String topicCode = "notif-participant-new-protocol-version-support";
-        Map<String, String> templateMap = new HashMap<>();
-        templateMap.put("version_code", "v0.8");
-        templateMap.put("participant_name", "test-provider");
-        HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", List.of("payor"), "", templateMap, output);
+        Map<String, String> templateParams = new HashMap<>();
+        templateParams.put("version_code", "v0.8");
+        templateParams.put("participant_name", "test-provider");
+        HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", List.of("payor"), "", templateParams, output);
         assertEquals("testprovider1.apollo@swasth-hcx-dev", configMap.get(Constants.PARTICIPANT_CODE));
     }
 
@@ -200,7 +200,7 @@ class HCXIncomingOutgoingRequestTest {
     @DisplayName("15")
     @Test
     void HcxReceiveNotification() throws Exception {
-        String payload = "eyJhbGciOiJSUzI1NiIsIngtaGN4LW5vdGlmaWNhdGlvbl9oZWFkZXJzIjp7InJlY2lwaWVudF90eXBlIjoicGFydGljaXBhbnRfcm9sZSIsInJlY2lwaWVudHMiOlsicGF5b3IiXSwieC1oY3gtY29ycmVsYXRpb25faWQiOiI4ZmViZjhmZC1jZTc3LTRlNDMtOTA0Mi1jMDNiOTQ1M2ZhZjYiLCJzZW5kZXJfY29kZSI6InRlc3Rwcm92aWRlcjEuYXBvbGxvQHN3YXN0aC1oY3gtZGV2IiwidGltZXN0YW1wIjoxNjg4OTc2NzMzMzMyfX0.eyJ0b3BpY19jb2RlIjoibm90aWYtcGFydGljaXBhbnQtbmV3LXByb3RvY29sLXZlcnNpb24tc3VwcG9ydCIsIm1lc3NhZ2UiOiJQYXJ0aWNpcGFudCBoYXMgdXBncmFkZWQgdG8gbGF0ZXN0IHByb3RvY29sIHZlcnNpb24ifQ.NkG3AJbC267pFMcSfw822Vxz2uiFYFNJ0ygq1S_uxqewPPu_HM4NalYkCt_RZDf3cTC9dd2q73lwSnPmehtXpUqQHzCgIxXUgGkOK3pFuXx5Sr1hZyJwrAdId2YzfvOGykEWPUTXpMG0JtkbC-19oEpKVjn0rEDR4J6Mdvk57hVcH9CiVR6Or3a35T8DEvuj1Ob7IRc5J_AdwElyscuzqVh9VLxMytSy8dDZpfFyPrYN3efoO9h2wFGiA-2kQwaSvcdx8IaAGFuuaA-alohdCyZ9KsT82wJxGoFB8_VVo0d7yaVEW8pbJnPq0hvL5GxbaoakY7DWkz4FHRNeui34OA";
+        String payload = "eyJhbGciOiJSUzI1NiIsIngtaGN4LW5vdGlmaWNhdGlvbl9oZWFkZXJzIjp7InJlY2lwaWVudF90eXBlIjoicGFydGljaXBhbnRfcm9sZSIsInJlY2lwaWVudHMiOlsicGF5b3IiXSwieC1oY3gtY29ycmVsYXRpb25faWQiOiIxYTVlNGY3MS1iNWRlLTRlNDYtODQ0MC1mNjQ1YWU4NWFiYTEiLCJzZW5kZXJfY29kZSI6InRlc3Rwcm92aWRlcjEuYXBvbGxvQHN3YXN0aC1oY3gtZGV2IiwidGltZXN0YW1wIjoxNjg5MDU5MzEwMjU4fX0.eyJ0b3BpY19jb2RlIjoibm90aWYtcGFydGljaXBhbnQtbmV3LXByb3RvY29sLXZlcnNpb24tc3VwcG9ydCIsIm1lc3NhZ2UiOiJ0ZXN0LXByb3ZpZGVyIG5vdyBzdXBwb3J0cyB2MC44IG9uIGl0cyBwbGF0Zm9ybS4gQWxsIHBhcnRpY2lwYW50cyBhcmUgcmVxdWVzdGVkIHRvIHVwZ3JhZGUgdG8gdjAuOCBvciBhYm92ZSB0byB0cmFuc2FjdCB3aXRoIHRlc3QtcHJvdmlkZXIuIn0.LLqp_pfy2JHekfnr6FrbTWt_oxHh76j1WoJ-g3Uuf599F2mZHUwxAg8mFzAF7LUk7lLgznXdbAU1bkiWzME8CkpkSkqSxzOhbb1XCAy63XbBn9hiHgKjR2hcw3lA2I4Y3fmPPSF6nDEm1_mALiA2AoyzmSttMH9dtXCk-lcXzb5c7BvKss2Gk_42t2DNTNq1HF0wWYWnZfNQdV7-Jcw8jo2bIOVeD8ep774RCp6KLAC_nh68JkMd_kft_clhL8qKwpMfVq-2YRi9Njb4vAOfuMYsTAA8EjL8eJlUxWG7o7JJ1RgGNbpTfg7BzbB7SYI0fcwRjqf9VZnTxfDsTWw1CQ";
         Map<String, Object> decodedPayload = JSONUtils.decodeBase64String(payload.split("\\.")[1], Map.class);
         Map<String, Object> output = new HashMap<>();
         HCXIntegrator.getInstance(configMap).receiveNotification(payload, output);

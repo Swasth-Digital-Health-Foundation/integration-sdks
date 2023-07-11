@@ -169,7 +169,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     @Override
     public boolean sendNotification(String topicCode, String recipientType, List<String> recipients, String message, Map<String, String> templateParams, String correlationId, Map<String, Object> output, Config config) throws Exception {
-        boolean result = false ;
+        boolean result;
         NotificationRequest notificationRequest = new NotificationRequest(topicCode,message,templateParams,recipientType,recipients,correlationId,config);
         NotificationService.validateNotificationRequest(notificationRequest);
         Map<String,Object> requestBody = NotificationService.createNotificationRequest(notificationRequest,output,message);
