@@ -13,7 +13,9 @@ import java.util.*;
 import static io.hcxprotocol.utils.Constants.*;
 
 public class NotificationService {
+    private NotificationService(){
 
+    }
     public static void validateNotificationRequest(NotificationRequest notificationRequest) throws ClientException {
         if (notificationRequest.getTopicCode().isEmpty()) {
             throw new ClientException("Topic code cannot be empty");
@@ -26,7 +28,7 @@ public class NotificationService {
         }
     }
 
-    public static String getMessage(NotificationRequest notificationRequest,Map<String, Object> output, String message) throws Exception {
+    private static String getMessage(NotificationRequest notificationRequest,Map<String, Object> output, String message) throws Exception {
         Map<String, Object> searchRequest = Map.of("filters", new HashMap<>());
         if (message.isEmpty()) {
             Map<String, Object> responseMap = new HashMap<>();
@@ -41,14 +43,14 @@ public class NotificationService {
         return message;
     }
 
-    public static Map<String, Object> getNotification(List<Map<String, Object>> notificationList, String code) {
+    private static Map<String, Object> getNotification(List<Map<String, Object>> notificationList, String code) {
         Map<String, Object> notification = new HashMap<>();
         Optional<Map<String, Object>> result = notificationList.stream().filter(obj -> obj.get(TOPIC_CODE).equals(code)).findFirst();
         if (result.isPresent()) notification = result.get();
         return notification;
     }
 
-    public static String getPrivateKey(Config config) {
+    private static String getPrivateKey(Config config) {
         String privateKey = config.getString("signingPrivateKey");
         privateKey = privateKey
                 .replace("-----BEGIN PRIVATE KEY-----", "")
@@ -57,12 +59,12 @@ public class NotificationService {
         return privateKey;
     }
 
-    public static String resolveTemplate(Map<String, Object> notification, Map<String, String> nData) throws JsonProcessingException {
+    private static String resolveTemplate(Map<String, Object> notification, Map<String, String> nData) throws JsonProcessingException {
         StringSubstitutor sub = new StringSubstitutor(nData);
         return sub.replace((JSONUtils.deserialize((String) notification.get(Constants.TEMPLATE), Map.class)).get(Constants.MESSAGE));
     }
 
-    public static Map<String, Object> getJWSRequestHeader(NotificationRequest notificationRequest) {
+    private static Map<String, Object> getJWSRequestHeader(NotificationRequest notificationRequest) {
         Map<String, Object> headersMap = new HashMap<>();
         headersMap.put("x-hcx-correlation_id", notificationRequest.getCorrelationId().isEmpty() ? UUID.randomUUID() : notificationRequest.getCorrelationId());
         headersMap.put("sender_code", notificationRequest.getConfig().getString(Constants.PARTICIPANT_CODE));
@@ -75,7 +77,7 @@ public class NotificationService {
         return headers;
     }
 
-    public static Map<String, Object> getJWSRequestPayload(NotificationRequest notificationRequest, Map<String, Object> output, String message) throws Exception {
+    private static Map<String, Object> getJWSRequestPayload(NotificationRequest notificationRequest, Map<String, Object> output, String message) throws Exception {
         Map<String, Object> payload = new HashMap<>();
         payload.put(TOPIC_CODE, notificationRequest.getTopicCode());
         message = NotificationService.getMessage(notificationRequest, output,message);
