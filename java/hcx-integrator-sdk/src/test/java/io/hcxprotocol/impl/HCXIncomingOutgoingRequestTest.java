@@ -1,7 +1,6 @@
 package io.hcxprotocol.impl;
 
 import io.hcxprotocol.dto.BaseRequest;
-import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
@@ -9,11 +8,8 @@ import io.hcxprotocol.utils.Operations;
 import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +24,6 @@ class HCXIncomingOutgoingRequestTest {
     private HCXIntegrator hcxIntegrator = null;
 
     private Map<String, Object> configMap = null;
-
-    HCXIncomingOutgoingRequestTest() throws IOException {
-    }
 
     @BeforeAll
     public void initializingConfigMap() throws Exception {
@@ -51,11 +44,9 @@ class HCXIncomingOutgoingRequestTest {
     @DisplayName("1")
     @Test
     void HcxOutgoingRequestCheckSuccess() throws Exception {
-        String fhir = IOUtils.toString(this.getClass().getClassLoader().getResourceAsStream("payload.txt"), StandardCharsets.UTF_8.name());
         Map<String, Object> output = new HashMap<>();
-        HCXIntegrator.getInstance(configMap).processOutgoingRequest(fhir, Operations.COVERAGE_ELIGIBILITY_CHECK, "primehospital+mock_payor.yopmail@swasth-hcx-dev", "", "", new HashMap<>(), output);
+        HCXIntegrator.getInstance(configMap).processOutgoingRequest(commonFhirPayload, Operations.COVERAGE_ELIGIBILITY_CHECK, "testpayor1.icici@swasth-hcx-dev", "", "", new HashMap<>(), output);
         BaseRequest baseRequest = new BaseRequest(output);
-        System.out.println(JSONUtils.serialize(output));
         assertEquals(configMap.getOrDefault("participantCode", "").toString(), baseRequest.getHcxSenderCode());
     }
 
@@ -187,7 +178,6 @@ class HCXIncomingOutgoingRequestTest {
     @DisplayName("14")
     @Test
     void HcxSendNotificationWithTemplateParams() throws Exception {
-        initializingConfigMap();
         Map<String, Object> output = new HashMap<>();
         String topicCode = "notif-participant-new-protocol-version-support";
         Map<String, String> templateMap = new HashMap<>();
@@ -200,7 +190,6 @@ class HCXIncomingOutgoingRequestTest {
     @DisplayName("14")
     @Test
     void HcxSendNotificationWithMessage() throws Exception {
-        initializingConfigMap();
         Map<String, Object> output = new HashMap<>();
         String topicCode = "notif-participant-new-protocol-version-support";
         String message = "Participant has upgraded to latest protocol version";
@@ -211,7 +200,6 @@ class HCXIncomingOutgoingRequestTest {
     @DisplayName("15")
     @Test
     void HcxReceiveNotification() throws Exception {
-        initializingConfigMap();
         String payload = "eyJhbGciOiJSUzI1NiIsIngtaGN4LW5vdGlmaWNhdGlvbl9oZWFkZXJzIjp7InJlY2lwaWVudF90eXBlIjoicGFydGljaXBhbnRfcm9sZSIsInJlY2lwaWVudHMiOlsicGF5b3IiXSwieC1oY3gtY29ycmVsYXRpb25faWQiOiI4ZmViZjhmZC1jZTc3LTRlNDMtOTA0Mi1jMDNiOTQ1M2ZhZjYiLCJzZW5kZXJfY29kZSI6InRlc3Rwcm92aWRlcjEuYXBvbGxvQHN3YXN0aC1oY3gtZGV2IiwidGltZXN0YW1wIjoxNjg4OTc2NzMzMzMyfX0.eyJ0b3BpY19jb2RlIjoibm90aWYtcGFydGljaXBhbnQtbmV3LXByb3RvY29sLXZlcnNpb24tc3VwcG9ydCIsIm1lc3NhZ2UiOiJQYXJ0aWNpcGFudCBoYXMgdXBncmFkZWQgdG8gbGF0ZXN0IHByb3RvY29sIHZlcnNpb24ifQ.NkG3AJbC267pFMcSfw822Vxz2uiFYFNJ0ygq1S_uxqewPPu_HM4NalYkCt_RZDf3cTC9dd2q73lwSnPmehtXpUqQHzCgIxXUgGkOK3pFuXx5Sr1hZyJwrAdId2YzfvOGykEWPUTXpMG0JtkbC-19oEpKVjn0rEDR4J6Mdvk57hVcH9CiVR6Or3a35T8DEvuj1Ob7IRc5J_AdwElyscuzqVh9VLxMytSy8dDZpfFyPrYN3efoO9h2wFGiA-2kQwaSvcdx8IaAGFuuaA-alohdCyZ9KsT82wJxGoFB8_VVo0d7yaVEW8pbJnPq0hvL5GxbaoakY7DWkz4FHRNeui34OA";
         Map<String, Object> decodedPayload = JSONUtils.decodeBase64String(payload.split("\\.")[1], Map.class);
         Map<String, Object> output = new HashMap<>();
