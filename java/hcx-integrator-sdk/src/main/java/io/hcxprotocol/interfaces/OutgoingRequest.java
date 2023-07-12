@@ -179,6 +179,36 @@ public interface OutgoingRequest {
      */
     boolean initializeHCXCall(String jwePayload, Operations operation, Map<String,Object> response, Config config) throws Exception;
 
+    /**
+     * Generates JWS payload and call to notify API.
+     * @param topicCode Topic code of the notification.
+     * @param recipientType The notification will be sent to a group of participants. To easily define the list, we use role or codes or subscriptions. This property will help to understand the type of identifiers given in recipients property. The values are participant_code, participant_role, subscription.
+     * @param recipients The recipients will be identified based on one of the below using recipient_type.
+     *                   <ol>
+     *                   <li>code: Participant code of the recipient(s) of the notification. Could be one or more based on the need.</li>
+     *                   <li>role: Participant role of the recipient(s) of the notification. </li>
+     *                   <li>subscription : subscription: list of subscription_ids</li>
+     *                   </ol>
+     * @param message Resolved notification message. If this is empty, user should pass template parameters.
+     * @param templateParams These are the values to be resolved in the notification template message.
+     * @param correlationID Custom correlation ID can be passed as an input. If an empty value is passed, the system will generate a correlation ID and adds to the payload.
+     * @param output A wrapper map to collect the outcome (errors or response) of the JWS Payload after decoding.
+     * <ol>
+     *    <li>output -
+     *    </li>
+     *    <li>success response object -
+     *    <pre>
+     *    {@code {
+           {
+             timestamp : ""  ,
+             correlation_id : ""
+           }
+     *    }}</pre>
+     *    </li>
+     *  </ol>
+     * @return It is a boolean value to understand the REST API call execution is successful or not.
+     *
+     */
     boolean sendNotification(String topicCode, String recipientType, List<String> recipients, String message, Map<String,String> templateParams, String correlationID, Map<String,Object> output, Config config) throws Exception;
 
 }

@@ -108,6 +108,43 @@ System.out.println("generated payload "+ outmap);
 
 Please use the Javadocs to understand the input parameters and response from the method.
 
+
+### **Notifications:**
+Health Claims data Exchange (HCX) is a data exchange platform used for exchanging health claims information across multiple stakeholders. The network would benefit further if the relevant information about such exchanges could also be shared with other interested/relevant participating entities in a safe and secure manner. HCX enables notifications to share such information.
+
+### **Send Notification:**
+If a participant needs to notify any important information to other participants within the ecosystem, they can utilize the send notification feature to notify them.
+```java
+//generate outgoing notification request.
+ HCXIntegrator.getInstance(configMap).sendNotification(String topicCode,String recipientType,List<String> recepients,String message,Map<String, String> templateParams,String correlationId,Map<String, Object> output);
+```
+Here's a sample code snippet that demonstrates how to send an notification request using the SDK.:
+```java
+//generate an outgoing notification request
+HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance(configMap);
+Map<String, Object> output = new HashMap<>();
+Map<String, String> templateParams = new HashMap<>();
+templateParams.put("version_code","v0.8");
+templateParams.put("participant_name","test-provider");
+HCXIntegrator.getInstance(configMap).sendNotification("notif-participant-new-protocol-version-support","participant_role",List.of("payor"),"",templateParams,output);
+```
+
+### **Receive Notification :**
+The integrator SDK will validate the incoming request payload from other participants via the HCX instance, which contains a JWS payload. After validating the payload, the SDK will decode it and provide the decoded content as output.
+```java
+//Process an incoming notification request.
+HCXIntegrator.getInstance(configMap).receiveNotification(String outputPayload,Map<String, object> output);
+```
+Here's a sample code snippet that demonstrates how to process an incoming notification request using the SDK. For reference, a sample JWS payload is also provided:
+```java
+//Processing an incoming notification request
+HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance(configMap);
+Map<String, Object> output = new HashMap<>();
+String jwsPayload = "eyJhbGciOiJSUzI1NiIsIngtaGN4LW5vdGlmaWNhdGlvbl9oZWFkZXJzIjp7InJlY2lwaWVudF90eXBlIjoicGFydGljaXBhbnRfcm9sZSIsInJlY2lwaWVudHMiOlsicGF5b3IiXSwieC1oY3gtY29ycmVsYXRpb25faWQiOiIxYTVlNGY3MS1iNWRlLTRlNDYtODQ0MC1mNjQ1YWU4NWFiYTEiLCJzZW5kZXJfY29kZSI6InRlc3Rwcm92aWRlcjEuYXBvbGxvQHN3YXN0aC1oY3gtZGV2IiwidGltZXN0YW1wIjoxNjg5MDU5MzEwMjU4fX0.eyJ0b3BpY19jb2RlIjoibm90aWYtcGFydGljaXBhbnQtbmV3LXByb3RvY29sLXZlcnNpb24tc3VwcG9ydCIsIm1lc3NhZ2UiOiJ0ZXN0LXByb3ZpZGVyIG5vdyBzdXBwb3J0cyB2MC44IG9uIGl0cyBwbGF0Zm9ybS4gQWxsIHBhcnRpY2lwYW50cyBhcmUgcmVxdWVzdGVkIHRvIHVwZ3JhZGUgdG8gdjAuOCBvciBhYm92ZSB0byB0cmFuc2FjdCB3aXRoIHRlc3QtcHJvdmlkZXIuIn0.LLqp_pfy2JHekfnr6FrbTWt_oxHh76j1WoJ-g3Uuf599F2mZHUwxAg8mFzAF7LUk7lLgznXdbAU1bkiWzME8CkpkSkqSxzOhbb1XCAy63XbBn9hiHgKjR2hcw3lA2I4Y3fmPPSF6nDEm1_mALiA2AoyzmSttMH9dtXCk-lcXzb5c7BvKss2Gk_42t2DNTNq1HF0wWYWnZfNQdV7-Jcw8jo2bIOVeD8ep774RCp6KLAC_nh68JkMd_kft_clhL8qKwpMfVq-2YRi9Njb4vAOfuMYsTAA8EjL8eJlUxWG7o7JJ1RgGNbpTfg7BzbB7SYI0fcwRjqf9VZnTxfDsTWw1CQ";
+
+HCXIntegrator.getInstance(configMap).receiveNotification(jwsPayload,output);
+System.out.println("output of incoming notification request " + output);
+```
 ### **Overriding SDK Methods:**
 The SDK provides several methods that can be overridden for customization purposes:
 
