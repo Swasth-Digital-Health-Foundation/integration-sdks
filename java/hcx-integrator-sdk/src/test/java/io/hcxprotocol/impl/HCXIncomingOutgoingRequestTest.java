@@ -184,7 +184,7 @@ class HCXIncomingOutgoingRequestTest {
         Map<String, String> templateParams = new HashMap<>();
         templateParams.put("version_code", "v0.8");
         templateParams.put("participant_name", "test-provider");
-        HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", List.of("payor"), "hi iam getting", templateParams, output);
+        HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", List.of("payor"), "", templateParams, output);
         assertEquals("testprovider1.apollo@swasth-hcx-dev", configMap.get(Constants.PARTICIPANT_CODE));
     }
 
