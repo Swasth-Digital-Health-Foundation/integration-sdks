@@ -31,12 +31,10 @@ public class NotificationService {
     private static String getMessage(NotificationRequest notificationRequest,Map<String, Object> output, String message) throws Exception {
         Map<String, Object> searchRequest = Map.of("filters", new HashMap<>());
         if (!notificationRequest.getTemplateParams().isEmpty()) {
-            Map<String, Object> responseMap = new HashMap<>();
-            Utils.initializeHCXCall(JSONUtils.serialize(searchRequest), Operations.NOTIFICATION_LIST, responseMap, notificationRequest.getConfig());
-            output.putAll(responseMap);
+            Utils.initializeHCXCall(JSONUtils.serialize(searchRequest), Operations.NOTIFICATION_LIST, output, notificationRequest.getConfig());
             if (output.containsKey(Constants.ERROR) || output.containsKey(ErrorCodes.ERR_DOMAIN_PROCESSING.toString()))
                 throw new ClientException("Error while resolving the message template");
-            List<Map<String, Object>> notificationsList = ((List<Map<String, Object>>) ((Map<String, Object>) responseMap.get("responseObj")).get("notifications"));
+            List<Map<String, Object>> notificationsList = ((List<Map<String, Object>>) ((Map<String, Object>) output.get("responseObj")).get("notifications"));
             Map<String, Object> notification = getNotification(notificationsList, notificationRequest.getTopicCode());
             message = resolveTemplate(notification, notificationRequest.getTemplateParams());
         }

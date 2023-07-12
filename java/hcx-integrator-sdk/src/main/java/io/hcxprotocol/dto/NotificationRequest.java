@@ -2,6 +2,7 @@ package io.hcxprotocol.dto;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.typesafe.config.Config;
+import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
 
 import java.util.List;
@@ -65,6 +66,12 @@ public class NotificationRequest {
 
     public Config getConfig() {
         return config;
+    }
+    public Map<String,Object> headersMap() throws JsonProcessingException {
+        return (Map<String, Object>) getHeaders().get(Constants.NOTIFICATION_HEADERS);
+    }
+    public String getSenderCode() throws JsonProcessingException {
+        return (String) headersMap().get("sender_code");
     }
 
 }

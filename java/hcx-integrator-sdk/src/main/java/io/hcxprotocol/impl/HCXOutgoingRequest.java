@@ -1,16 +1,17 @@
 package io.hcxprotocol.impl;
 
 import com.typesafe.config.Config;
-import io.hcxprotocol.dto.HttpResponse;
 import io.hcxprotocol.dto.NotificationRequest;
-import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.exception.ErrorCodes;
 import io.hcxprotocol.helper.FhirPayload;
 import io.hcxprotocol.interfaces.OutgoingRequest;
 import io.hcxprotocol.jwe.JweRequest;
 import io.hcxprotocol.key.PublicKeyLoader;
 import io.hcxprotocol.service.NotificationService;
-import io.hcxprotocol.utils.*;
+import io.hcxprotocol.utils.Constants;
+import io.hcxprotocol.utils.JSONUtils;
+import io.hcxprotocol.utils.Operations;
+import io.hcxprotocol.utils.Utils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -55,7 +56,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     private static final Logger logger = LoggerFactory.getLogger(HCXOutgoingRequest.class);
 
-    NotificationService notificationService;
+    private NotificationService notificationService;
 
     @Override
     public boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> domainHeaders, Map<String, Object> output, Config config) {
@@ -152,25 +153,16 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     // Exception is handled in processFunction method
     @Override
     public boolean initializeHCXCall(String jwePayload, Operations operation, Map<String, Object> response, Config config) throws Exception {
-        boolean result;
-        result = Utils.initializeHCXCall(jwePayload, operation, response, config);
-        return result;
+        return Utils.initializeHCXCall(jwePayload, operation, response, config);
     }
 
     @Override
     public boolean sendNotification(String topicCode, String recipientType, List<String> recipients, String message, Map<String, String> templateParams, String correlationId, Map<String, Object> output, Config config) throws Exception {
         try {
-            boolean result;
             NotificationRequest notificationRequest = new NotificationRequest(topicCode, message, templateParams, recipientType, recipients, correlationId, config);
             NotificationService.validateNotificationRequest(notificationRequest);
             Map<String, Object> requestBody = NotificationService.createNotificationRequest(notificationRequest, output, message);
-            Map<String, Object> response = new HashMap<>();
-            result = initializeHCXCall(JSONUtils.serialize(requestBody), Operations.NOTIFICATION_NOTIFY, response, config);
-            output.putAll(response);
-            if (output.containsKey(Constants.ERROR) || output.containsKey(ErrorCodes.ERR_DOMAIN_PROCESSING.toString()))
-                throw new ClientException("Error while sending notification to the participants " + output);
-            logger.info("Notification has been sent to the participants");
-            return result;
+            return initializeHCXCall(JSONUtils.serialize(requestBody), Operations.NOTIFICATION_NOTIFY, output, config);
         } catch (Exception e){
             logger.error("Error while sending the notification: {}", e.getMessage());
             output.put(Constants.ERROR, "Error while sending the notifications: " + e.getMessage());

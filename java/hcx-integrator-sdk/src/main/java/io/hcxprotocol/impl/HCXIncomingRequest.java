@@ -44,7 +44,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     public boolean process(String jwePayload, Operations operation, Map<String, Object> output, Config config) throws Exception {
         Map<String, Object> error = new HashMap<>();
         boolean result = false;
-        jwePayload = deserializePayload(jwePayload);
+        jwePayload = getPayload(jwePayload);
         logger.info("Processing incoming request has started :: operation: {}", operation);
         if (!validateRequest(jwePayload, operation, error)) {
             sendResponse(error, output);
@@ -108,7 +108,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
         return result;
     }
 
-    private String deserializePayload(String payload) throws JsonProcessingException {
+    private String getPayload(String payload) throws JsonProcessingException {
         if (payload.contains(Constants.PAYLOAD) || payload.contains(Constants.HCX_API_CALL_ID)){
             return payload;
         } else {
@@ -118,23 +118,17 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
 
     @Override
     public Map<String, Object> receiveNotification(String jwsPayload, Map<String, Object> output, Config config) throws Exception {
-        jwsPayload = deserializePayload(jwsPayload);
-        Map<String,Object> requestPayload = JSONUtils.deserialize(jwsPayload,Map.class);
+        Map<String,Object> requestPayload = JSONUtils.deserialize(getPayload(jwsPayload),Map.class);
         NotificationRequest notificationRequest = new NotificationRequest((String) requestPayload.get(Constants.PAYLOAD));
         if (notificationRequest.getJwsPayload().isEmpty()) {
             throw new ClientException("JWS Token cannot be empty");
         }
-        Map<String, Object> headers = notificationRequest.getHeaders();
-        Map<String, Object> payload = notificationRequest.getPayload();
-        Map<String, Object> headersMap = (Map<String, Object>) headers.get(Constants.NOTIFICATION_HEADERS);
         String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH));
-        String publicKeyUrl = (String) Utils.searchRegistry(headersMap.get("sender_code").toString(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
+        String publicKeyUrl = (String) Utils.searchRegistry(notificationRequest.getSenderCode(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
         boolean isSignatureValid = Utils.isValidSignature((String) requestPayload.get(Constants.PAYLOAD), publicKeyUrl);
-        output.put(Constants.HEADERS, headers);
-        output.put(Constants.PAYLOAD, payload);
+        output.put(Constants.HEADERS, notificationRequest.getHeaders());
+        output.put(Constants.PAYLOAD, notificationRequest.getPayload());
         output.put(Constants.IS_SIGNATURE_VALID, isSignatureValid);
         return output;
     }
-
-
 }

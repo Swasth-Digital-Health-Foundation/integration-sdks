@@ -19,7 +19,9 @@ public enum Operations {
     PREDETERMINATION_SUBMIT("/predetermination/submit","Bundle"),
     PREDETERMINATION_ON_SUBMIT("/predetermination/on_submit","Bundle"),
     NOTIFICATION_NOTIFY("/notification/notify",""),
-    NOTIFICATION_LIST("/notification/topic/list","");
+    NOTIFICATION_LIST("/notification/topic/list",""),
+    EOB_FETCH( "/eob/fetch",""),
+    EOB_ON_FETCH( "/eob/on_fetch","");
 
     private final String operation;
     private final String fhirResourceType;
