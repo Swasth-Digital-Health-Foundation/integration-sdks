@@ -50,7 +50,6 @@ import java.util.*;
  *         These methods are available for the integrator(s) to use them based on different scenario(s) or use cases.
  *     </li>
  * </ul>
- *
  */
 public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
@@ -89,7 +88,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     }
 
 
-    public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
+    public boolean validatePayload(String fhirPayload, Operations operation, Map<String, Object> error, Config config) {
         if (config.getBoolean(Constants.FHIR_VALIDATION_ENABLED))
             return validateFHIR(fhirPayload, operation, error, config);
         else return true;
@@ -161,9 +160,9 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
         try {
             NotificationRequest notificationRequest = new NotificationRequest(topicCode, message, templateParams, recipientType, recipients, correlationId, config);
             NotificationService.validateNotificationRequest(notificationRequest);
-            Map<String, Object> requestBody = NotificationService.createNotificationRequest(notificationRequest, output, message);
+            Map<String, Object> requestBody = notificationService.createNotificationRequest(notificationRequest, output, message);
             return initializeHCXCall(JSONUtils.serialize(requestBody), Operations.NOTIFICATION_NOTIFY, output, config);
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error("Error while sending the notification: {}", e.getMessage());
             output.put(Constants.ERROR, "Error while sending the notifications: " + e.getMessage());
             return false;
