@@ -13,9 +13,10 @@ import java.util.*;
 import static io.hcxprotocol.utils.Constants.*;
 
 public class NotificationService {
-    private NotificationService(){
+    private NotificationService() {
 
     }
+
     public static void validateNotificationRequest(NotificationRequest notificationRequest) throws ClientException {
         if (notificationRequest.getTopicCode().isEmpty()) {
             throw new ClientException("Topic code cannot be empty");
@@ -28,7 +29,7 @@ public class NotificationService {
         }
     }
 
-    private static String getMessage(NotificationRequest notificationRequest,Map<String, Object> output, String message) throws Exception {
+    private static String getMessage(NotificationRequest notificationRequest, Map<String, Object> output, String message) throws Exception {
         Map<String, Object> searchRequest = Map.of("filters", new HashMap<>());
         if (!notificationRequest.getTemplateParams().isEmpty()) {
             Utils.initializeHCXCall(JSONUtils.serialize(searchRequest), Operations.NOTIFICATION_LIST, output, notificationRequest.getConfig());
@@ -78,14 +79,14 @@ public class NotificationService {
     private static Map<String, Object> getJWSRequestPayload(NotificationRequest notificationRequest, Map<String, Object> output, String message) throws Exception {
         Map<String, Object> payload = new HashMap<>();
         payload.put(TOPIC_CODE, notificationRequest.getTopicCode());
-        message = NotificationService.getMessage(notificationRequest, output,message);
+        message = NotificationService.getMessage(notificationRequest, output, message);
         payload.put(MESSAGE, message);
         return payload;
     }
 
-    public static Map<String,Object> createNotificationRequest(NotificationRequest notificationRequest,Map<String,Object> output,String message) throws Exception {
+    public static Map<String, Object> createNotificationRequest(NotificationRequest notificationRequest, Map<String, Object> output, String message) throws Exception {
         Map<String, Object> headers = NotificationService.getJWSRequestHeader(notificationRequest);
-        Map<String,Object> payload = NotificationService.getJWSRequestPayload(notificationRequest,output,message);
+        Map<String, Object> payload = NotificationService.getJWSRequestPayload(notificationRequest, output, message);
         String jwsToken = JWTUtils.generateJWS(headers, payload, NotificationService.getPrivateKey(notificationRequest.getConfig()));
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put(PAYLOAD, jwsToken);

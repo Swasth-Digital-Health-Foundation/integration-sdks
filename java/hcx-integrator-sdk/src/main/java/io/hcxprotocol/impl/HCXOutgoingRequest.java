@@ -163,7 +163,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             NotificationService.validateNotificationRequest(notificationRequest);
             Map<String, Object> requestBody = NotificationService.createNotificationRequest(notificationRequest, output, message);
             return initializeHCXCall(JSONUtils.serialize(requestBody), Operations.NOTIFICATION_NOTIFY, output, config);
-        } catch (Exception e){
+        } catch (Exception e) {
             logger.error("Error while sending the notification: {}", e.getMessage());
             output.put(Constants.ERROR, "Error while sending the notifications: " + e.getMessage());
             return false;
