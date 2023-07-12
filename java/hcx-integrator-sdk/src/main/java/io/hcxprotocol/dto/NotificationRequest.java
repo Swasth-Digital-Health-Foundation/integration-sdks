@@ -15,15 +15,14 @@ public class NotificationRequest {
     private String recipientType;
     private String message;
     private String correlationId;
-    private Map<String, String> templateParams;
+    private Map<String,String> templateParams;
 
     private Config config;
-
-    public NotificationRequest(String jwsPayload) {
+    public NotificationRequest(String jwsPayload){
         this.jwsPayload = jwsPayload;
     }
 
-    public NotificationRequest(String topicCode, String message, Map<String, String> templateParams, String recipientType, List<String> recipients, String correlationId, Config config) {
+    public NotificationRequest(String topicCode, String message, Map<String, String> templateParams, String recipientType, List<String> recipients,String correlationId,Config config) {
         this.topicCode = topicCode;
         this.message = message;
         this.templateParams = templateParams;
@@ -37,22 +36,19 @@ public class NotificationRequest {
         return jwsPayload;
     }
 
-    public Map<String, Object> getHeaders() throws JsonProcessingException {
-        return JSONUtils.decodeBase64String(jwsPayload.split("\\.")[0], Map.class);
+    public Map<String,Object> getHeaders() throws JsonProcessingException {
+       return JSONUtils.decodeBase64String(jwsPayload.split("\\.")[0], Map.class);
     }
 
-    public Map<String, Object> getPayload() throws JsonProcessingException {
+    public Map<String,Object> getPayload() throws JsonProcessingException {
         return JSONUtils.decodeBase64String(jwsPayload.split("\\.")[1], Map.class);
     }
-
     public String getTopicCode() {
         return topicCode;
     }
-
     public List<String> getRecipients() {
         return recipients;
     }
-
     public String getRecipientType() {
         return recipientType;
     }
@@ -60,7 +56,6 @@ public class NotificationRequest {
     public String getMessage() {
         return message;
     }
-
     public Map<String, String> getTemplateParams() {
         return templateParams;
     }
@@ -72,11 +67,9 @@ public class NotificationRequest {
     public Config getConfig() {
         return config;
     }
-
-    public Map<String, Object> notificationHeaders() throws JsonProcessingException {
+    public Map<String,Object> notificationHeaders() throws JsonProcessingException {
         return (Map<String, Object>) getHeaders().get(Constants.NOTIFICATION_HEADERS);
     }
-
     public String getSenderCode() throws JsonProcessingException {
         return (String) notificationHeaders().get("sender_code");
     }

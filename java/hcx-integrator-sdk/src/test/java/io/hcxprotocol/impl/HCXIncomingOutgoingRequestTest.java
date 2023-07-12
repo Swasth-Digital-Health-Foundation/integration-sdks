@@ -218,7 +218,7 @@ class HCXIncomingOutgoingRequestTest {
         String topicCode = "";
         String message = "Participant has upgraded to latest protocol version";
         HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", List.of("payor"), message, new HashMap<>(), output);
-        assertEquals("Error while sending the notifications: Topic code cannot be empty", output.get("error"));
+        assertEquals("Error while sending the notifications: Topic code cannot be empty" ,output.get("error"));
     }
 
     @DisplayName("17")
@@ -228,7 +228,7 @@ class HCXIncomingOutgoingRequestTest {
         String topicCode = "notif-participant-new-protocol-version-support";
         String message = "";
         HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", List.of("payor"), message, new HashMap<>(), output);
-        assertEquals("Error while sending the notifications: Either the message or the template parameters are mandatory.", output.get("error"));
+        assertEquals("Error while sending the notifications: Either the message or the template parameters are mandatory." ,output.get("error"));
     }
 
     @DisplayName("18")
@@ -239,7 +239,7 @@ class HCXIncomingOutgoingRequestTest {
         String topicCode = "notif-participant-new-protocol-version-support";
         String message = "Participant has upgraded to latest protocol version";
         HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "participant_role", new ArrayList<>(), message, new HashMap<>(), output);
-        assertEquals("Error while sending the notifications: Recipients cannot be empty", output.get("error"));
+        assertEquals("Error while sending the notifications: Recipients cannot be empty" ,output.get("error"));
     }
 
     @DisplayName("19")
@@ -249,7 +249,7 @@ class HCXIncomingOutgoingRequestTest {
         String topicCode = "notif-participant-new-protocol-version-support";
         String message = "Participant has upgraded to latest protocol version";
         HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "", List.of("payor"), message, new HashMap<>(), output);
-        assertEquals("Error while sending the notifications: Recipient type cannot be empty", output.get("error"));
+        assertEquals("Error while sending the notifications: Recipient type cannot be empty" ,output.get("error"));
     }
 }
 

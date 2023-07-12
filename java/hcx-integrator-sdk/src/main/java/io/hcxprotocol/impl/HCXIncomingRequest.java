@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+
 /**
  * The <b>HCX Incoming Request</b> class provide the methods to help in processing the JWE Payload and extract FHIR Object.
  *
@@ -79,14 +80,14 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     }
 
     @Override
-    public boolean validatePayload(String fhirPayload, Operations operation, Map<String, Object> error, Config config) {
+    public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
         if (config.getBoolean(Constants.FHIR_VALIDATION_ENABLED))
             return validateFHIR(fhirPayload, operation, error, config);
         else return true;
     }
 
     @Override
-    public boolean sendResponse(Map<String, Object> error, Map<String, Object> output) throws JsonProcessingException {
+    public boolean sendResponse(Map<String,Object> error, Map<String,Object> output) throws JsonProcessingException {
         Map<String, Object> responseObj = new HashMap<>();
         responseObj.put(Constants.TIMESTAMP, System.currentTimeMillis());
         boolean result = false;
@@ -100,7 +101,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
             logger.error("Error while processing the request: {}", error);
             // Fetching only the first error and constructing the error object
             String code = (String) error.keySet().toArray()[0];
-            String message = error.get(code).toString();
+            String message =  error.get(code).toString();
             responseObj.put(Constants.ERROR, JSONUtils.serialize(new ResponseError(code, message, "")));
         }
         output.put(Constants.RESPONSE_OBJ, responseObj);
@@ -108,7 +109,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     }
 
     private String getPayload(String payload) throws JsonProcessingException {
-        if (payload.contains(Constants.PAYLOAD) || payload.contains(Constants.HCX_API_CALL_ID)) {
+        if (payload.contains(Constants.PAYLOAD) || payload.contains(Constants.HCX_API_CALL_ID)){
             return payload;
         } else {
             return JSONUtils.serialize(Collections.singletonMap(Constants.PAYLOAD, payload));
@@ -117,7 +118,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
 
     @Override
     public Map<String, Object> receiveNotification(String jwsPayload, Map<String, Object> output, Config config) throws Exception {
-        Map<String, Object> payload = JSONUtils.deserialize(getPayload(jwsPayload), Map.class);
+        Map<String,Object> payload = JSONUtils.deserialize(getPayload(jwsPayload),Map.class);
         NotificationRequest notificationRequest = new NotificationRequest((String) payload.get(Constants.PAYLOAD));
         if (notificationRequest.getJwsPayload().isEmpty()) {
             throw new ClientException("JWS Token cannot be empty");

@@ -191,12 +191,12 @@ public class HCXIntegrator extends BaseIntegrator {
         return getOutgoingRequest().process(fhirPayload, operation, "", apiCallId, "", actionJwe, onActionStatus, domainHeaders, output, getConfig());
     }
 
-    public Map<String, Object> receiveNotification(String requestBody, Map<String, Object> output) throws Exception {
-        return getIncomingRequest().receiveNotification(requestBody, output, getConfig());
+    public Map<String,Object> receiveNotification(String requestBody,Map<String,Object> output) throws Exception {
+        return getIncomingRequest().receiveNotification(requestBody,output,getConfig());
     }
 
-    public boolean sendNotification(String topicCode, String recipientType, List<String> recepients, String message, Map<String, String> templateParams, Map<String, Object> output) throws Exception {
-        return getOutgoingRequest().sendNotification(topicCode, recipientType, recepients, message, templateParams, "", output, getConfig());
+    public boolean sendNotification(String topicCode, String recipientType, List<String> recepients,String message,Map<String,String> templateParams,Map<String,Object> output) throws Exception {
+        return getOutgoingRequest().sendNotification(topicCode,recipientType,recepients,message,templateParams,"",output,getConfig());
     }
 
 }
