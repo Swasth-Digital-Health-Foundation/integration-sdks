@@ -118,14 +118,14 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
 
     @Override
     public Map<String, Object> receiveNotification(String jwsPayload, Map<String, Object> output, Config config) throws Exception {
-        Map<String,Object> requestPayload = JSONUtils.deserialize(getPayload(jwsPayload),Map.class);
-        NotificationRequest notificationRequest = new NotificationRequest((String) requestPayload.get(Constants.PAYLOAD));
+        Map<String,Object> payload = JSONUtils.deserialize(getPayload(jwsPayload),Map.class);
+        NotificationRequest notificationRequest = new NotificationRequest((String) payload.get(Constants.PAYLOAD));
         if (notificationRequest.getJwsPayload().isEmpty()) {
             throw new ClientException("JWS Token cannot be empty");
         }
         String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH));
         String publicKeyUrl = (String) Utils.searchRegistry(notificationRequest.getSenderCode(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
-        boolean isSignatureValid = Utils.isValidSignature((String) requestPayload.get(Constants.PAYLOAD), publicKeyUrl);
+        boolean isSignatureValid = Utils.isValidSignature((String) payload.get(Constants.PAYLOAD), publicKeyUrl);
         output.put(Constants.HEADERS, notificationRequest.getHeaders());
         output.put(Constants.PAYLOAD, notificationRequest.getPayload());
         output.put(Constants.IS_SIGNATURE_VALID, isSignatureValid);
