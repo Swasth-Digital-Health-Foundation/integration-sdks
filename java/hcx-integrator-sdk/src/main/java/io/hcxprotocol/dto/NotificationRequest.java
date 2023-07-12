@@ -67,11 +67,11 @@ public class NotificationRequest {
     public Config getConfig() {
         return config;
     }
-    public Map<String,Object> headersMap() throws JsonProcessingException {
+    public Map<String,Object> notificationHeaders() throws JsonProcessingException {
         return (Map<String, Object>) getHeaders().get(Constants.NOTIFICATION_HEADERS);
     }
     public String getSenderCode() throws JsonProcessingException {
-        return (String) headersMap().get("sender_code");
+        return (String) notificationHeaders().get("sender_code");
     }
 
 }
