@@ -126,6 +126,9 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
         String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH));
         String publicKeyUrl = (String) Utils.searchRegistry(notificationRequest.getSenderCode(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
         boolean isSignatureValid = Utils.isValidSignature((String) payload.get(Constants.PAYLOAD), publicKeyUrl);
+        if (output == null) {
+            output = new HashMap<>();
+        }
         output.put(Constants.HEADERS, notificationRequest.getHeaders());
         output.put(Constants.PAYLOAD, notificationRequest.getPayload());
         output.put(Constants.IS_SIGNATURE_VALID, isSignatureValid);
