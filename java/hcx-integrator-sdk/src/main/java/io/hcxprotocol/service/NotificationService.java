@@ -42,10 +42,14 @@ public class NotificationService {
         return message;
     }
 
-    private static Map<String, Object> getNotification(List<Map<String, Object>> notificationList, String code) {
-        Map<String, Object> notification = new HashMap<>();
+    private static Map<String, Object> getNotification(List<Map<String, Object>> notificationList, String code) throws ClientException {
+        Map<String, Object> notification;
         Optional<Map<String, Object>> result = notificationList.stream().filter(obj -> obj.get(TOPIC_CODE).equals(code)).findFirst();
-        if (result.isPresent()) notification = result.get();
+        if (result.isPresent()) {
+            notification = result.get();
+        } else {
+            throw new ClientException("Topic code is not found in the master notification list: " + code);
+        }
         return notification;
     }
 
