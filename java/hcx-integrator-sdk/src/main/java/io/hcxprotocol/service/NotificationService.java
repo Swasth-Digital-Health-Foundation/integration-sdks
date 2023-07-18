@@ -50,6 +50,7 @@ public class NotificationService {
         if (result.isEmpty()) {
             throw new ClientException("Topic code is not found in the master notification list: " + code);
         }
+        result.stream().findFirst().isPresent();
         notification = result.stream().findFirst().get();
         return notification;
     }
