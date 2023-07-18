@@ -2,7 +2,9 @@ package io.hcxprotocol.impl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.typesafe.config.Config;
+import io.hcxprotocol.dto.NotificationRequest;
 import io.hcxprotocol.dto.ResponseError;
+import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.helper.FhirPayload;
 import io.hcxprotocol.helper.ValidateHelper;
 import io.hcxprotocol.interfaces.IncomingRequest;
@@ -10,12 +12,14 @@ import io.hcxprotocol.jwe.JweRequest;
 import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
+import io.hcxprotocol.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
 
 
 /**
@@ -40,7 +44,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
     public boolean process(String jwePayload, Operations operation, Map<String, Object> output, Config config) throws Exception {
         Map<String, Object> error = new HashMap<>();
         boolean result = false;
-        jwePayload = formatPayload(jwePayload);
+        jwePayload = getPayload(jwePayload);
         logger.info("Processing incoming request has started :: operation: {}", operation);
         if (!validateRequest(jwePayload, operation, error)) {
             sendResponse(error, output);
@@ -104,11 +108,30 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
         return result;
     }
 
-    private String formatPayload(String payload) throws JsonProcessingException {
-        if (payload.contains(Constants.PAYLOAD) || payload.contains(Constants.HCX_API_CALL_ID)){
+    private String getPayload(String payload) throws JsonProcessingException {
+        if (payload.contains(Constants.PAYLOAD) || payload.contains(Constants.HCX_API_CALL_ID)) {
             return payload;
         } else {
             return JSONUtils.serialize(Collections.singletonMap(Constants.PAYLOAD, payload));
         }
+    }
+
+    @Override
+    public Map<String, Object> receiveNotification(String jwsPayload, Map<String, Object> output, Config config) throws Exception {
+        Map<String, Object> payload = JSONUtils.deserialize(getPayload(jwsPayload), Map.class);
+        NotificationRequest notificationRequest = new NotificationRequest((String) payload.get(Constants.PAYLOAD));
+        if (notificationRequest.getJwsPayload().isEmpty()) {
+            throw new ClientException("JWS Token cannot be empty");
+        }
+        String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH));
+        String publicKeyUrl = (String) Utils.searchRegistry(notificationRequest.getSenderCode(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
+        boolean isSignatureValid = Utils.isValidSignature((String) payload.get(Constants.PAYLOAD), publicKeyUrl);
+        if (output == null) {
+            output = new HashMap<>();
+        }
+        output.put(Constants.HEADERS, notificationRequest.getHeaders());
+        output.put(Constants.PAYLOAD, notificationRequest.getPayload());
+        output.put(Constants.IS_SIGNATURE_VALID, isSignatureValid);
+        return output;
     }
 }

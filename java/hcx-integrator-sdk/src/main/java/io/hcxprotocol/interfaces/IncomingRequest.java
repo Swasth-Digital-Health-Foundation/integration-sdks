@@ -166,6 +166,29 @@ public interface IncomingRequest {
      *
      * @return It is a boolean value to understand the final status is successful or failure.
      */
+
     boolean sendResponse(Map<String,Object> error, Map<String,Object> output) throws JsonProcessingException;
+
+
+    /**
+     * Validates and decodes the jws payload.
+     * @param jwsPayload The JWS payload from the incoming API notification request body.
+     * @param output A wrapper map to collect the outcome (errors or response) of the JWS Payload after decoding.
+     * <ol>
+     *    <li>output -
+     *    </li>
+     *    <li>success response object -
+     *    <pre>
+     *    {@code {
+     *       "headers": "" - fetched from incoming request
+     *       "payload": "" - fetched from incoming request
+     *       "isSignatureValid" : "" - jws signature is valid or not
+     *    }}</pre>
+     *    </li>
+     *  </ol>
+     * @return It is a map object value to get the output of decoded jws payload.
+     *
+     */
+    Map<String,Object> receiveNotification(String jwsPayload, Map<String,Object> output, Config config) throws Exception;
 
 }
