@@ -132,7 +132,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     @Override
     public boolean encryptPayload(Map<String, Object> headers, String fhirPayload, Map<String, Object> output, Config config) throws Exception {
         try {
-            String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH));
+            String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.PROTOCOL_BASE_PATH));
             String publicKeyUrl = (String) Utils.searchRegistry(headers.get(Constants.HCX_RECIPIENT_CODE).toString(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
             String certificate = IOUtils.toString(new URL(publicKeyUrl), StandardCharsets.UTF_8.toString());
             InputStream stream = new ByteArrayInputStream(certificate.getBytes());
