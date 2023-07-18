@@ -9,6 +9,8 @@ import io.hcxprotocol.utils.*;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static io.hcxprotocol.utils.Constants.*;
 
@@ -44,9 +46,9 @@ public class NotificationService {
 
     private static Map<String, Object> getNotification(List<Map<String, Object>> notificationList, String code) throws ClientException {
         Map<String, Object> notification;
-        Optional<Map<String, Object>> result = notificationList.stream().filter(obj -> obj.get(TOPIC_CODE).equals(code)).findFirst();
-        if (result.isPresent()) {
-            notification = result.get();
+        List<Map<String, Object>> result = notificationList.stream().filter(obj -> obj.get(TOPIC_CODE).equals(code)).collect(Collectors.toList());
+        if (!result.isEmpty()) {
+            notification = result.stream().findFirst().get();
         } else {
             throw new ClientException("Topic code is not found in the master notification list: " + code);
         }
