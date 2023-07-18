@@ -47,11 +47,10 @@ public class NotificationService {
     private static Map<String, Object> getNotification(List<Map<String, Object>> notificationList, String code) throws ClientException {
         Map<String, Object> notification;
         List<Map<String, Object>> result = notificationList.stream().filter(obj -> obj.get(TOPIC_CODE).equals(code)).collect(Collectors.toList());
-        if (!result.isEmpty()) {
-            notification = result.stream().findFirst().get();
-        } else {
+        if (result.isEmpty()) {
             throw new ClientException("Topic code is not found in the master notification list: " + code);
         }
+        notification = result.stream().findFirst().get();
         return notification;
     }
 
