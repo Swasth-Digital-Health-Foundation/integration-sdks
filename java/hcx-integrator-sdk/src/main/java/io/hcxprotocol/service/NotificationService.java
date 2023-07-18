@@ -9,8 +9,6 @@ import io.hcxprotocol.utils.*;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static io.hcxprotocol.utils.Constants.*;
 
@@ -45,14 +43,12 @@ public class NotificationService {
     }
 
     private static Map<String, Object> getNotification(List<Map<String, Object>> notificationList, String code) throws ClientException {
-        Map<String, Object> notification;
-        List<Map<String, Object>> result = notificationList.stream().filter(obj -> obj.get(TOPIC_CODE).equals(code)).collect(Collectors.toList());
-        if (result.isEmpty()) {
-            throw new ClientException("Topic code is not found in the master notification list: " + code);
+        Optional<Map<String, Object>> result = notificationList.stream().filter(obj -> obj.get(TOPIC_CODE).equals(code)).findFirst();
+        if (result.isPresent()) {
+            return result.get();
+        } else {
+            throw new ClientException("Topic code is not found in the notification list: " + code);
         }
-        result.stream().findFirst().isPresent();
-        notification = result.stream().findFirst().get();
-        return notification;
     }
 
     private static String getPrivateKey(Config config) {
@@ -93,7 +89,7 @@ public class NotificationService {
     public static Map<String, Object> createNotificationRequest(NotificationRequest notificationRequest, Map<String, Object> output, String message) throws Exception {
         Map<String, Object> headers = NotificationService.getJWSRequestHeader(notificationRequest);
         Map<String, Object> payload = NotificationService.getJWSRequestPayload(notificationRequest, output, message);
-        String jwsToken = JWTUtils.generateJWS(headers, payload, NotificationService.getPrivateKey(notificationRequest.getConfig()));
+        String jwsToken = JWSUtils.generate(headers, payload, NotificationService.getPrivateKey(notificationRequest.getConfig()));
         Map<String, Object> requestBody = new HashMap<>();
         requestBody.put(PAYLOAD, jwsToken);
         return requestBody;

@@ -12,9 +12,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.Base64;
 import java.util.Map;
 
-public class JWTUtils {
+public class JWSUtils {
 
-    public static String generateJWS(Map<String, Object> headers, Map<String, Object> payload, String privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    public static String generate(Map<String, Object> headers, Map<String, Object> payload, String privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] privateKeyDecoded = Base64.getDecoder().decode(privateKey);
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(privateKeyDecoded);
         PrivateKey rsaPrivateKey = KeyFactory.getInstance("RSA").generatePrivate(spec);
