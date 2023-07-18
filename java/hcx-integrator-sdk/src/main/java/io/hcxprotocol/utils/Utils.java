@@ -1,5 +1,6 @@
 package io.hcxprotocol.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.typesafe.config.Config;
 import io.hcxprotocol.dto.HttpResponse;
 import io.hcxprotocol.exception.ClientException;
@@ -37,7 +38,7 @@ public class Utils {
     private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 
     // TODO: In the initial version we are not handling the token caching, it will be handled in the next version
-    public static String generateToken(String username, String password, String protocolBasePath) throws Exception {
+    public static String generateToken(String username, String password, String protocolBasePath) throws JsonProcessingException, ClientException, ServerException {
         Map<String,String> headers = new HashMap<>();
         headers.put("content-type", "application/x-www-form-urlencoded");
         Map<String,Object> fields = new HashMap<>();
