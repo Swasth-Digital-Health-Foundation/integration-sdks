@@ -5,11 +5,8 @@ import io.hcxprotocol.init.HCXIntegrator;
 import io.hcxprotocol.utils.Constants;
 import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
-import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.*;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
