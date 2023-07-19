@@ -95,7 +95,7 @@ public class Utils {
         return sig.verify(decodedSignature);
     }
 
-    public static boolean initializeHCXCall(String jwePayload, Operations operation, Map<String, Object> response, Config config) throws Exception {
+    public static boolean initializeHCXCall(String jwePayload, Operations operation, Map<String, Object> response, Config config) throws ServerException, ClientException, JsonProcessingException {
         Map<String,String> headers = new HashMap<>();
         headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.PROTOCOL_BASE_PATH)));
         HttpResponse hcxResponse = HttpUtils.post(config.getString(Constants.PROTOCOL_BASE_PATH) + operation.getOperation(), headers, jwePayload);
