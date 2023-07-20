@@ -13,7 +13,7 @@ To use the SDK, add the following dependency to your pom.xml file from the [Mave
 <dependency>
   <groupId>io.hcxprotocol</groupId>
   <artifactId>hcx-integrator-sdk</artifactId>
-  <version>1.0.5</version>
+  <version>1.0.6</version>
 </dependency>
 ```
 
@@ -28,6 +28,7 @@ The following configuration details are required to set the context in the integ
 |username|yes|The username of the integrator in the HCX instance.|
 |password|yes|The password of the integrator in the HCX instance.|
 |encryptionPrivateKey|yes|The private key of the integrator to use it for encryption.|
+|signingPrivateKey|yes|The private key of the integrator to use it for signing notifications.|
 |incomingRequestClass|no|To override any incoming request process methods, implement a custom class and provide the class name here. By default, it will use HCXIncomingRequest class.|
 |outgoingRequestClass|no|To override any outgoing request process methods, implement a custom class and provide the class name here. By default, it will use HCXOutgoingRequest class.|
 |fhirValidationEnabled|no|Flag to enable/disable FHIR validations. By default, the flag will be set to true.|
@@ -44,6 +45,7 @@ configMap.put("participantCode", "<Participant code shared with you>");
 configMap.put("username", "<Email ID used for registration>");
 configMap.put("password", "<Your Password>");
 configMap.put("encryptionPrivateKey", "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEF=\n-----END PRIVATE KEY-----");
+configMap.put("signingPrivateKey", "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEF=\n-----END PRIVATE KEY-----");
 HCXIntegrator hcxIntegrator = HCXIntegrator.getInstance(configMap);
 ```
 
