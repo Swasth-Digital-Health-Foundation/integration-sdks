@@ -1,5 +1,6 @@
 package io.hcxprotocol.utils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.typesafe.config.Config;
 import io.hcxprotocol.dto.HttpResponse;
 import io.hcxprotocol.exception.ClientException;
@@ -22,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static io.hcxprotocol.utils.Constants.PARTICIPANT_GENERATE_TOKEN;
 /**
  * The common utils functionality used in HCX Integrator SDK.
  * <ol>
@@ -36,15 +38,13 @@ public class Utils {
     private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 
     // TODO: In the initial version we are not handling the token caching, it will be handled in the next version
-    public static String generateToken(String username, String password, String authBasePath) throws Exception {
+    public static String generateToken(String username, String password, String protocolBasePath) throws JsonProcessingException, ClientException, ServerException {
         Map<String,String> headers = new HashMap<>();
         headers.put("content-type", "application/x-www-form-urlencoded");
         Map<String,Object> fields = new HashMap<>();
-        fields.put("client_id", "registry-frontend");
         fields.put("username", username);
         fields.put("password", password);
-        fields.put("grant_type", "password");
-        HttpResponse response = HttpUtils.post(authBasePath, headers, fields);
+        HttpResponse response = HttpUtils.post(protocolBasePath + PARTICIPANT_GENERATE_TOKEN, headers, fields);
         Map<String,Object> respMap = JSONUtils.deserialize(response.getBody(), Map.class);
         String token;
         if (response.getStatus() == 200) {
@@ -95,9 +95,9 @@ public class Utils {
         return sig.verify(decodedSignature);
     }
 
-    public static boolean initializeHCXCall(String jwePayload, Operations operation, Map<String, Object> response, Config config) throws Exception {
+    public static boolean initializeHCXCall(String jwePayload, Operations operation, Map<String, Object> response, Config config) throws ServerException, ClientException, JsonProcessingException {
         Map<String,String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.AUTH_BASE_PATH)));
+        headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.PROTOCOL_BASE_PATH)));
         HttpResponse hcxResponse = HttpUtils.post(config.getString(Constants.PROTOCOL_BASE_PATH) + operation.getOperation(), headers, jwePayload);
         response.put(Constants.RESPONSE_OBJ, JSONUtils.deserialize(hcxResponse.getBody(), Map.class));
         int status = hcxResponse.getStatus();

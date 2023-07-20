@@ -28,7 +28,7 @@ The following configuration details are required to set the context in the integ
 |username|yes|The username of the integrator in the HCX instance.|
 |password|yes|The password of the integrator in the HCX instance.|
 |encryptionPrivateKey|yes|The private key of the integrator to use it for encryption.|
-|signingPrivateKey|yes|The private key of the integrator to use it for signing notifications.|
+|signingPrivateKey|yes|The private key of the integrator to use it for signing notifications.| 
 |incomingRequestClass|no|To override any incoming request process methods, implement a custom class and provide the class name here. By default, it will use HCXIncomingRequest class.|
 |outgoingRequestClass|no|To override any outgoing request process methods, implement a custom class and provide the class name here. By default, it will use HCXOutgoingRequest class.|
 |fhirValidationEnabled|no|Flag to enable/disable FHIR validations. By default, the flag will be set to true.|
