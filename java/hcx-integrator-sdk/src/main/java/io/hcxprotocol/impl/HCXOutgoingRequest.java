@@ -60,6 +60,15 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
 
     @Override
     public boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> domainHeaders, Map<String, Object> output, Config config) {
+        return processOutgoing(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", actionJwe, onActionStatus, domainHeaders, output, config);
+    }
+
+    @Override
+    public boolean process(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String workflowId, String actionJwe, String onActionStatus, Map<String, Object> domainHeaders, Map<String, Object> output, Config config) {
+        return processOutgoing(fhirPayload, operation, recipientCode, apiCallId, correlationId, workflowId, actionJwe, onActionStatus, domainHeaders, output, config);
+    }
+
+    public boolean processOutgoing(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String workflowId, String actionJwe, String onActionStatus, Map<String, Object> domainHeaders, Map<String, Object> output, Config config) {
         boolean result = false;
         try {
             Map<String, Object> error = new HashMap<>();
@@ -68,7 +77,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             logger.info("Processing outgoing request has started :: operation: {}", operation);
             if (!validatePayload(fhirPayload, operation, error, config)) {
                 output.putAll(error);
-            } else if (!createHeader(config.getString(Constants.PARTICIPANT_CODE), recipientCode, apiCallId, correlationId, actionJwe, onActionStatus, headers, error)) {
+            } else if (!createHeader(config.getString(Constants.PARTICIPANT_CODE), recipientCode, apiCallId, correlationId, workflowId, actionJwe, onActionStatus, headers, error)) {
                 output.putAll(error);
             } else if (!encryptPayload(headers, fhirPayload, output, config)) {
                 output.putAll(error);
@@ -88,7 +97,6 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
         }
     }
 
-
     public boolean validatePayload(String fhirPayload, Operations operation, Map<String,Object> error, Config config) {
         if (config.getBoolean(Constants.FHIR_VALIDATION_ENABLED))
             return validateFHIR(fhirPayload, operation, error, config);
@@ -96,7 +104,7 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
     }
 
     @Override
-    public boolean createHeader(String senderCode, String recipientCode, String apiCallId, String correlationId, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error) {
+    public boolean createHeader(String senderCode, String recipientCode, String apiCallId, String correlationId, String workflowId, String actionJwe, String onActionStatus, Map<String, Object> headers, Map<String, Object> error) {
         try {
             headers.put(Constants.ALG, Constants.A256GCM);
             headers.put(Constants.ENC, Constants.RSA_OAEP);
@@ -104,20 +112,22 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
             if (StringUtils.isEmpty(apiCallId))
                 apiCallId = UUID.randomUUID().toString();
             headers.put(Constants.HCX_API_CALL_ID, apiCallId);
-            System.out.println("recipient key: " + recipientCode);
+            logger.info("recipient key: " + recipientCode);
             if (!StringUtils.isEmpty(recipientCode)) {
                 headers.put(Constants.HCX_SENDER_CODE, senderCode);
                 headers.put(Constants.HCX_RECIPIENT_CODE, recipientCode);
                 if (StringUtils.isEmpty(correlationId))
                     correlationId = UUID.randomUUID().toString();
                 headers.put(Constants.HCX_CORRELATION_ID, correlationId);
+                if (!StringUtils.isEmpty(workflowId))
+                    headers.put(Constants.WORKFLOW_ID, workflowId);
             } else {
                 Map<String, Object> actionHeaders = JSONUtils.decodeBase64String(actionJwe.split("\\.")[0], Map.class);
                 headers.put(Constants.HCX_SENDER_CODE, actionHeaders.get(Constants.HCX_RECIPIENT_CODE));
                 headers.put(Constants.HCX_RECIPIENT_CODE, actionHeaders.get(Constants.HCX_SENDER_CODE));
                 headers.put(Constants.HCX_CORRELATION_ID, actionHeaders.get(Constants.HCX_CORRELATION_ID));
                 headers.put(Constants.STATUS, onActionStatus);
-                if (headers.containsKey(Constants.WORKFLOW_ID))
+                if (actionHeaders.containsKey(Constants.WORKFLOW_ID))
                     headers.put(Constants.WORKFLOW_ID, actionHeaders.get(Constants.WORKFLOW_ID));
             }
             logger.info("Request headers are created: " + headers);
