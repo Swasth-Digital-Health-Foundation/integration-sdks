@@ -132,6 +132,67 @@ public class HCXIntegrator extends BaseIntegrator {
         return getOutgoingRequest().process(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", "", domainHeaders, output, getConfig());
     }
 
+    /**
+     * Generates the JWE Payload using FHIR Object, Operation and other parameters part of input. This method is used to handle the action API request.
+     * It has the implementation of the below steps to create JWE Payload and send the request.
+     * <ul>
+     *     <li>Validating the FHIR object using HCX FHIR IG.</li>
+     *     <li>Crate HCX Protocol headers based on the request.</li>
+     *     <li>Fetch the sender encryption public key from the HCX participant registry.</li>
+     *     <li>Encrypt the FHIR object along with HCX Protocol headers using <b>RFC7516</b> to create JWE Payload.</li>
+     *     <li>Generate or fetch the authorization token of HCX Gateway.</li>
+     *     <li>Trigger HCX Gateway REST API based on operation.</li>
+     * </ul>
+     * @param fhirPayload The FHIR object created by the participant system.
+     * @param operation The HCX operation or action defined by specs to understand the functional behaviour.
+     * @param recipientCode The recipient code from HCX Participant registry.
+     * @param apiCallId The unique id for each request, to use the custom identifier, pass the same or else
+     *                  pass an empty string("") and method will generate a UUID and uses it.
+     * @param correlationId The unique id for all the messages (requests and responses) that are involved in processing of one cycle,
+     *                      to use the custom identifier, pass the same or else pass empty string("") and method will generate a UUID and uses it.
+     * @param workflowId This is an optional header that can be set by providers to the same value for all requests (coverage eligibility check, preauth, claim, etc)
+     *                   related to a single admission/case. And when the workflow_id is sent by the originating provider, all other participant systems (payors) must set the same workflow id in all API calls (responses, forwards/redirects, payment notices, etc) related to the workflow.
+     * @param domainHeaders The domain headers to use while creating the JWE Payload.
+     * @param output A wrapper map to collect the outcome (errors or response) of the JWE Payload generation process using FHIR object.
+     * <ol>
+     *    <li>output -
+     *    <pre>
+     *    {@code {
+     *       "payload":{}, -  jwe payload
+     *       "responseObj":{} - success/error response object
+     *    }}</pre>
+     *    </li>
+     *    <li>success response object -
+     *    <pre>
+     *    {@code {
+     *       "timestamp": , - unix timestamp
+     *       "correlation_id": "", - fetched from incoming request
+     *       "api_call_id": "" - fetched from incoming request
+     *    }}</pre>
+     *    </li>
+     *    <li>error response object -
+     *    <pre>
+     *    {@code {
+     *       "timestamp": , - unix timestamp
+     *       "error": {
+     *           "code" : "", - error code
+     *           "message": "", - error message
+     *           "trace":"" - error trace
+     *        }
+     *    }}</pre>
+     *    </li>
+     *  </ol>
+     * @return It is a boolean value to understand the outgoing request generation is successful or not.
+     *
+     * <ol>
+     *      <li>true - It is successful.</li>
+     *      <li>false - It is failure.</li>
+     * </ol>
+     */
+    public boolean processOutgoingRequest(String fhirPayload, Operations operation, String recipientCode, String apiCallId, String correlationId, String workflowId, Map<String,Object> domainHeaders, Map<String,Object> output) throws InstantiationException, IllegalAccessException {
+        return getOutgoingRequest().process(fhirPayload, operation, recipientCode, apiCallId, correlationId, workflowId, "", "", domainHeaders, output, getConfig());
+    }
+
 
     /**
      * Generates the JWE Payload using FHIR Object, Operation and other parameters part of input. This method is used to handle the on_action API request.

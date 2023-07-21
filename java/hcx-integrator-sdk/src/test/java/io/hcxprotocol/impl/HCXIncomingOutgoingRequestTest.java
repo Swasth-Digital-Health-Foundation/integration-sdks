@@ -7,10 +7,7 @@ import io.hcxprotocol.utils.JSONUtils;
 import io.hcxprotocol.utils.Operations;
 import org.junit.jupiter.api.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -246,6 +243,15 @@ class HCXIncomingOutgoingRequestTest {
         String message = "Participant has upgraded to latest protocol version";
         HCXIntegrator.getInstance(configMap).sendNotification(topicCode, "", List.of("payor"), message, new HashMap<>(), output);
         assertEquals("Error while sending the notifications: Recipient type cannot be empty", output.get("error"));
+    }
+
+    @DisplayName("20")
+    @Test
+    void HcxOutgoingRequestCheckWithWorkflowIdSuccess() throws Exception {
+        Map<String, Object> output = new HashMap<>();
+        HCXIntegrator.getInstance(configMap).processOutgoingRequest(commonFhirPayload, Operations.COVERAGE_ELIGIBILITY_CHECK, "testpayor1.icici@swasth-hcx-dev", "", "", UUID.randomUUID().toString(), new HashMap<>(), output);
+        BaseRequest baseRequest = new BaseRequest(output);
+        assertEquals(configMap.getOrDefault("participantCode", "").toString(), baseRequest.getHcxSenderCode());
     }
 }
 
