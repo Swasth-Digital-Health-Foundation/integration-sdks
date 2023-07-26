@@ -1,16 +1,15 @@
-from hcx_utils_care import HcxUtils
-from hcx_operations import HcxOperations
+# from ..utils hcx_operations
+from utils.hcx_operations import HcxOperations
+from hcx_integrator import HCXIntegrator
 
-
-#making the object for the HcxUtils class
-
-hcxUtils = HcxUtils(participantCode="1-521eaec7-8cb9-4b6c-8b4e-4dba300af6f4",
-                    authBasePath="https://staging-hcx.swasth.app/auth/realms/swasth-health-claim-exchange/protocol/openid-connect/token",
-                    protocolBasePath="http://staging-hcx.swasth.app/api/v0.7",
-                    encryptionPrivateKeyURL="https://raw.githubusercontent.com/Swasth-Digital-Health-Foundation/hcx-platform/sprint-30/demo-app/server/resources/keys/x509-private-key.pem",
-                    username="swasth_mock_provider@swasthapp.org",
-                    password="Opensaber@123",
-                    igUrl="https://ig.hcxprotocol.io/v0.7.1")
+config = {
+    "participantCode": "testprovider1.apollo@swasth-hcx-dev",
+    "authBasePath": "http://dev-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
+    "protocolBasePath": "http://dev-hcx.swasth.app/api/v0.7",
+    "encryptionPrivateKeyURL": "https://raw.githubusercontent.com/Swasth-Digital-Health-Foundation/hcx-platform/sprint-30/demo-app/server/resources/keys/x509-private-key.pem",
+    "username": "testprovider1@apollo.com",
+    "password": "Opensaber@123",
+    "igUrl": "https://ig.hcxprotocol.io/v0.7.1"}
 
 
 fhirPayload = {
@@ -392,12 +391,7 @@ fhirPayload = {
   } ]
 }
 
-#to send a call to HCX
-response = hcxUtils.generateOutgoingHcxCall(fhirPayload=fhirPayload, operation=HcxOperations.CLAIM_SUBMIT, recipientCode="1-29482df3-e875-45ef-a4e9-592b6f565782")
+hcxIntegrator = HCXIntegrator(config=config)
+
+response = hcxIntegrator.processOutgoing(fhirPayload, recipientCode="primehospital+mock_payor.yopmail@swasth-hcx-dev", operation=HcxOperations.CLAIM_SUBMIT)
 print(response)
-
-print("\n\n")
-
-#process an incoming call which contains encrypted payload from HCX
-processRequest = hcxUtils.processIncomingRequest(response.get("payload"))
-print(processRequest)
