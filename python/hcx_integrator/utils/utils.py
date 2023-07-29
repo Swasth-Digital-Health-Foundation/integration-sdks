@@ -31,7 +31,7 @@ def generateHcxToken(authBasePath, username, password):
     try:
         response = requests.request("POST", url, headers=headers, data=payload_urlencoded)
         y = json.loads(response.text)
-        return y["access_token"]
+        return y["access_token"]  
     except Exception as e:
         print(f'Generate HCX Token: {e}')
 

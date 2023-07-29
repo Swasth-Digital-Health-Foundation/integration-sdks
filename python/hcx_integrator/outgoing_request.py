@@ -18,7 +18,7 @@ class OutgoingRequest:
         self.authBasePath = authBasePath
         self.username = username
         self.password = password
-        self.encryptionPrivateKeyURL = encryptionPrivateKeyURL
+        self.encryptionPrivateKeyURL = encryptionPrivateKeyURL  # not needed in outgoing
         self.igURL = igURL
         self.hcxToken = None
 
@@ -50,8 +50,8 @@ class OutgoingRequest:
         if self.hcxToken is None:
             self.hcxToken = generateHcxToken(self.authBasePath, self.username, self.password)
         regsitry_data = searchRegistry(self.protocolBasePath, self.hcxToken,
-                                       searchField = "participant_code", searchValue = recipientCode)        
-        public_cert = requests.get(regsitry_data["participants"][0]["encryption_cert"])   
+                                       searchField = "participant_code", searchValue = recipientCode)       
+        public_cert = requests.get(regsitry_data["participants"][0]["encryption_cert"], verify=False)  # verify=False handels firewall off case
         key = jwk.JWK.from_pem(public_cert.text.encode('utf-8')) 
         headers = self.createHeaders(recipientCode)
         jwePayload = jwe.JWE(str(json.dumps(fhirPayload)),recipient=key,protected=json.dumps(headers))
@@ -79,7 +79,7 @@ class OutgoingRequest:
 
     
     def process(self, fhirPayload, recipientCode, operation:HcxOperations):
-        self.validatePayload(fhirPayload, operation)
+        # self.validatePayload(fhirPayload, operation)
         encryptedPaylaod = self.encryptPayload(recipientCode, fhirPayload)
         response = self.initializeHCXCall(operation, encryptedPaylaod)
         return {

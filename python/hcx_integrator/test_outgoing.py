@@ -3,11 +3,11 @@ from utils.hcx_operations import HcxOperations
 from hcx_integrator import HCXIntegrator
 
 config = {
-    "participantCode": "testprovider1.apollo@swasth-hcx-dev",
-    "authBasePath": "http://dev-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
-    "protocolBasePath": "http://dev-hcx.swasth.app/api/v0.7",
+    "participantCode": "testprovider1.swasthmock@swasth-hcx-staging",
+    "authBasePath": "http://staging-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
+    "protocolBasePath": "https://staging-hcx.swasth.app/api/v0.8",
     "encryptionPrivateKeyURL": "https://raw.githubusercontent.com/Swasth-Digital-Health-Foundation/hcx-platform/sprint-30/demo-app/server/resources/keys/x509-private-key.pem",
-    "username": "testprovider1@apollo.com",
+    "username": "testprovider1@swasthmock.com",
     "password": "Opensaber@123",
     "igUrl": "https://ig.hcxprotocol.io/v0.7.1"}
 
@@ -393,5 +393,5 @@ fhirPayload = {
 
 hcxIntegrator = HCXIntegrator(config=config)
 
-response = hcxIntegrator.processOutgoing(fhirPayload, recipientCode="primehospital+mock_payor.yopmail@swasth-hcx-dev", operation=HcxOperations.CLAIM_SUBMIT)
+response = hcxIntegrator.processOutgoing(fhirPayload, recipientCode="testpayor1.swasthmock@swasth-hcx-staging", operation=HcxOperations.CLAIM_SUBMIT)
 print(response)
