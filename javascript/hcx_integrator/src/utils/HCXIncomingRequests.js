@@ -1,4 +1,4 @@
-const Constants = require('./Constants');
+/*const Constants = require('./Constants');
 const Utils = require('./Utils');
 const JSONUtils = require('./JSONUtils');
 const ResponseError = require('./ResponseError');
@@ -81,3 +81,4 @@ class HCXIncomingRequest {
 }
 
 module.exports = HCXIncomingRequest;
+*/
