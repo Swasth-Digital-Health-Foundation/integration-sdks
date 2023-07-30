@@ -1,7 +1,7 @@
 const axios = require('axios');
 const uuid = require('uuid');
-const { generateHcxToken, searchRegistry } = require('./utils/utils');
-const HcxOperations = require('./utils/hcx_operations');
+const { generateHcxToken, searchRegistry } = require('./utils');
+const HcxOperations = require('./hcx_operations');
 const { JWEHelper } = require('./jwe_helper');
 
 class OutgoingRequest {
