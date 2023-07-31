@@ -5,10 +5,10 @@ export class JWEHelper {
 
     static async encrypt({ cert, headers, payload, format = 'compact', contentAlg = "A256GCM", alg = "RSA-OAEP-256" }) {
         let keyData = cert;
-        let key = await jose.JWK.asKey(keyData, "pem"); // Updated this line
+        let key = await jose.JWK.asKey(keyData, "pem");
         const buffer = Buffer.from(JSON.stringify(payload));
         const fields = { alg, ...headers };
-        const encrypted = await jose.JWE.createEncrypt({ format, contentAlg, fields }, key).update(buffer).final(); // Updated this line
+        const encrypted = await jose.JWE.createEncrypt({ format, contentAlg, fields }, key).update(buffer).final();
         return encrypted;
     }
 
@@ -18,14 +18,13 @@ export class JWEHelper {
             keyData = cert
         }
         else {
-            keyData = await (await axios.get(cert)).data; // Corrected this line
+            keyData = await (await axios.get(cert)).data;
         }
         if (!(keyData && payload)) throw new Error('Invalid Input');
         let keystore = JWK.createKeyStore();
         await keystore.add(await JWK.asKey(keyData, "pem"));
         
-        // Assuming you have the correct method to decrypt the payload
-        let decrypted = await someMethodToDecrypt(payload, keystore); // Replace this line with the correct method
+        let decrypted = await someMethodToDecrypt(payload, keystore);
         const payloadString = decrypted.payload.toString();
         const payloadMap = JSON.parse(payloadString);
         decrypted.payload = payloadMap;

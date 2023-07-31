@@ -7,8 +7,6 @@ export class HCXIntegrator {
   }
 
   validateConfig() {
-    // TODO: check for all constants/attributes needed
-    // set all the internal variables
     this.protocolBasePath = this.config.protocolBasePath;
     this.participantCode = this.config.participantCode;
     this.authBasePath = this.config.authBasePath;
