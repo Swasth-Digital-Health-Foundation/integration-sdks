@@ -1,5 +1,5 @@
-const { HcxOperations } = require('./src/utils/hcx_operations');
-const { HCXIntegrator } = require('./hcx_integrator');
+import { HCXIntegrator } from "./hcx_integrator.js";
+import HcxOperations from "./utils/hcx_operations.js"
 
 const config = {
     participantCode: "testprovider1.swasthmock@swasth-hcx-staging",
@@ -98,7 +98,7 @@ const fhirPayload = {
         } ],
         "insurance": [ {
           "sequence": 1,
-          "focal": True,
+          "focal": true,
           "coverage": {
             "reference": "Coverage/COVERAGE1"
           }
@@ -391,6 +391,8 @@ const fhirPayload = {
 };
 
 const hcxIntegrator = new HCXIntegrator(config);
-const response = hcxIntegrator.processOutgoing(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", HcxOperations.CLAIM_SUBMIT);
+const sub = HcxOperations.CLAIM_SUBMIT
+
+const response = hcxIntegrator.processOutgoing(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", sub);
 
 console.log(response);
