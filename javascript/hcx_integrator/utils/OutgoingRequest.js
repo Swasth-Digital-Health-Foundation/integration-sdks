@@ -7,7 +7,7 @@ uuidv4();
 
 import { JWEHelper } from '../JWEHelper.js';
 
-import {generateHcxToken} from "../utils/utils.js"
+import { generateHcxToken } from "../utils/utils.js"
 import { searchRegistry } from '../utils/utils.js';
 
 export class OutgoingRequest {
@@ -21,18 +21,26 @@ export class OutgoingRequest {
         this.igURL = igURL;
         this.hcxToken = false;
     }
-    createHeaders(recipientCode) {
-        return {
-            'x-hcx-recipient_code': recipientCode,
-            'x-hcx-timestamp': new Date().toISOString(),
-            'x-hcx-sender_code': this.participantCode,
-            'x-hcx-correlation_id': uuidv4(),
-            'x-hcx-workflow_id': uuidv4(),
-            'x-hcx-api_call_id': uuidv4(),
-        };
+    validatePayload(fhirPayload, operation){
+    
+      
+        //TODO: to be implemented
+        return True
     }
     
+    createHeaders(recipientCode,actionJwe){
+        
+    return {
+                'x-hcx-recipient_code': recipientCode,
+                'x-hcx-timestamp': new Date().toISOString(),
+                'x-hcx-sender_code': this.participantCode,
+                'x-hcx-correlation_id': uuidv4(),
+                'x-hcx-workflow_id': uuidv4(),
+                'x-hcx-api_call_id': uuidv4(),
+            };
 
+         }
+       
     async encryptPayload(recipientCode, fhirPayload) {
         if (!recipientCode) {
             throw new Error("Recipient code can not be empty, must be a string");
@@ -41,11 +49,11 @@ export class OutgoingRequest {
             throw new Error("Fhir payload must be an object");
         }
         if (!this.hcxToken) {
-            console.log(`generating token ${this.hcxToken}`)
+
             this.hcxToken = await generateHcxToken(this.authBasePath, this.username, this.password);
             console.log(`token is ${this.hcxToken}`)
         }
-        const registryData = await searchRegistry(this.protocolBasePath, this.hcxToken, recipientCode,"participant_code");
+        const registryData = await searchRegistry(this.protocolBasePath, this.hcxToken, recipientCode, "participant_code");
 
         console.log(registryData)
         const publicCert = await axios.get(registryData.participants[0].encryption_cert);
@@ -61,8 +69,8 @@ export class OutgoingRequest {
         return encrypted;
     }
 
-    async initializeHCXCall(operation, encryptedJWE) {
-        const url = this.protocolBasePath +"/claim/submit";
+    async  initializeHCXCall(operation, encryptedJWE) {
+        const url = this.protocolBasePath + "/claim/submit";
         console.log("making the API call to url " + url);
         console.log(url)
         if (!this.hcxToken) {
@@ -86,9 +94,7 @@ export class OutgoingRequest {
     }
 
     async process(fhirPayload, recipientCode, operation) {
-        console.log(this.protocolBasePath)
-        console.log(this.protocolBasePath)
-        console.log(this.protocolBasePath)
+       
         const encryptedPayload = await this.encryptPayload(recipientCode, fhirPayload);
         const response = await this.initializeHCXCall(operation, encryptedPayload);
         return {
@@ -96,5 +102,5 @@ export class OutgoingRequest {
             response
         };
     }
-}
 
+}

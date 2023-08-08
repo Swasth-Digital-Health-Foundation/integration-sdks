@@ -1,4 +1,5 @@
 import { OutgoingRequest } from './utils/OutgoingRequest.js';
+import {HCXIncomingRequest} from './utils/HCXIncomingRequest.js';
 
 export class HCXIntegrator {
   constructor(config) {
@@ -27,8 +28,20 @@ export class HCXIntegrator {
       this.igURL
     );
     const response = outgoing.process(fhirPayload, recipientCode, operation);
-   
     return response;
   }
+// processIncoming(encryptedPayload, operation = null) {
+//       let incoming = new HCXIncomingRequest(
+//           this.protocolBasePath, 
+//           this.participantCode,
+//           this.authBasePath, 
+//           this.username,
+//           this.password, 
+//           this.encryptionPrivateKeyURL,
+//           this.igURL
+//       );
+//     let response = incoming.process(encryptedPayload, operation);
+//     return response;
+//   }
 }
 

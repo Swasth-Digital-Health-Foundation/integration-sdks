@@ -13,10 +13,11 @@ export async function generateHcxToken(authBasePath, username, password) {
   const headers = {
     'content-type': 'application/x-www-form-urlencoded'
   };
-  
+  console.log("gnerate token ke andar ka ")
   const result =  await axios.post(url, payloadUrlencoded, { headers })
     .then(response => response.data.access_token)
     .catch(error => console.error('Generate HCX Token:', error));
+    console.log(result)
     return result;
 }
 
