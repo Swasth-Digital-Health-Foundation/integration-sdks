@@ -79,8 +79,9 @@ export class HCXIncomingRequest {
   }
       console.log(cert)
       let decryptedPayload = await JWEHelper.decrypt({cert, payload})
+      console.log("thise is return of decrypt")
       console.log(decryptedPayload)
-      let header = decryptedPayload.protectedHeader;
+      let header = decryptedPayload.header;
 
 
       console.log(header);
@@ -139,7 +140,7 @@ export class HCXIncomingRequest {
     if (!this.error) {
       console.log("here")
       
-      let headers = Constants.HEADERS
+      let headers = this.Constants.HEADERS
       console.log(headers)
       response_obj[this.Constants.API_CALL_ID] = this.Constants.HCX_API_CALL_ID;
       response_obj[this.Constants.CORRELATION_ID] = this.Constants.HCX_CORRELATION_ID

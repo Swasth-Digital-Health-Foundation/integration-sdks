@@ -394,6 +394,9 @@ const hcxIntegrator = new HCXIntegrator(config);
 const sub = HcxOperations.CLAIM_SUBMIT
 
 const response = await hcxIntegrator.processOutgoing(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", sub);
-const responseIncoming = await hcxIntegrator.processIncoming(response,sub)
+const responseIncoming = await hcxIntegrator.processIncoming(response.payload,sub)
+
 console.log(responseIncoming);
+
+console.log("from outgoing")
 console.log(response)
