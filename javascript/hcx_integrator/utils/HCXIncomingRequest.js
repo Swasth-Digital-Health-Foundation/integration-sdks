@@ -5,9 +5,6 @@ import fs from 'fs';
 import moment from 'moment';
 import {Constants} from './Constants.js';
 
-// The other imported modules in the Python code like HcxOperations, generateHcxToken, searchRegistry, validateJWERequest,
-// validateJsonRequest, ErrorCodes, ResponseMessage would need JavaScript counterparts, which are not provided here.
-
 export class HCXIncomingRequest {
     constructor(protocolBasePath, participantCode, authBasePath, username, password, encryptionPrivateKeyURL, igURL) {
         this.protocolBasePath = protocolBasePath;
@@ -41,12 +38,7 @@ export class HCXIncomingRequest {
   validatePayload(fhirPayload, operation) {
     // TODO: fhir validation to be implemented
     return true;
-}
-
-
-    // Translating other methods like validateRequest, decryptPayload, validatePayload, send_response into JavaScript would require more information
-    // about how these methods are implemented in JavaScript.
-    
+}    
     async process(payload, operation) {
         console.log(`Processing incoming request has started :: operation: ${operation}`);
         // this.validateRequest(payload, operation);
