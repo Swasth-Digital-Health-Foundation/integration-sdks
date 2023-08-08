@@ -5,7 +5,7 @@ const config = {
     participantCode: "testprovider1.swasthmock@swasth-hcx-staging",
     authBasePath: "http://staging-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
     protocolBasePath: "https://staging-hcx.swasth.app/api/v0.8",
-    encryptionPrivateKeyURL: "https://raw.githubusercontent.com/Swasth-Digital-Health-Foundation/hcx-platform/sprint-30/demo-app/server/resources/keys/x509-private-key.pem",
+    encryptionPrivateKeyURL: "https://raw.githubusercontent.com/Swasth-Digital-Health-Foundation/hcx-platform/main/hcx-apis/src/test/resources/examples/x509-private-key.pem",
     username: "testprovider1@swasthmock.com",
     password: "Opensaber@123",
     igUrl: "https://ig.hcxprotocol.io/v0.7.1"
@@ -393,7 +393,7 @@ const fhirPayload = {
 const hcxIntegrator = new HCXIntegrator(config);
 const sub = HcxOperations.CLAIM_SUBMIT
 
-const response = hcxIntegrator.processOutgoing(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", sub);
-// const responseIncoming = hcxIntegrator.processIncoming(response, operation=HcxOperations.CLAIM_SUBMIT)
-// console.log(responseIncoming);
+const response = await hcxIntegrator.processOutgoing(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", sub);
+const responseIncoming = await hcxIntegrator.processIncoming(response,sub)
+console.log(responseIncoming);
 console.log(response)

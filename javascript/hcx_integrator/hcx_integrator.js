@@ -17,7 +17,7 @@ export class HCXIntegrator {
     this.igURL = this.config.igURL;
   }
    
-  processOutgoing(fhirPayload, recipientCode, operation) {
+  async processOutgoing(fhirPayload, recipientCode, operation) {
     const outgoing = new OutgoingRequest(
       this.protocolBasePath,
       this.participantCode,
@@ -27,21 +27,21 @@ export class HCXIntegrator {
       this.encryptionPrivateKeyURL,
       this.igURL
     );
-    const response = outgoing.process(fhirPayload, recipientCode, operation);
+    const response = await outgoing.process(fhirPayload, recipientCode, operation);
     return response;
   }
-// processIncoming(encryptedPayload, operation = null) {
-//       let incoming = new HCXIncomingRequest(
-//           this.protocolBasePath, 
-//           this.participantCode,
-//           this.authBasePath, 
-//           this.username,
-//           this.password, 
-//           this.encryptionPrivateKeyURL,
-//           this.igURL
-//       );
-//     let response = incoming.process(encryptedPayload, operation);
-//     return response;
-//   }
+async processIncoming(encryptedPayload, operation = null) {
+      let incoming = new HCXIncomingRequest(
+          this.protocolBasePath, 
+          this.participantCode,
+          this.authBasePath, 
+          this.username,
+          this.password, 
+          this.encryptionPrivateKeyURL,
+          this.igURL
+      );
+    let response = await incoming.process(encryptedPayload, operation);
+    return response;
+  }
 }
 
