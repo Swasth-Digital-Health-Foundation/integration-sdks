@@ -1,5 +1,5 @@
-import { OutgoingRequest } from './utils/OutgoingRequest.js';
-import {HCXIncomingRequest} from './utils/HCXIncomingRequest.js';
+import { OutgoingRequest } from "./utils/OutgoingRequest.js";
+import { HCXIncomingRequest } from "./utils/HCXIncomingRequest.js";
 
 export class HCXIntegrator {
   constructor(config) {
@@ -16,7 +16,7 @@ export class HCXIntegrator {
     this.encryptionPrivateKeyURL = this.config.encryptionPrivateKeyURL;
     this.igURL = this.config.igURL;
   }
-   
+
   async processOutgoing(fhirPayload, recipientCode, operation) {
     const outgoing = new OutgoingRequest(
       this.protocolBasePath,
@@ -27,21 +27,24 @@ export class HCXIntegrator {
       this.encryptionPrivateKeyURL,
       this.igURL
     );
-    const response = await outgoing.process(fhirPayload, recipientCode, operation);
+    const response = await outgoing.process(
+      fhirPayload,
+      recipientCode,
+      operation
+    );
     return response;
   }
-async processIncoming(encryptedPayload, operation = null) {
-      let incoming = new HCXIncomingRequest(
-          this.protocolBasePath, 
-          this.participantCode,
-          this.authBasePath, 
-          this.username,
-          this.password, 
-          this.encryptionPrivateKeyURL,
-          this.igURL
-      );
+  async processIncoming(encryptedPayload, operation = null) {
+    let incoming = new HCXIncomingRequest(
+      this.protocolBasePath,
+      this.participantCode,
+      this.authBasePath,
+      this.username,
+      this.password,
+      this.encryptionPrivateKeyURL,
+      this.igURL
+    );
     let response = await incoming.process(encryptedPayload, operation);
     return response;
   }
 }
-
