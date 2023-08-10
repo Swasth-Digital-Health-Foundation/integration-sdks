@@ -45,4 +45,7 @@ export async function searchRegistry(protocolBasePath, token, searchValue, searc
   return result;
 }
 
-
+export const decodeBase64String = (encodedString, clazz) => {
+  const decodedString = base64.decode(encodedString);
+  return JSON.parse(decodedString);
+};
