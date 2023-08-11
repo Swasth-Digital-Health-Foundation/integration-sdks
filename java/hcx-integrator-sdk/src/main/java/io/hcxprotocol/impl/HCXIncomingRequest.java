@@ -123,7 +123,7 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
         if (notificationRequest.getJwsPayload().isEmpty()) {
             throw new ClientException("JWS Token cannot be empty");
         }
-        String authToken = Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.PROTOCOL_BASE_PATH));
+        String authToken = Utils.generateToken(config);
         String publicKeyUrl = (String) Utils.searchRegistry(notificationRequest.getSenderCode(), authToken, config.getString(Constants.PROTOCOL_BASE_PATH)).get(Constants.ENCRYPTION_CERT);
         boolean isSignatureValid = Utils.isValidSignature((String) payload.get(Constants.PAYLOAD), publicKeyUrl);
         if (output == null) {
