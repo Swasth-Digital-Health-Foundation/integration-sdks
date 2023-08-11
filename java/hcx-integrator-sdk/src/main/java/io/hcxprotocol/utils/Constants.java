@@ -71,4 +71,5 @@ public class Constants {
     public static final String NOTIFICATION_HEADERS = "x-hcx-notification_headers";
     public static final String TOPIC_CODE = "topic_code";
     public static final String TEMPLATE = "template";
+    public static final String SECRET = "secret";
 }

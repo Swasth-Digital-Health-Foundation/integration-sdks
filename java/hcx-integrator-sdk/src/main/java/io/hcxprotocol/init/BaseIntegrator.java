@@ -2,6 +2,7 @@ package io.hcxprotocol.init;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.impl.HCXIncomingRequest;
 import io.hcxprotocol.impl.HCXOutgoingRequest;
 import io.hcxprotocol.interfaces.IncomingRequest;
@@ -27,6 +28,13 @@ public class BaseIntegrator {
         for(String prop: props){
             if(!config.hasPathOrNull(prop) || StringUtils.isEmpty(config.getString(prop)))
                 throw new Exception(prop + " is missing or has empty value, please add to the configuration.");
+        }
+        validateOptionalFields();
+    }
+
+    private void validateOptionalFields() throws ClientException {
+        if (!config.hasPathOrNull(Constants.PASSWORD) && !config.hasPathOrNull(Constants.SECRET)) {
+            throw new ClientException("Access token generation failed. Please provide participant password or user secret in the config");
         }
     }
 
