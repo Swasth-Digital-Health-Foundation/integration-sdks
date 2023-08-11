@@ -268,7 +268,7 @@ class HCXIncomingOutgoingRequestTest {
 
 
     @Test
-    void HcxRequestWithoutSecretAndPasswordInConfig() {
+    void hcxRequestWithoutSecretAndPasswordInConfig() {
         ClientException exception = assertThrows(ClientException.class, () -> {
             HCXIntegrator.getInstance(configMapWithoutSecretAndPassword());
         });
@@ -288,7 +288,7 @@ class HCXIncomingOutgoingRequestTest {
 
 
     @Test
-    public void HcxRequestEligibilityCheckSuccessWithSecret() throws Exception {
+    public void hcxRequestEligibilityCheckSuccessWithSecret() throws Exception {
         Map<String, Object> output = new HashMap<>();
         HCXIntegrator.getInstance(configMapWithSecret()).processOutgoingRequest(commonFhirPayload, Operations.COVERAGE_ELIGIBILITY_CHECK, "testpayor1.icici@swasth-hcx-dev", "", "", new HashMap<>(), output);
         BaseRequest baseRequest = new BaseRequest(output);
