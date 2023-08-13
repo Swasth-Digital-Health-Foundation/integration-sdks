@@ -12,12 +12,10 @@ export async function generateHcxToken(authBasePath, username, password) {
   const headers = {
     "content-type": "application/x-www-form-urlencoded",
   };
-  console.log("gnerate token ke andar ka ");
   const result = await axios
     .post(url, payloadUrlencoded, { headers })
     .then((response) => response.data.access_token)
     .catch((error) => console.error("Generate HCX Token:", error));
-  console.log(result);
   return result;
 }
 
@@ -27,7 +25,6 @@ export async function searchRegistry(
   searchValue,
   searchField = "participant_code"
 ) {
-  console.log(protocolBasePath);
   const url = protocolBasePath + "/participant/search";
   const payload = JSON.stringify({
     filters: {
@@ -45,8 +42,6 @@ export async function searchRegistry(
     .post(url, payload, { headers })
     .then((response) => response.data)
     .catch((error) => console.error("Search Registry:", error));
-  console.log(`registery data ke andar ka result ${result}`);
-  console.log(result);
   return result;
 }
 
