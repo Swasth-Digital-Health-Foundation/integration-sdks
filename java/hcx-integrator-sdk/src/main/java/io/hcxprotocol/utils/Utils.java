@@ -38,13 +38,18 @@ public class Utils {
     private static final Logger logger = LoggerFactory.getLogger(Utils.class);
 
     // TODO: In the initial version we are not handling the token caching, it will be handled in the next version
-    public static String generateToken(String username, String password, String protocolBasePath) throws JsonProcessingException, ClientException, ServerException {
+    public static String generateToken(Config config) throws JsonProcessingException, ClientException, ServerException {
         Map<String,String> headers = new HashMap<>();
         headers.put("content-type", "application/x-www-form-urlencoded");
         Map<String,Object> fields = new HashMap<>();
-        fields.put("username", username);
-        fields.put("password", password);
-        HttpResponse response = HttpUtils.post(protocolBasePath + PARTICIPANT_GENERATE_TOKEN, headers, fields);
+        fields.put(Constants.USERNAME, config.getString(Constants.USERNAME));
+        if (config.hasPathOrNull(Constants.PASSWORD)){
+            fields.put(Constants.PASSWORD, config.getString(Constants.PASSWORD));
+        } else if (config.hasPathOrNull(Constants.SECRET)) {
+            fields.put(Constants.SECRET, config.getString(Constants.SECRET));
+            fields.put("participant_code", config.getString("participantCode"));
+        }
+        HttpResponse response = HttpUtils.post(config.getString(Constants.PROTOCOL_BASE_PATH) + PARTICIPANT_GENERATE_TOKEN, headers, fields);
         Map<String,Object> respMap = JSONUtils.deserialize(response.getBody(), Map.class);
         String token;
         if (response.getStatus() == 200) {
@@ -97,7 +102,7 @@ public class Utils {
 
     public static boolean initializeHCXCall(String jwePayload, Operations operation, Map<String, Object> response, Config config) throws ServerException, ClientException, JsonProcessingException {
         Map<String,String> headers = new HashMap<>();
-        headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(config.getString(Constants.USERNAME), config.getString(Constants.PASSWORD), config.getString(Constants.PROTOCOL_BASE_PATH)));
+        headers.put(Constants.AUTHORIZATION, "Bearer " + Utils.generateToken(config));
         HttpResponse hcxResponse = HttpUtils.post(config.getString(Constants.PROTOCOL_BASE_PATH) + operation.getOperation(), headers, jwePayload);
         response.put(Constants.RESPONSE_OBJ, JSONUtils.deserialize(hcxResponse.getBody(), Map.class));
         int status = hcxResponse.getStatus();
