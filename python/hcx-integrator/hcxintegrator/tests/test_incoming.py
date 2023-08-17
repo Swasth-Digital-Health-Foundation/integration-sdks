@@ -1,7 +1,7 @@
 import os, inspect
 from hcxintegrator.integrator import HCXIntegrator
 from hcxintegrator.utils.hcx_operations import HcxOperations
-from hcxintegrator.utils.utils import get_curdir, compare_output
+from hcxintegrator.utils.utils import compare_output
 import json
 
 curdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -21,6 +21,7 @@ outgoing = json.loads(outgoing)
 
 # Initialising the HCX integrator
 hcxIntegrator = HCXIntegrator(config=config)
+
 # Incoming process call
 incoming = hcxIntegrator.processIncoming(outgoing, operation=HcxOperations.CLAIM_SUBMIT)
 # print(incoming)
@@ -32,5 +33,3 @@ try:
         print(f'Test incoming successful!')
 except Exception as e:
     print(f'Test failed! Following exception occured: {e}')
-
-#todo : test ActionJwe
