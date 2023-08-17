@@ -12,5 +12,6 @@ buildNumber.properties
 .idea
 .hcx-integrator-sdk.iml
 hcx-integrator-sdk/hcx-integrator-sdk.iml
-python/hcx_integrator/__pycache__
-python/hcx_integrator/utils/__pycache__
+python/hcx-integrator/hcxintegrator/__pycache__
+python/hcx-integrator/hcxintegrator/utils/__pycache__
+python/hcx-integrator/hcxintegrator.egg-info

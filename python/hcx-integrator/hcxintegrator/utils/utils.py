@@ -1,6 +1,7 @@
+import os, inspect
 import requests
 import json
-from urllib.parse import urlencode
+from urllib.parse import urlencode 
 
 def generateHcxToken(authBasePath, username, password):
     """
@@ -71,3 +72,32 @@ def searchRegistry(protocolBasePath, token, searchValue, searchField="participan
         return dict(json.loads(response.text))
     except Exception as e:
         print(f'Search Registry: {e}')
+
+def get_curdir():
+    """
+    Returns
+    -------
+    str : The directory in which executed file exists.
+    """
+    return os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+
+def compare_output(a, b):
+    """
+    Parameters
+    ----------
+    a : json/dict
+    b : json/dict
+
+    Returns
+    -------
+    bool : True, if a & b is equal
+           False, if a & b is not equal.
+    """
+    typea = isinstance(a, dict)
+    typeb = isinstance(b, dict)
+    if not typea == typeb:
+        print("Type of A doesn't match B")
+        return False
+    if not sorted(a.keys())==sorted(b.keys()):
+        return False
+    return True

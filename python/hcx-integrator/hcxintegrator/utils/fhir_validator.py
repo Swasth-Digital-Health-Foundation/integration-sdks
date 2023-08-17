@@ -1,16 +1,11 @@
-# from ..utils hcx_operations
-from utils.hcx_operations import HcxOperations
-from hcx_integrator import HCXIntegrator
-
-config = {
-    "participantCode": "testprovider1.swasthmock@swasth-hcx-staging",
-    "authBasePath": "http://staging-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
-    "protocolBasePath": "https://staging-hcx.swasth.app/api/v0.8",
-    "encryptionPrivateKeyURL": "https://raw.githubusercontent.com/Swasth-Digital-Health-Foundation/hcx-platform/sprint-30/demo-app/server/resources/keys/x509-private-key.pem",
-    "username": "testprovider1@swasthmock.com",
-    "password": "Opensaber@123",
-    "igUrl": "https://ig.hcxprotocol.io/v0.7.1"}
-
+import json
+from fhir.resources import construct_fhir_element
+json_dict = {"resourceType": "Claim",
+    "id": "mmanu",
+    "active": True,
+    "name": "Acme Corporation",
+    "address": [{"country": "Switzerland"}]
+}
 
 fhirPayload = {
   "resourceType": "Bundle",
@@ -391,7 +386,9 @@ fhirPayload = {
   } ]
 }
 
-hcxIntegrator = HCXIntegrator(config=config)
 
-response = hcxIntegrator.processOutgoing(fhirPayload, recipientCode="testpayor1.swasthmock@swasth-hcx-staging", operation=HcxOperations.CLAIM_SUBMIT)
-print(response)
+json_dict = json.dumps(fhirPayload)
+org = construct_fhir_element('Bundle', json_dict)
+# org.address[0].country == "Switzerland"
+
+# org.dict()['active'] is True

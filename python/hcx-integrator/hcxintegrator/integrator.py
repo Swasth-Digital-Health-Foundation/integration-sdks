@@ -1,5 +1,6 @@
-from outgoing_request import OutgoingRequest
-from utils.hcx_operations import HcxOperations
+from hcxintegrator.outgoing_request import OutgoingRequest
+from hcxintegrator.incoming_request import IncomingRequest
+from hcxintegrator.utils.hcx_operations import HcxOperations
 
 class HCXIntegrator:
 
@@ -25,10 +26,20 @@ class HCXIntegrator:
         self.encryptionPrivateKeyURL = self.config.get("encryptionPrivateKeyURL")
         self.igURL = self.config.get("igURL")
 
-    def processOutgoing(self, fhirPayload: str, recipientCode: str, operation: HcxOperations):
+    def processOutgoing(self, fhirPayload: str, recipientCode: str, operation: HcxOperations,
+                        apiCallId=None, correlationId=None, actionJWE=None, onActionStatus=None, domainHeaders=None):
         outgoing = OutgoingRequest(self.protocolBasePath, self.participantCode,
                                    self.authBasePath, self.username,
                                    self.password, self.encryptionPrivateKeyURL,
                                    self.igURL)
-        response = outgoing.process(fhirPayload, recipientCode, operation)
+        response = outgoing.process(fhirPayload, recipientCode, operation,
+                                    apiCallId, correlationId, actionJWE, onActionStatus, domainHeaders)
         return response
+    
+    def processIncoming(self, encryptedPaylaod:str, operation:HcxOperations=None):
+        incoming = IncomingRequest(self.protocolBasePath, self.participantCode,
+                                   self.authBasePath, self.username,
+                                   self.password, self.encryptionPrivateKeyURL,
+                                   self.igURL)
+        resposne = incoming.process(encryptedPaylaod, operation=operation)
+        return resposne
