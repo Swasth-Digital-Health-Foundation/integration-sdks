@@ -1,5 +1,6 @@
 import { HCXIntegrator } from "../src/hcx_integrator.js";
 import HcxOperations from "../src/utils/hcx_operations.js";
+import { validateResource } from "../fhir/validateFHIR.js";
 
 const config = {
   participantCode: "testprovider1.swasthmock@swasth-hcx-staging",
@@ -508,5 +509,8 @@ const responseIncoming = await hcxIntegrator.processIncoming(
   responseOutgoing.payload,
   operation
 );
-console.log(responseOutgoing);
-console.log(responseIncoming);
+// console.log(responseOutgoing);
+// console.log(responseIncoming);
+
+const fhirResult = validateResource(fhirPayload);
+console.log(fhirPayload)
