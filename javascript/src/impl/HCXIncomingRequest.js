@@ -60,9 +60,6 @@ export class HCXIncomingRequest {
       let header = decryptedPayload.header;
       this.output[this.Constants.HEADERS] = header;
       this.output[this.Constants.PAYLOAD] = decryptedPayload.payload;
-
-      const payload2 = decryptedPayload.payload;
-      let result = this.send_response();
       return this.output;
     } catch (e) {
       console.log(e);
