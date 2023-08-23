@@ -1,5 +1,6 @@
 import { HCXOutgoingRequest } from "../src/impl/HCXOutgoingRequest.js";
 import { HCXIncomingRequest } from "../src/impl/HCXIncomingRequest.js";
+import responseJSON from "../src/response.json" assert { type: "json" };
 
 export class HCXIntegrator {
   constructor(config) {
@@ -24,7 +25,7 @@ export class HCXIntegrator {
     this.igURL = this.config.igURL;
   }
 
-  async processOutgoing(fhirPayload, recipientCode, operation) {
+  async processOutgoing(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus) {
     const outgoing = new HCXOutgoingRequest(
       this.protocolBasePath,
       this.participantCode,
@@ -37,11 +38,30 @@ export class HCXIntegrator {
     const response = await outgoing.process(
       fhirPayload,
       recipientCode,
-      operation
+      operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus
     );
     return response;
   }
-  async processIncoming(encryptedPayload, operation = null) {
+  async processOutgoingCallback(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, onActionStatus){
+    const actionJwe = responseJSON.payload;
+    const outgoing = new HCXOutgoingRequest(
+      this.protocolBasePath,
+      this.participantCode,
+      this.authBasePath,
+      this.username,
+      this.password,
+      this.encryptionPrivateKeyURL,
+      this.igURL
+    );
+  if(recipientCode)recipientCode=""
+    const response = await outgoing.process(
+      fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus
+    );
+    return response;
+}
+
+
+  async processIncoming(encryptedPayload, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus) {
     let incoming = new HCXIncomingRequest(
       this.protocolBasePath,
       this.participantCode,
@@ -51,7 +71,7 @@ export class HCXIntegrator {
       this.encryptionPrivateKeyURL,
       this.igURL
     );
-    let response = await incoming.process(encryptedPayload, operation);
+    let response = await incoming.process(encryptedPayload, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus);
     return response;
   }
 }

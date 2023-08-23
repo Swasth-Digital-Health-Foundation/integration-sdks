@@ -1,5 +1,6 @@
 import { HCXIntegrator } from "../src/hcx_integrator.js";
 import HcxOperations from "../src/utils/hcx_operations.js";
+import responseJSON from "../src/response.json" assert { type: "json" };
 
 const config = {
   participantCode: "testprovider1.swasthmock@swasth-hcx-staging",
@@ -498,16 +499,16 @@ const fhirPayload = {
 
 const hcxIntegrator = new HCXIntegrator(config);
 const operation = HcxOperations.CLAIM_SUBMIT;
-
-const responseOutgoing = await hcxIntegrator.processOutgoing(
-  fhirPayload,
-  "",
-  operation
-);
+const actionJwe =responseJSON.payload;
+const responseOutgoing = await hcxIntegrator.processOutgoing(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", operation);
 const responseIncoming = await hcxIntegrator.processIncoming(
   responseOutgoing.payload,
   operation
 );
 
+const responseOutgoingCallback =  await hcxIntegrator.processOutgoingCallback(fhirPayload, "", operation)
+
 console.log(responseOutgoing);
 console.log(responseIncoming);
+
+console.log(responseOutgoingCallback)

@@ -1,6 +1,5 @@
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import responseJSON from "../response.json" assert { type: "json" };
 import { JWEHelper } from "../jwe/JWEHelper.js";
 import { generateHcxToken, searchRegistry, decodeBase64String } from "../utils/utils.js";
 import { Constants } from "../utils/Constants.js";
@@ -31,31 +30,37 @@ export class HCXOutgoingRequest {
     return true;
 }
 
-  createHeaders(recipientCode = null, apiCallId = null, correlation_Id = null, onActionStatus = null, actionJwe = null, headers = {}) {
+  createHeaders(recipientCode, apiCallId , correlation_Id , onActionStatus , actionJwe,workflowId, headers = {}) {
     var headers = {
     [this.Constants.ALG] : "RSA-OAEP",
     [this.Constants.ENC] : "A256GCM",
     [this.Constants.HCX_API_CALL_ID] : apiCallId || uuidv4(),
     [this.Constants.HCX_TIMESTAMP] : new Date().toISOString(),
-    [this.Constants.WORKFLOW_ID] : uuidv4()
+
   }
     if (recipientCode.length != 0) {
       headers[this.Constants.HCX_SENDER_CODE] = this.participantCode;
       headers[this.Constants.HCX_RECIPIENT_CODE] = recipientCode;
       headers[this.Constants.HCX_CORRELATION_ID] = correlation_Id || uuidv4();
+      headers[this.Constants.WORKFLOW_ID] =workflowId|| uuidv4();
     } else {
-      const actionJwe = responseJSON.payload;
+      
       const encodedHeader = actionJwe.split(".")[0];
       const actionHeaders = decodeBase64String(encodedHeader, Map);
       headers[this.Constants.HCX_SENDER_CODE] = actionHeaders["x-hcx-sender_code"];
       headers[this.Constants.HCX_RECIPIENT_CODE] = actionHeaders["x-hcx-recipient_code"];
       headers[this.Constants.HCX_CORRELATION_ID] = actionHeaders["x-hcx-correlation_id"];
+      // headers[this.Constants.STATUS] = onActionStatus;
+      if(this.Constants.WORKFLOW_ID in actionHeaders){
+       headers[this.Constants.WORKFLOW_ID] = actionHeaders[this.Constants.WORKFLOW_ID];
+      }
     }
+    console.log(headers)
     return headers;
   }
 
-  async encryptPayload(recipientCode, fhirPayload) {
-    const headers = this.createHeaders(recipientCode);
+  async encryptPayload( fhirPayload,recipientCode, apiCallId, correlationId,workflowId, actionJwe, onActionStatus) {
+    const headers = this.createHeaders(recipientCode,apiCallId,correlationId,onActionStatus,actionJwe,workflowId);
     if (typeof fhirPayload !== "object") {
       throw new Error("Fhir payload must be an object");
     }
@@ -66,6 +71,7 @@ export class HCXOutgoingRequest {
         this.password
       );
     }
+    console.log(headers[this.Constants.HCX_RECIPIENT_CODE])
     const registryData = await searchRegistry(
       this.protocolBasePath,
       this.hcxToken,
@@ -103,10 +109,9 @@ export class HCXOutgoingRequest {
     }
   }
 
-  async process(fhirPayload, recipientCode, operation) {
+  async process(fhirPayload, recipientCode, operation,apiCallId, correlationId, workflowId , actionJwe, onActionStatus) {
     const encryptedPayload = await this.encryptPayload(
-      recipientCode,
-      fhirPayload
+ fhirPayload,recipientCode,apiCallId, correlationId,workflowId, actionJwe, onActionStatus
     );
     const response = await this.initializeHCXCall(operation, encryptedPayload);
     return {
