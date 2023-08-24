@@ -1,4 +1,4 @@
-const HcxOperations = Object.freeze({
+export const HcxOperations = Object.freeze({
   COVERAGE_ELIGIBILITY_CHECK: "/coverageeligibility/check",
   COVERAGE_ELIGIBILITY_ON_CHECK: "/coverageeligibility/on_check",
   PRE_AUTH_SUBMIT: "/preauth/submit",
@@ -14,4 +14,3 @@ const HcxOperations = Object.freeze({
   PREDETERMINATION_SUBMIT: "/predetermination/submit",
   PREDETERMINATION_ON_SUBMIT: "/predetermination/on_submit",
 });
-export default HcxOperations;

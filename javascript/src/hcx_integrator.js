@@ -1,6 +1,5 @@
 import { HCXOutgoingRequest } from "../src/impl/HCXOutgoingRequest.js";
 import { HCXIncomingRequest } from "../src/impl/HCXIncomingRequest.js";
-import responseJSON from "../src/response.json" assert { type: "json" };
 
 export class HCXIntegrator {
   constructor(config) {
@@ -25,7 +24,7 @@ export class HCXIntegrator {
     this.igURL = this.config.igURL;
   }
 
-  async processOutgoing(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus) {
+  async processOutgoingRequest(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus) {
     const outgoing = new HCXOutgoingRequest(
       this.protocolBasePath,
       this.participantCode,
@@ -42,8 +41,7 @@ export class HCXIntegrator {
     );
     return response;
   }
-  async processOutgoingCallback(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, onActionStatus){
-    const actionJwe = responseJSON.payload;
+  async processOutgoingCallback(fhirPayload, recipientCode, operation, actionJwe, apiCallId, correlationId, workflowId, onActionStatus){
     const outgoing = new HCXOutgoingRequest(
       this.protocolBasePath,
       this.participantCode,

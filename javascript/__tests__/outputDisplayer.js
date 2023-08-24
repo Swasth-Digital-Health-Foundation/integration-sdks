@@ -1,5 +1,5 @@
 import { HCXIntegrator } from "../src/hcx_integrator.js";
-import HcxOperations from "../src/utils/hcx_operations.js";
+import { HcxOperations } from "../src/utils/hcx_operations.js";
 import responseJSON from "../src/response.json" assert { type: "json" };
 
 const config = {
@@ -10,6 +10,18 @@ const config = {
   encryptionPrivateKeyURL:
     "https://raw.githubusercontent.com/Swasth-Digital-Health-Foundation/hcx-platform/main/hcx-apis/src/test/resources/examples/x509-private-key.pem",
   username: "testprovider1@swasthmock.com",
+  password: "Opensaber@123",
+  igUrl: "https://ig.hcxprotocol.io/v0.7.1",
+};
+
+const config2 = {
+  participantCode: "testpayor1.swasthmock@swasth-hcx-staging",
+  authBasePath:
+    "http://staging-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
+  protocolBasePath: "https://staging-hcx.swasth.app/api/v0.8",
+  encryptionPrivateKeyURL:
+    "https://raw.githubusercontent.com/Swasth-Digital-Health-Foundation/hcx-platform/main/hcx-apis/src/test/resources/examples/x509-private-key.pem",
+  username: "testpayor1@swasthmock.com",
   password: "Opensaber@123",
   igUrl: "https://ig.hcxprotocol.io/v0.7.1",
 };
@@ -498,17 +510,18 @@ const fhirPayload = {
 };
 
 const hcxIntegrator = new HCXIntegrator(config);
+const hcxIntegrator2 = new HCXIntegrator(config2);
 const operation = HcxOperations.CLAIM_SUBMIT;
+const operation2 = HcxOperations.CLAIM_ON_SUBMIT;
 const actionJwe =responseJSON.payload;
-const responseOutgoing = await hcxIntegrator.processOutgoing(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", operation);
+const responseOutgoing = await hcxIntegrator.processOutgoingRequest(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", operation);
 const responseIncoming = await hcxIntegrator.processIncoming(
   responseOutgoing.payload,
   operation
 );
 
-const responseOutgoingCallback =  await hcxIntegrator.processOutgoingCallback(fhirPayload, "", operation)
+const responseOutgoingCallback =  await hcxIntegrator2.processOutgoingCallback(fhirPayload, "", operation2, actionJwe, "", "", "", "response.complete", )
 
 console.log(responseOutgoing);
 console.log(responseIncoming);
-
 console.log(responseOutgoingCallback)

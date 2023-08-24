@@ -47,10 +47,10 @@ export class HCXOutgoingRequest {
       
       const encodedHeader = actionJwe.split(".")[0];
       const actionHeaders = decodeBase64String(encodedHeader, Map);
-      headers[this.Constants.HCX_SENDER_CODE] = actionHeaders["x-hcx-sender_code"];
-      headers[this.Constants.HCX_RECIPIENT_CODE] = actionHeaders["x-hcx-recipient_code"];
+      headers[this.Constants.HCX_SENDER_CODE] = actionHeaders["x-hcx-recipient_code"];
+      headers[this.Constants.HCX_RECIPIENT_CODE] = actionHeaders["x-hcx-sender_code"];
       headers[this.Constants.HCX_CORRELATION_ID] = actionHeaders["x-hcx-correlation_id"];
-      // headers[this.Constants.STATUS] = onActionStatus;
+      headers[this.Constants.STATUS] = onActionStatus;
       if(this.Constants.WORKFLOW_ID in actionHeaders){
        headers[this.Constants.WORKFLOW_ID] = actionHeaders[this.Constants.WORKFLOW_ID];
       }
@@ -88,7 +88,8 @@ export class HCXOutgoingRequest {
   }
 
   async initializeHCXCall(operation, encryptedJWE) {
-    const url = `${this.protocolBasePath}/claim/submit`;
+    const url = `${this.protocolBasePath}${operation}`;
+    console.log("The url is "+ url);
     if (!this.hcxToken) {
       this.hcxToken = await generateHcxToken(
         this.authBasePath,
@@ -107,6 +108,7 @@ export class HCXOutgoingRequest {
     } catch (e) {
       console.error(`Initialize HCX: ${e}`);
     }
+
   }
 
   async process(fhirPayload, recipientCode, operation,apiCallId, correlationId, workflowId , actionJwe, onActionStatus) {
