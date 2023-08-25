@@ -28,6 +28,31 @@ class HCXIntegrator:
 
     def processOutgoing(self, fhirPayload: str, recipientCode: str, operation: HcxOperations,
                         apiCallId=None, correlationId=None, actionJWE=None, onActionStatus=None, domainHeaders=None):
+        """
+        Processes Outgoing HCX request, validates payload and headers.
+        
+        Parameters
+        ----------
+        fhirPayload : str
+            FHIR payload to be sent in outgoing request
+        recipientCode : str
+            Recipient code 
+        operation : HcxOperations
+            Operation type from utils.HcxOperations (default=None)
+        apiCallId : str, None
+            Unique API call id, generated if None
+        correlationId : str, None
+            Unique correlation id of the api loop
+        actionJwe : dict, str, None
+            Action jwe, if provided recipient code should be None
+        onActionStatus : str, None
+        domainHeaders : str, None
+        
+        Returns
+        -------
+        response: dict
+            Response for the given payload.
+        """
         outgoing = OutgoingRequest(self.protocolBasePath, self.participantCode,
                                    self.authBasePath, self.username,
                                    self.password, self.encryptionPrivateKeyURL,
@@ -37,6 +62,21 @@ class HCXIntegrator:
         return response
     
     def processIncoming(self, encryptedPaylaod:str, operation:HcxOperations=None):
+        """
+        Processes Incoming HCX request, validates payload and headers.
+        
+        Parameters
+        ----------
+        encryptedPayload : str
+            Encrypted response from outgoing request
+        operation : HcxOperations
+            Operation type from utils.HcxOperations (default=None)
+        
+        Returns
+        -------
+        response: dict
+            Response for the given payload.
+        """
         incoming = IncomingRequest(self.protocolBasePath, self.participantCode,
                                    self.authBasePath, self.username,
                                    self.password, self.encryptionPrivateKeyURL,
