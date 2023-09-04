@@ -2,6 +2,7 @@ import axios from "axios";
 import moment from "moment";
 import { Constants } from "../utils/Constants.js";
 import { JWEHelper } from "../jwe/JWEHelper.js";
+import { ErrorCodes, ResponseMessage } from "../utils/Errors.js"
 
 export class HCXIncomingRequest {
   constructor(
@@ -74,7 +75,6 @@ export class HCXIncomingRequest {
     let result = false;
 
     if (!this.error) {
-      let headers = this.Constants.HEADERS;
       response_obj[this.Constants.API_CALL_ID] = this.Constants.HCX_API_CALL_ID;
       response_obj[this.Constants.CORRELATION_ID] =
         this.Constants.HCX_CORRELATION_ID;

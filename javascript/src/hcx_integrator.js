@@ -1,5 +1,6 @@
 import { HCXOutgoingRequest } from "../src/impl/HCXOutgoingRequest.js";
 import { HCXIncomingRequest } from "../src/impl/HCXIncomingRequest.js";
+import { ErrorCodes, ResponseMessage } from "../src/utils/Errors.js";
 
 export class HCXIntegrator {
   constructor(config) {
@@ -25,51 +26,76 @@ export class HCXIntegrator {
   }
 
   async processOutgoingRequest(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus) {
-    const outgoing = new HCXOutgoingRequest(
-      this.protocolBasePath,
-      this.participantCode,
-      this.authBasePath,
-      this.username,
-      this.password,
-      this.encryptionPrivateKeyURL,
-      this.igURL
-    );
-    const response = await outgoing.process(
-      fhirPayload,
-      recipientCode,
-      operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus
-    );
-    return response;
+    try {
+      const outgoing = new HCXOutgoingRequest(
+        this.protocolBasePath,
+        this.participantCode,
+        this.authBasePath,
+        this.username,
+        this.password,
+        this.encryptionPrivateKeyURL,
+        this.igURL
+      );
+      const response = await outgoing.process(
+        fhirPayload,
+        recipientCode,
+        operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus
+      );
+      return response;
+    } catch (error) {
+      console.error(`Error in processOutgoingRequest: ${error.message}`);
+      this.error = {
+        [ErrorCodes.OUTGOING_PROCESSING_FAILED]: ResponseMessage.OUTGOING_PROCESSING_FAILED
+      };
+      throw new Error("Outgoing request processing failed.");
+    }
   }
-  async processOutgoingCallback(fhirPayload, recipientCode, operation, actionJwe, apiCallId, correlationId, workflowId, onActionStatus){
-    const outgoing = new HCXOutgoingRequest(
-      this.protocolBasePath,
-      this.participantCode,
-      this.authBasePath,
-      this.username,
-      this.password,
-      this.encryptionPrivateKeyURL,
-      this.igURL
-    );
-  if(recipientCode)recipientCode=""
-    const response = await outgoing.process(
-      fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus
-    );
-    return response;
-}
+  async processOutgoingCallback(fhirPayload, recipientCode, operation, actionJwe, apiCallId, correlationId, workflowId, onActionStatus) {
+    try {
+      const outgoing = new HCXOutgoingRequest(
+        this.protocolBasePath,
+        this.participantCode,
+        this.authBasePath,
+        this.username,
+        this.password,
+        this.encryptionPrivateKeyURL,
+        this.igURL
+      );
+      if (recipientCode) recipientCode = ""
+      const response = await outgoing.process(
+        fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus
+      );
+      return response;
+    } catch (error) {
+      console.error(`Error in processOutgoingCallback: ${error.message}`);
+      this.error = {
+        [ErrorCodes.ERR_OUTGOING_CALLBACK]: ResponseMessage.OUTGOING_CALLBACK_FAILED
+      };
+      throw new Error("Outgoing callback processing failed.");
+    }
+  }
 
 
   async processIncoming(encryptedPayload, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus) {
-    let incoming = new HCXIncomingRequest(
-      this.protocolBasePath,
-      this.participantCode,
-      this.authBasePath,
-      this.username,
-      this.password,
-      this.encryptionPrivateKeyURL,
-      this.igURL
-    );
-    let response = await incoming.process(encryptedPayload, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus);
-    return response;
+    try {
+      let incoming = new HCXIncomingRequest(
+        this.protocolBasePath,
+        this.participantCode,
+        this.authBasePath,
+        this.username,
+        this.password,
+        this.encryptionPrivateKeyURL,
+        this.igURL
+      );
+      let response = await incoming.process(encryptedPayload, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus);
+      return response;
+    }
+    catch (error) {
+      console.error(`Error in processIncoming: ${error.message}`);
+      this.error = {
+        [ErrorCodes.ERR_INCOMING_PROCESSING]: ResponseMessage.INCOMING_PROCESSING_FAILED
+      };
+      throw new Error("Incoming request processing failed.");
+    }
   }
 }
