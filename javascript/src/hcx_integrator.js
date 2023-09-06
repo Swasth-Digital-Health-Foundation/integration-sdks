@@ -43,7 +43,7 @@ export class HCXIntegrator {
       );
       return response;
     } catch (error) {
-      console.error(`Error in processOutgoingRequest: ${error.message}`);
+      console.error(`Error in processOutgoingRequest: ${error.stack}`);
       this.error = {
         [ErrorCodes.OUTGOING_PROCESSING_FAILED]: ResponseMessage.OUTGOING_PROCESSING_FAILED
       };
@@ -76,7 +76,7 @@ export class HCXIntegrator {
   }
 
 
-  async processIncoming(encryptedPayload, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus) {
+  async processIncoming(encryptedPayload, operation) {
     try {
       let incoming = new HCXIncomingRequest(
         this.protocolBasePath,
@@ -87,7 +87,7 @@ export class HCXIntegrator {
         this.encryptionPrivateKeyURL,
         this.igURL
       );
-      let response = await incoming.process(encryptedPayload, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus);
+      let response = await incoming.process(encryptedPayload, operation);
       return response;
     }
     catch (error) {
