@@ -2,7 +2,7 @@ import { stringify } from "qs";
 import { base64url } from "jose";
 import axios from "axios";
 
-export async function generateHcxToken(authBasePath, username, password) {
+export async function generateToken(authBasePath, username, password) {
   const url = authBasePath;
   const payload = {
     client_id: "registry-frontend",

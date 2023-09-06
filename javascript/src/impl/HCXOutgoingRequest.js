@@ -1,7 +1,7 @@
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import { JWEHelper } from "../jwe/JWEHelper.js";
-import { generateHcxToken, searchRegistry, decodeBase64String } from "../utils/utils.js";
+import { generateToken, searchRegistry, decodeBase64String } from "../utils/utils.js";
 import { Constants } from "../utils/Constants.js";
 import { ErrorCodes, ResponseMessage } from "../utils/Errors.js";
 
@@ -31,7 +31,7 @@ export class HCXOutgoingRequest {
     return true;
   }
 
-  createHeaders(recipientCode, apiCallId, correlation_Id, onActionStatus, actionJwe, workflowId, headers = {}) {
+  createHeader(recipientCode, apiCallId, correlation_Id, onActionStatus, actionJwe, workflowId, headers = {}) {
     
     if(headers = null) {
       headers = {};
@@ -64,12 +64,12 @@ export class HCXOutgoingRequest {
 
   async encryptPayload(fhirPayload, recipientCode, apiCallId, correlationId, workflowId, actionJwe, onActionStatus) {
     try {
-      const headers = this.createHeaders(recipientCode, apiCallId, correlationId, onActionStatus, actionJwe, workflowId);
+      const headers = this.createHeader(recipientCode, apiCallId, correlationId, onActionStatus, actionJwe, workflowId);
       if (typeof fhirPayload !== "object") {
         throw new Error("Fhir payload must be an object");
       }
       if (!this.hcxToken) {
-        this.hcxToken = await generateHcxToken(
+        this.hcxToken = await generateToken(
           this.authBasePath,
           this.username,
           this.password
