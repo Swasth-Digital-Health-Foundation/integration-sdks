@@ -32,12 +32,15 @@ export class HCXOutgoingRequest {
   }
 
   createHeaders(recipientCode, apiCallId, correlation_Id, onActionStatus, actionJwe, workflowId, headers = {}) {
+    
+    if(headers = null) {
+      headers = {};
+    }
     var headers = {
       [this.Constants.ALG]: "RSA-OAEP",
       [this.Constants.ENC]: "A256GCM",
       [this.Constants.HCX_API_CALL_ID]: apiCallId || uuidv4(),
       [this.Constants.HCX_TIMESTAMP]: new Date().toISOString(),
-
     }
     if (recipientCode.length != 0) {
       headers[this.Constants.HCX_SENDER_CODE] = this.participantCode;

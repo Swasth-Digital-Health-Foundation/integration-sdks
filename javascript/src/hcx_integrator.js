@@ -25,7 +25,7 @@ export class HCXIntegrator {
     this.igURL = this.config.igURL;
   }
 
-  async processOutgoingRequest(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId) {
+  async processOutgoingRequest(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, domainHeaders) {
     try {
       const outgoing = new HCXOutgoingRequest(
         this.protocolBasePath,
@@ -39,7 +39,7 @@ export class HCXIntegrator {
       const response = await outgoing.process(
         fhirPayload,
         recipientCode,
-        operation, apiCallId, correlationId, workflowId
+        operation, apiCallId, correlationId, workflowId, domainHeaders
       );
       return response;
     } catch (error) {
@@ -50,7 +50,7 @@ export class HCXIntegrator {
       throw new Error(`Outgoing Request Processing failed: ${error.message}`);
     }
   }
-  async processOutgoingCallback(fhirPayload, recipientCode, operation, actionJwe, apiCallId, correlationId, workflowId, onActionStatus) {
+  async processOutgoingCallback(fhirPayload, recipientCode, operation, actionJwe, apiCallId, correlationId, workflowId, onActionStatus, domainHeaders) {
     try {
       const outgoing = new HCXOutgoingRequest(
         this.protocolBasePath,
@@ -63,7 +63,7 @@ export class HCXIntegrator {
       );
       if (recipientCode) recipientCode = ""
       const response = await outgoing.process(
-        fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus
+        fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus, domainHeaders
       );
       return response;
     } catch (error) {
