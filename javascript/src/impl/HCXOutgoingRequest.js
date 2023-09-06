@@ -86,11 +86,11 @@ export class HCXOutgoingRequest {
       });
       return encrypted;
     } catch (error) {
-      console.error(`Error in encryptPayload: ${error}`);
+      console.error(`Error in encryptPayload: ${error.message}\n${error.stack}`);
       this.error = {
         [ErrorCodes.ERR_INVALID_ENCRYPTION]: ResponseMessage.INVALID_PAYLOAD_VALUES_ERR_MSG
       };
-      throw new error("Service unavailable");
+      throw new Error(`Service unavailable: ${error.message}`);
     }
   }
 
@@ -120,7 +120,7 @@ export class HCXOutgoingRequest {
       this.error = {
         [ErrorCodes.ERR_SERVICE_UNAVAILABLE]: ResponseMessage.INVALID_STATUS_ERR_MSG
       };
-      throw new Error("Service unavailable.");
+      throw new Error(`Service unavailable: ${error.message}`);
     }
   }
 

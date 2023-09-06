@@ -25,7 +25,7 @@ export class HCXIntegrator {
     this.igURL = this.config.igURL;
   }
 
-  async processOutgoingRequest(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus) {
+  async processOutgoingRequest(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId) {
     try {
       const outgoing = new HCXOutgoingRequest(
         this.protocolBasePath,
@@ -39,15 +39,15 @@ export class HCXIntegrator {
       const response = await outgoing.process(
         fhirPayload,
         recipientCode,
-        operation, apiCallId, correlationId, workflowId, actionJwe, onActionStatus
+        operation, apiCallId, correlationId, workflowId
       );
       return response;
     } catch (error) {
-      console.error(`Error in processOutgoingRequest: ${error.stack}`);
+      console.error(`Error in processOutgoingRequest: ${error.message}\n${error.stack}`);
       this.error = {
         [ErrorCodes.OUTGOING_PROCESSING_FAILED]: ResponseMessage.OUTGOING_PROCESSING_FAILED
       };
-      throw new Error("Outgoing request processing failed.");
+      throw new Error(`Outgoing Request Processing failed: ${error.message}`);
     }
   }
   async processOutgoingCallback(fhirPayload, recipientCode, operation, actionJwe, apiCallId, correlationId, workflowId, onActionStatus) {
