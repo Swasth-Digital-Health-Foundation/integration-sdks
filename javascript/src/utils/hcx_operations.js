@@ -13,4 +13,6 @@ export const HcxOperations = Object.freeze({
   COMMUNICATION_ON_REQUEST: "/communication/on_request",
   PREDETERMINATION_SUBMIT: "/predetermination/submit",
   PREDETERMINATION_ON_SUBMIT: "/predetermination/on_submit",
+  EOB_FETCH: "/eob/fetch",
+  EOB_ON_FETCH: "/eob/on_fetch"
 });
