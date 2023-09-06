@@ -18,10 +18,13 @@ export async function generateToken(authBasePath, username, password) {
     const response = await axios.post(url, payloadUrlencoded, { headers });
     return response.data.access_token;
   } catch (error) {
-    throw new Error(`Generate HCX Token Error: ${error.message}`);
+    const serverErrorMessage = error.response && error.response.data && error.response.data.message ? 
+      error.response.data.message : 
+      error.message;
+    console.error(`Generate HCX Token Error: ${serverErrorMessage}`);
+    throw new Error(`Generate HCX Token Error: ${serverErrorMessage}`);
   }
 }
-
 export async function searchRegistry(
   protocolBasePath,
   token,

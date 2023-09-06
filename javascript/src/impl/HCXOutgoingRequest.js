@@ -31,7 +31,7 @@ export class HCXOutgoingRequest {
     return true;
   }
 
-  createHeader(recipientCode, apiCallId, correlation_Id, onActionStatus, actionJwe, workflowId, headers = {}) {
+  createHeader(recipientCode, apiCallId, correlationId, onActionStatus, actionJwe, workflowId, headers = {}) {
     
     if(headers = null) {
       headers = {};
@@ -45,7 +45,7 @@ export class HCXOutgoingRequest {
     if (recipientCode.length != 0) {
       headers[this.Constants.HCX_SENDER_CODE] = this.participantCode;
       headers[this.Constants.HCX_RECIPIENT_CODE] = recipientCode;
-      headers[this.Constants.HCX_CORRELATION_ID] = correlation_Id || uuidv4();
+      headers[this.Constants.HCX_CORRELATION_ID] = correlationId || uuidv4();
       headers[this.Constants.WORKFLOW_ID] = workflowId || uuidv4();
     } else {
 
@@ -97,7 +97,7 @@ export class HCXOutgoingRequest {
     }
   }
 
-  async initializeHCXCall(operation, encryptedJWE) {
+  async initializeHCXCall(operation, jwePayload) {
     try {
       const url = `${this.protocolBasePath}${operation}`;
       if (!this.hcxToken) {
@@ -107,7 +107,7 @@ export class HCXOutgoingRequest {
           this.password
         );
       }
-      const payload = JSON.stringify({ payload: encryptedJWE, });
+      const payload = JSON.stringify({ payload: jwePayload, });
       const headers = {
         Authorization: `Bearer ${this.hcxToken}`,
         "Content-Type": "application/json",
