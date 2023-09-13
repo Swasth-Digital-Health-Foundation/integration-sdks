@@ -1,10 +1,14 @@
-﻿using System;
+﻿
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Xml;
+
 
 namespace Io.HcxProtocol.Utils
 {
@@ -28,7 +32,7 @@ namespace Io.HcxProtocol.Utils
                 {
                     if (header.Key == "Authorization")
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", header.Value.Replace("Bearer ", ""));
-                    else if (header.Key == "content-type")
+                    else if (header.Key == "Content-Type")
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(header.Value));
                     else
                         client.DefaultRequestHeaders.Add(header.Key, header.Value);
@@ -48,13 +52,13 @@ namespace Io.HcxProtocol.Utils
                 {
                     if (header.Key == "Authorization")
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", header.Value.Replace("Bearer ", ""));
-                    else if (header.Key == "content-type")
+                    else if (header.Key == "Content-Type")
                         client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(header.Value));
                     else
                         client.DefaultRequestHeaders.Add(header.Key, header.Value);
                 }
-
-                var formData = new FormUrlEncodedContent(fields.Select(kvp => new KeyValuePair<string, string>(kvp.Key, kvp.Value.ToString())));
+                client.DefaultRequestHeaders.Clear();                
+                FormUrlEncodedContent formData = new FormUrlEncodedContent(fields);//.Select(kvp => new KeyValuePair<string, string>(kvp.Key, kvp.Value.ToString())));
                 var response = client.PostAsync(url, formData).Result;
                 var responseString = response.Content.ReadAsStringAsync().Result;
                 return new Dto.HttpResponse((int)response.StatusCode, responseString);

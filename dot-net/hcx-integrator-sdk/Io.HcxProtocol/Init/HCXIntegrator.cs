@@ -1,4 +1,9 @@
-﻿namespace Io.HcxProtocol.Init
+﻿using Hl7.Fhir.ElementModel.Types;
+using Io.HcxProtocol.Utils;
+using System;
+using System.Collections.Generic;
+
+namespace Io.HcxProtocol.Init
 {
     /**
      * Library  : Io.Hcx.Protocol
@@ -10,52 +15,54 @@
     /// <summary>
     /// The methods and variables to access the configuration.
     /// </summary>
-    public static class HCXIntegrator
+    public class HCXIntegrator : BaseIntegrator
     {
-        public static Config config;
-
         /// <summary>
         /// This method is to initialize config factory by passing the configuration as object.
         /// </summary>
         /// <param name="_config">A object that contains configuration variables and its values.</param>
         /// <exception cref="System.Exception"></exception>
-        public static void initConfig(Config _config)
+
+
+        public static HCXIntegrator GetInstance(Config config)
         {
-            string prop = null;
-
-            if (string.IsNullOrEmpty(_config.ProtocolBasePath))
-            {
-                prop = "ProtocolBasePath";
-            }
-            else if (string.IsNullOrEmpty(_config.ParticipantCode))
-            {
-                prop = "ParticipantCode";
-            }
-            else if (string.IsNullOrEmpty(_config.AuthBasePath))
-            {
-                prop = "AuthBasePath";
-            }
-            else if (string.IsNullOrEmpty(_config.UserName))
-            {
-                prop = "UserName";
-            }
-            else if (string.IsNullOrEmpty(_config.Password))
-            {
-                prop = "Password";
-            }
-            else if (string.IsNullOrEmpty(_config.EncryptionPrivateKey))
-            {
-                prop = "EncryptionPrivateKey";
-            }
-            else if (string.IsNullOrEmpty(_config.IgUrl))
-            {
-                prop = "IgUrl";
-            }
-
-            if (prop != null)
-                throw new System.Exception(prop + " is missing or has empty value, please add to the configuration.");
-            else
-                config = _config;
+            HCXIntegrator hcxIntegrator = new HCXIntegrator();
+            hcxIntegrator.SetConfig(config);
+            return hcxIntegrator;
         }
+
+        public bool ProcessIncoming(string jwePayload, Operations operation, Dictionary<string, object> output)
+        {
+            return GetIncomingRequest().Process(jwePayload, operation, output, GetConfig());
+        }
+
+        public bool ProcessOutgoingRequest(string fhirPayload, Operations operation, string recipientCode, string apiCallId, string correlationId, Dictionary<string, object> domainHeaders, Dictionary<string, object> output)
+        {
+            return GetOutgoingRequest().Process(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", "", domainHeaders, output, GetConfig());
+        }
+
+        //overloaded method with workflowId
+        public bool ProcessOutgoingRequest(string fhirPayload, Operations operation, string recipientCode, string apiCallId, string correlationId,string workflowId, Dictionary<string, object> domainHeaders, Dictionary<string, object> output)
+        {
+            return GetOutgoingRequest().Process(fhirPayload, operation, recipientCode, apiCallId, correlationId,workflowId, "", "", domainHeaders, output, GetConfig());
+        }
+
+
+        public bool ProcessOutgoingCallback(string fhirPayload, Operations operation, string apiCallId, string actionJwe, string onActionStatus, Dictionary<string, object> domainHeaders, Dictionary<string, object> output)
+        {
+            return GetOutgoingRequest().Process(fhirPayload, operation, "", apiCallId, "", actionJwe, onActionStatus, domainHeaders, output, GetConfig());
+        }
+
+        //    public Dictionary<string, Object> receiveNotification(string requestBody, Dictionary<string, Object> output) 
+        //    {
+        //    return  GetIncomingRequest().receiveNotification(requestBody, output, GetConfig());
+        //}
+
+        public bool SendNotification(string topicCode, string recipientType, List<string> recepients, string message, Dictionary<string, string> templateParams, Dictionary<string, object> output)
+        {
+            return GetOutgoingRequest().SendNotification(topicCode, recipientType, recepients, message, templateParams, "", output,GetConfig());
+        }
+
+
     }
 }

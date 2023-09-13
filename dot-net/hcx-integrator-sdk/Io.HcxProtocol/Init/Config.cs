@@ -18,6 +18,22 @@
         public string UserName { get; set; }
         public string Password { get; set; }
         public string EncryptionPrivateKey { get; set; }
-        public string IgUrl { get; set; }
+        public string HcxIGBasePath { get; set; }
+        public string NrcesIGBasePath { get; set; }
+        public string IncomingRequestClass { get; set; }
+        public string OutgoingRequestClass { get; set; }
+        public bool FhirValidationEnabled { get; set; }  
+        public string Secrete { get; set; }
+        public string ParticipantGenerateToken { get; set; }
+        public string signingPrivateKey { get; set; }
+
+        //public  string getString(string path)
+        //{
+        //    ConfigValue v = find(path, ConfigValueType.STRING);
+        //    return (string)v.unwrapped();
+        //}
+
+
+
     }
 }

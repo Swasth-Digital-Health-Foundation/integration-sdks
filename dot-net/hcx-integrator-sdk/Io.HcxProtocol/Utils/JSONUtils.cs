@@ -1,5 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using Hl7.Fhir.Utility;
+using Newtonsoft.Json;
+
+using Org.BouncyCastle.Asn1.X509.Qualified;
 using System;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace Io.HcxProtocol.Utils
@@ -16,6 +20,15 @@ namespace Io.HcxProtocol.Utils
     /// </summary>
     public static class JSONUtils
     {
+       // private static readonly Maper mapper = new Mapper();
+        
+
+      
+       
+
+
+
+
         public static T DecodeBase64String<T>(string encodedString)
         {
             int mod4 = encodedString.Length % 4;
@@ -37,5 +50,14 @@ namespace Io.HcxProtocol.Utils
         {
             return JsonConvert.DeserializeObject<T>(value);
         }
+
+        public static T Deserialize<T>(string value, Type clazz)
+        {
+           // return mapper.readValue(value, clazz);
+           return  JsonConvert.DeserializeObject<T>(value);
+          
+            
+        }
+
     }
 }
