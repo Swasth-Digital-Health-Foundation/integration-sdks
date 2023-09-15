@@ -208,37 +208,40 @@ namespace Io.HcxProtocol.Impl
             }
             return FinalPayload;
         }
-//        public Dictionary<string, object> receiveNotification(string jwsPayload, Dictionary<string, object> output, Config config)
-//        {
-//            Dictionary<string, object> result = new Dictionary<string, object>();
+        public Dictionary<string, object> receiveNotification(string jwsPayload, Dictionary<string, object> output, Config config)
+        {
+            Dictionary<string, object> result = new Dictionary<string, object>();
 
 
-//        Dictionary<string, Object> payload = JSONUtils.Deserialize<Dictionary<string, object>>(getPayload(jwsPayload));
-//        NotificationRequest notificationRequest = new NotificationRequest((string)payload[Constants.PAYLOAD]);
-//            if (string.IsNullOrEmpty(notificationRequest.getJwsPayload()))
-//            {
-//                throw new ClientException("JWS Token cannot be empty");
-//    }
-//    string authToken = HcxUtils.GenerateToken(config);
-//    string publicKeyUrl = (string)HcxUtils.SearchRegistry(notificationRequest.getSenderCode(), authToken, config.ProtocolBasePath)[Constants.ENCRYPTION_CERT];
-//            bool isSignatureValid = HcxUtils.isValidSignature((string)payload[Constants.PAYLOAD], publicKeyUrl);
-//            if (output == null)
-//            {
-//                output = new Dictionary<string, Object>();
-//            }
-//output.Add(Constants.HEADERS, notificationRequest.getHeaders());
-//output.Add(Constants.PAYLOAD, notificationRequest.getPayload());
-//output.Add(Constants.IS_SIGNATURE_VALID, isSignatureValid);
-//return output;
+            Dictionary<string, Object> payload = JSONUtils.Deserialize<Dictionary<string, object>>(getPayload(jwsPayload));
+            NotificationRequest notificationRequest = new NotificationRequest((string)payload["Item2"]);
+            if (string.IsNullOrEmpty(notificationRequest.getJwsPayload()))
+            {
+                throw new ClientException("JWS Token cannot be empty");
+            }
+            string authToken = HcxUtils.GenerateToken(config);
+            string publicKeyUrl = (string)HcxUtils.SearchRegistry(notificationRequest.getSenderCode(), authToken, config.ProtocolBasePath)[Constants.ENCRYPTION_CERT];
+            bool isSignatureValid = HcxUtils.isValidSignature((string)payload["Item2"], publicKeyUrl,out output);
+            if (output == null)
+            {
+                output = new Dictionary<string, Object>();
+            }
+            if (isSignatureValid == false)
+            {
+                output.Add(Constants.HEADERS, notificationRequest.getHeaders());
+                output.Add(Constants.PAYLOAD, notificationRequest.getPayload());
+                output.Add(Constants.IS_SIGNATURE_VALID, isSignatureValid);
+            }
+            return output;
 
 
-//        }
+        }
 
-            //                   }
+        //                   }
 
 
 
-            ~HCXIncomingRequest() { Dispose(disposing: false); }
+        ~HCXIncomingRequest() { Dispose(disposing: false); }
 
     }
 }

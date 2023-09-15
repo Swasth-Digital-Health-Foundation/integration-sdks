@@ -1,11 +1,15 @@
 ﻿using Hl7.Fhir.Model;
 using Io.HcxProtocol.Dto;
 using Io.HcxProtocol.Exceptions;
+using Io.HcxProtocol.Helper;
 using Io.HcxProtocol.Init;
 using Io.HcxProtocol.Utils;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.NetworkInformation;
 
 namespace UnitTest.Impl
 {
@@ -289,20 +293,22 @@ namespace UnitTest.Impl
            // Assert.AreEqual("testprovider1.apollo@swasth-hcx-dev", configObj.ParticipantCode);
         }
 
-        // [TestMethod]  //16
+        [TestMethod]  //16
 
-        //public void HcxReceiveNotification()
-        // {
-        //InitializeConfig();
-        //     string payload = "eyJhbGciOiJSUzI1NiIsIngtaGN4LW5vdGlmaWNhdGlvbl9oZWFkZXJzIjp7InJlY2lwaWVudF90eXBlIjoicGFydGljaXBhbnRfcm9sZSIsInJlY2lwaWVudHMiOlsicGF5b3IiXSwieC1oY3gtY29ycmVsYXRpb25faWQiOiIxYTVlNGY3MS1iNWRlLTRlNDYtODQ0MC1mNjQ1YWU4NWFiYTEiLCJzZW5kZXJfY29kZSI6InRlc3Rwcm92aWRlcjEuYXBvbGxvQHN3YXN0aC1oY3gtZGV2IiwidGltZXN0YW1wIjoxNjg5MDU5MzEwMjU4fX0.eyJ0b3BpY19jb2RlIjoibm90aWYtcGFydGljaXBhbnQtbmV3LXByb3RvY29sLXZlcnNpb24tc3VwcG9ydCIsIm1lc3NhZ2UiOiJ0ZXN0LXByb3ZpZGVyIG5vdyBzdXBwb3J0cyB2MC44IG9uIGl0cyBwbGF0Zm9ybS4gQWxsIHBhcnRpY2lwYW50cyBhcmUgcmVxdWVzdGVkIHRvIHVwZ3JhZGUgdG8gdjAuOCBvciBhYm92ZSB0byB0cmFuc2FjdCB3aXRoIHRlc3QtcHJvdmlkZXIuIn0.LLqp_pfy2JHekfnr6FrbTWt_oxHh76j1WoJ-g3Uuf599F2mZHUwxAg8mFzAF7LUk7lLgznXdbAU1bkiWzME8CkpkSkqSxzOhbb1XCAy63XbBn9hiHgKjR2hcw3lA2I4Y3fmPPSF6nDEm1_mALiA2AoyzmSttMH9dtXCk-lcXzb5c7BvKss2Gk_42t2DNTNq1HF0wWYWnZfNQdV7-Jcw8jo2bIOVeD8ep774RCp6KLAC_nh68JkMd_kft_clhL8qKwpMfVq-2YRi9Njb4vAOfuMYsTAA8EjL8eJlUxWG7o7JJ1RgGNbpTfg7BzbB7SYI0fcwRjqf9VZnTxfDsTWw1CQ";
-        //     Dictionary<string, object> decodedPayload = JSONUtils.DecodeBase64String(payload.Split("\\.", true)[1], typeof(System.Collections.IDictionary));
-        //     Dictionary<string, object> output = new Dictionary<string, object>();
-        //     HCXIntegrator.GetInstance(configObj).receiveNotification(payload, output);
-        //     string topicCode = (string)((IDictionary<string, object>)output[Constants.PAYLOAD])[Constants.TOPIC_CODE];
-        //     string message = (string)((IDictionary<string, object>)output[Constants.PAYLOAD])[Constants.MESSAGE];
-        //     Assert.AreEqual(decodedPayload[Constants.TOPIC_CODE], topicCode);
-        //     Assert.AreEqual(decodedPayload[Constants.MESSAGE], message);
-        // }
+        public void HcxReceiveNotification()
+        {
+            InitializeConfig();
+            string payload = "eyJhbGciOiJSUzI1NiIsIngtaGN4LW5vdGlmaWNhdGlvbl9oZWFkZXJzIjp7InJlY2lwaWVudF90eXBlIjoicGFydGljaXBhbnRfcm9sZSIsInJlY2lwaWVudHMiOlsicGF5b3IiXSwieC1oY3gtY29ycmVsYXRpb25faWQiOiIxYTVlNGY3MS1iNWRlLTRlNDYtODQ0MC1mNjQ1YWU4NWFiYTEiLCJzZW5kZXJfY29kZSI6InRlc3Rwcm92aWRlcjEuYXBvbGxvQHN3YXN0aC1oY3gtZGV2IiwidGltZXN0YW1wIjoxNjg5MDU5MzEwMjU4fX0.eyJ0b3BpY19jb2RlIjoibm90aWYtcGFydGljaXBhbnQtbmV3LXByb3RvY29sLXZlcnNpb24tc3VwcG9ydCIsIm1lc3NhZ2UiOiJ0ZXN0LXByb3ZpZGVyIG5vdyBzdXBwb3J0cyB2MC44IG9uIGl0cyBwbGF0Zm9ybS4gQWxsIHBhcnRpY2lwYW50cyBhcmUgcmVxdWVzdGVkIHRvIHVwZ3JhZGUgdG8gdjAuOCBvciBhYm92ZSB0byB0cmFuc2FjdCB3aXRoIHRlc3QtcHJvdmlkZXIuIn0.LLqp_pfy2JHekfnr6FrbTWt_oxHh76j1WoJ-g3Uuf599F2mZHUwxAg8mFzAF7LUk7lLgznXdbAU1bkiWzME8CkpkSkqSxzOhbb1XCAy63XbBn9hiHgKjR2hcw3lA2I4Y3fmPPSF6nDEm1_mALiA2AoyzmSttMH9dtXCk-lcXzb5c7BvKss2Gk_42t2DNTNq1HF0wWYWnZfNQdV7-Jcw8jo2bIOVeD8ep774RCp6KLAC_nh68JkMd_kft_clhL8qKwpMfVq-2YRi9Njb4vAOfuMYsTAA8EjL8eJlUxWG7o7JJ1RgGNbpTfg7BzbB7SYI0fcwRjqf9VZnTxfDsTWw1CQ";
+            var payloadarray = payload.Split('.');
+            var payloadstr = payloadarray[1];
+            Dictionary<string, object> decodedPayload = JSONUtils.DecodeBase64String<Dictionary<string,Object>>(payloadstr);
+            Dictionary<string, object> output = new Dictionary<string, object>();
+            output =  HCXIntegrator.GetInstance(configObj).receiveNotification(payload, output);
+            string topicCode = output[Constants.TOPIC_CODE].ToString();
+            string message = output[Constants.MESSAGE].ToString(); ;
+            Assert.AreEqual(decodedPayload[Constants.TOPIC_CODE], topicCode);
+            Assert.AreEqual(decodedPayload[Constants.MESSAGE], message);
+        }
 
         [TestMethod]   //17
         public  void HcxSendNotificationWithMessageEmpty()
@@ -323,27 +329,27 @@ namespace UnitTest.Impl
             InitializeConfig();
             Dictionary<string, object> output = new Dictionary<string, object>();
             string topicCode = "notif-participant-new-protocol-version-support";
-            string message = "";
+            string message = "Participant has upgraded to latest protocol version";
             List<string> RecepientList = new List<string>();
-            RecepientList.Add("payor");
+            //RecepientList.Add("payor");
             Dictionary<string, string> templateParams = new Dictionary<string, string>();
             HCXIntegrator.GetInstance(configObj).SendNotification(topicCode, "participant_role", RecepientList, message, templateParams, output);
             Assert.AreEqual("Error while sending the notifications: Recipients cannot be empty", output["error"]);
         }
 
-        //[TestMethod]   //19
-        //public void HcxSendNotificationWithRecepientTypeEmpty()
-        //{
-        //    InitializeConfig();
-        //    Dictionary<string, object> output = new Dictionary<string, object>();
-        //    string topicCode = "notif-participant-new-protocol-version-support";
-        //    string message = "";
-        //    List<string> RecepientList = new List<string>();
-        //    RecepientList.Add("payor");
-        //    Dictionary<string, string> templateParams = new Dictionary<string, string>();
-        //    HCXIntegrator.GetInstance(configObj).SendNotification(topicCode, "", RecepientList, message, templateParams, output);
-        //    Assert.AreEqual("Error while sending the notifications: Recipient type cannot be empty", output["error"]);
-        //}
+        [TestMethod]   //19
+        public void HcxSendNotificationWithRecepientTypeEmpty()
+        {
+            InitializeConfig();
+            Dictionary<string, object> output = new Dictionary<string, object>();
+            string topicCode = "notif-participant-new-protocol-version-support";
+            string message = "Participant has upgraded to latest protocol version";
+            List<string> RecepientList = new List<string>();
+            RecepientList.Add("payor");
+            Dictionary<string, string> templateParams = new Dictionary<string, string>();
+            HCXIntegrator.GetInstance(configObj).SendNotification(topicCode, "", RecepientList, message, templateParams, output);
+            Assert.AreEqual("Error while sending the notifications: Recipient type cannot be empty", output["error"]);
+        }
 
 
         //private void InitializeConfig2()

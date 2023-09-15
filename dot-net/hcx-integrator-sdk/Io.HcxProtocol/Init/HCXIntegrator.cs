@@ -53,10 +53,10 @@ namespace Io.HcxProtocol.Init
             return GetOutgoingRequest().Process(fhirPayload, operation, "", apiCallId, "", actionJwe, onActionStatus, domainHeaders, output, GetConfig());
         }
 
-        //    public Dictionary<string, Object> receiveNotification(string requestBody, Dictionary<string, Object> output) 
-        //    {
-        //    return  GetIncomingRequest().receiveNotification(requestBody, output, GetConfig());
-        //}
+        public Dictionary<string, Object> receiveNotification(string requestBody,  Dictionary<string, Object> output)
+        {
+            return GetIncomingRequest().receiveNotification(requestBody, output, GetConfig());
+        }
 
         public bool SendNotification(string topicCode, string recipientType, List<string> recepients, string message, Dictionary<string, string> templateParams, Dictionary<string, object> output)
         {

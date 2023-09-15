@@ -16,14 +16,17 @@
 		<Compile Remove="CreateResource\**" />
 		<Compile Remove="Exception\**" />
 		<Compile Remove="lib\**" />
+		<Compile Remove="Logs\**" />
 		<Compile Remove="Validator\**" />
 		<EmbeddedResource Remove="CreateResource\**" />
 		<EmbeddedResource Remove="Exception\**" />
 		<EmbeddedResource Remove="lib\**" />
+		<EmbeddedResource Remove="Logs\**" />
 		<EmbeddedResource Remove="Validator\**" />
 		<None Remove="CreateResource\**" />
 		<None Remove="Exception\**" />
 		<None Remove="lib\**" />
+		<None Remove="Logs\**" />
 		<None Remove="Validator\**" />
 	</ItemGroup>
 
@@ -68,7 +71,6 @@
 
 	<ItemGroup>
 		<Folder Include="Dto\" />
-		<Folder Include="Logs\" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Docs\README.md" Pack="true" PackagePath="\" />

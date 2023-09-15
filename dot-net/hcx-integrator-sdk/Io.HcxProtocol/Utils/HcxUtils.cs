@@ -1,13 +1,22 @@
 ﻿//using CSharp.security.cert;
 
+
 using Hl7.Fhir.ElementModel.Types;
 using Io.HcxProtocol.Dto;
 using Io.HcxProtocol.Exceptions;
 using Io.HcxProtocol.Helper;
 using Io.HcxProtocol.Init;
+using Io.HcxProtocol.Key;
 using Io.HcxProtocol.Utils;
+using Jose;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using NLog;
+using Org.BouncyCastle.Asn1.Cms;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Tls;
+using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities;
 using Org.BouncyCastle.Utilities.Encoders;
 using Org.BouncyCastle.Utilities.Zlib;
@@ -16,11 +25,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 using static Org.BouncyCastle.Math.EC.ECCurve;
+using System.Reflection.PortableExecutable;
 
 namespace Io.HcxProtocol.Utils
 {
@@ -91,8 +102,7 @@ namespace Io.HcxProtocol.Utils
 
             Dictionary<string, Object> respMap = JSONUtils.Deserialize<Dictionary<string, Object>>(response.getBody());
             string token;
-           // token = "eyJhbGciOiJSUzI1NiIsIngtaGN4LW5vdGlmaWNhdGlvbl9oZWFkZXJzIjp7InJlY2lwaWVudF90eXBlIjoicGFydGljaXBhbnRfcm9sZSIsInJlY2lwaWVudHMiOlsicGF5b3IiXSwieC1oY3gtY29ycmVsYXRpb25faWQiOiIxYTVlNGY3MS1iNWRlLTRlNDYtODQ0MC1mNjQ1YWU4NWFiYTEiLCJzZW5kZXJfY29kZSI6InRlc3Rwcm92aWRlcjEuYXBvbGxvQHN3YXN0aC1oY3gtZGV2IiwidGltZXN0YW1wIjoxNjg5MDU5MzEwMjU4fX0.eyJ0b3BpY19jb2RlIjoibm90aWYtcGFydGljaXBhbnQtbmV3LXByb3RvY29sLXZlcnNpb24tc3VwcG9ydCIsIm1lc3NhZ2UiOiJ0ZXN0LXByb3ZpZGVyIG5vdyBzdXBwb3J0cyB2MC44IG9uIGl0cyBwbGF0Zm9ybS4gQWxsIHBhcnRpY2lwYW50cyBhcmUgcmVxdWVzdGVkIHRvIHVwZ3JhZGUgdG8gdjAuOCBvciBhYm92ZSB0byB0cmFuc2FjdCB3aXRoIHRlc3QtcHJvdmlkZXIuIn0.LLqp_pfy2JHekfnr6FrbTWt_oxHh76j1WoJ-g3Uuf599F2mZHUwxAg8mFzAF7LUk7lLgznXdbAU1bkiWzME8CkpkSkqSxzOhbb1XCAy63XbBn9hiHgKjR2hcw3lA2I4Y3fmPPSF6nDEm1_mALiA2AoyzmSttMH9dtXCk-lcXzb5c7BvKss2Gk_42t2DNTNq1HF0wWYWnZfNQdV7-Jcw8jo2bIOVeD8ep774RCp6KLAC_nh68JkMd_kft_clhL8qKwpMfVq-2YRi9Njb4vAOfuMYsTAA8EjL8eJlUxWG7o7JJ1RgGNbpTfg7BzbB7SYI0fcwRjqf9VZnTxfDsTWw1CQ";
-            //  token = "eyJhbGciOiJSUzI1NiJ9.eyJzdWIiOiI4NTI3ODUzYy1iNDQyLTQ0ZGItYWVkYS1kYmJkY2Y0NzJkOWIiLCJlbWFpbF92ZXJpZmllZCI6ZmFsc2UsImlzcyI6Imh0dHA6XC9cL2tleWNsb2FrLmtleWNsb2FrLnN2Yy5jbHVzdGVyLmxvY2FsOjgwODBcL2F1dGhcL3JlYWxtc1wvc3dhc3RoLWhjeC1wYXJ0aWNpcGFudHMiLCJ0eXAiOiJCZWFyZXIiLCJwcmVmZXJyZWRfdXNlcm5hbWUiOiJ0ZXN0cHJvdmlkZXIxQGFwb2xsby5jb20iLCJhdWQiOiJhY2NvdW50IiwiYWNyIjoiMSIsInJlYWxtX2FjY2VzcyI6eyJyb2xlcyI6WyJwcm92aWRlciIsImRlZmF1bHQtcm9sZXMtbmRlYXIiXX0sImF6cCI6InJlZ2lzdHJ5LWZyb250ZW5kIiwicGFydGljaXBhbnRfY29kZSI6InRlc3Rwcm92aWRlcjEuYXBvbGxvQHN3YXN0aC1oY3gtZGV2Iiwic2NvcGUiOiJwcm9maWxlIGVtYWlsIiwiZXhwIjoxNjk1MzAxNDQ0LCJzZXNzaW9uX3N0YXRlIjoiZTI1YjE4MjktMmJmYi00Y2JlLWEzODktYzNiZTQ4Yjk1NzdhIiwiaWF0IjoxNjkzNTczNDQ0LCJqdGkiOiJhMmY0NDAyYS03YzVhLTRlNzgtOTM2NC02ZGRhZDhiZWRkNzEiLCJlbnRpdHkiOlsiT3JnYW5pc2F0aW9uIl0sImVtYWlsIjoidGVzdHByb3ZpZGVyMUBhcG9sbG8uY29tIn0.Su4qQQtciMud91DXv4fNTAS6Ma6twJpy8jJf5edNDx_ACQowQxb228rYLsGcGLdB-c8xob_n9xIbj009lcYP4TZL8o0q7fPOLWPjTRScpRe7BesGPMsbRlM0LdtqEGSkHEI_2znKPQTb220EDLUGWbqCwwwlLartL2ENstYm-xKES45RQ5m8ajBor5KkFxTHMb2MdKUmfS_yrkRhP2I5bwe8s1C2-DsJtAKY_EY5K0l2k4vbTGQ0O-BFWpB9jSZLyuLLcAO-tRPwA_2lFQBovf_5PKp_Yu_Jw_triTAwiuS_dldq9AesbGV3xntzg4XWhB0QfCvloeu5AV-99nsEow";
+          
             if (response.getStatus() == 200)
             {
                 token = (string)respMap["access_token"];
@@ -132,23 +142,39 @@ namespace Io.HcxProtocol.Utils
             return details.Any() ? details.FirstOrDefault() : new Dictionary<string, object>();
         }
 
-        //public static bool isValidSignature(string payload, string publicKeyUrl)
-        //{
-        //    // string certificate = IOUtils.tostring(new Uri(publicKeyUrl), StandardCharsets.UTF_8.tostring());
-        //    string certificate = new Uri(publicKeyUrl).ToString();
-        //    CertificateFactory cf = CertificateFactory.getInstance("X.509");
-        //    Stream stream = new System.IO.MemoryStream(Encoding.ASCII.GetBytes(certificate)); //StandardCharsets.UTF_8
-        //    Certificate cert = cf.generateCertificate(stream);
-        //    PublicKey publicKey = cert.getPublicKey();
-        //    string[] parts = payload.Split("\\.");
-        //    string data = parts[0] + "." + parts[1];
-        //    Signature sig = Signature.getInstance("SHA256withRSA");
-        //    sig.initVerify(publicKey);
-        //    sig.update(data.getBytes());
-        //    byte[] decodedSignature = Base64.getUrlDecoder().decode(parts[2]);
-        //    return sig.verify(decodedSignature);
-        //}
+        public static bool isValidSignature(string payload, string publicKeyUrl,out Dictionary<string,Object> output)
+        {
+          //  payload = "eyJhbGciOiJSUzI1NiIsIngtaGN4LW5vdGlmaWNhdGlvbl9oZWFkZXJzIjp7IngtaGN4LWNvcnJlbGF0aW9uX2lkIjoiZWI1YzJjZmItOTViMy00NzNlLTkxODEtZTJiNThjMmMxYzhhIiwic2VuZGVyX2NvZGUiOiJ0ZXN0cHJvdmlkZXIxLmFwb2xsb0Bzd2FzdGgtaGN4LWRldiIsInRpbWVzdGFtcCI6MTY5NDY4OTM0NTU2OSwicmVjaXBpZW50X3R5cGUiOiJwYXJ0aWNpcGFudF9yb2xlIiwicmVjaXBpZW50cyI6WyJwYXlvciJdfX0.eyJ0b3BpY19jb2RlIjoibm90aWYtcGFydGljaXBhbnQtbmV3LXByb3RvY29sLXZlcnNpb24tc3VwcG9ydCIsIm1lc3NhZ2UiOiJ7XCJtZXNzYWdlXCI6IFwidGVzdC1wcm92aWRlciBub3cgc3VwcG9ydHMgdjAuOCBvbiBpdHMgcGxhdGZvcm0uIEFsbCBwYXJ0aWNpcGFudHMgYXJlIHJlcXVlc3RlZCB0byB1cGdyYWRlIHRvIHYwLjggb3IgYWJvdmUgdG8gdHJhbnNhY3Qgd2l0aCB0ZXN0LXByb3ZpZGVyLlwifSJ9.Rbtbq2LueuEB4u53MhC8uCAfXmHvZSBFaRIaNV_PnnRDIjTlF5HneFt28RwyTsADcOXrEQKzU9Fcp-oeh8fUF1LywMWaxbmjfQ_KvlWgjXJEC15MB2PObg7SEO2KL55smM7Up03bBgZinbgYikPigJ0dTyHoOfbRa0oF2DtDz0liKhBujWDCesJCJI8vfcFYaCpbe9WPqBOV00MCpHxy9brCC2S66xvOr02SZA8evP_h8FxylsBZ3yQ3m_vkVNAHYTboiwpTXEx5O7-N0A6kSjzGLFvp9ua6bNjfWC6awexIgBcxA5mve7JlU3VoC5YsS1VA5tsydmGnXBAvlBJ6zg";
+            bool isValid = false;
 
+            RSA rsaPublicKey = X509KeyLoader.GetRSAPublicKeyFromPem(publicKeyUrl, PemMode.Url);
+           
+          var  payloadDictionary = Jose.JWT.Decode<Dictionary<string, object>>(payload, rsaPublicKey);
+          var  headersDictionary = Jose.JWT.Headers<Dictionary<string, object>>(payload);
+            output = new Dictionary<string, object>();
+            if (payloadDictionary.Count > 0)
+            {
+                isValid = true;
+                foreach (var item in payloadDictionary)
+                {
+                    output.Add(item.Key, item.Value);
+                }
+            }
+            if(headersDictionary.Count>0)
+            {
+                foreach (var item in headersDictionary)
+                {
+                    output.Add(item.Key, item.Value);
+                }
+
+                headersDictionary.Remove("alg");
+                headersDictionary.Remove("enc");
+ 
+            }
+         
+            return isValid;
+        }
+ 
         public static bool initializeHCXCall(string jwePayload, Operations operation, Dictionary<string, object> response, Init.Config config)
         {
             Dictionary<string, string> headers = new Dictionary<string, string>();

@@ -238,7 +238,7 @@ namespace Io.HcxProtocol.Interfaces
         /// <returns> It is a map object value to get the output of decoded jws payload.
         ///     </returns>
 
-      //  Dictionary<string, Object> receiveNotification(String jwsPayload, Dictionary<string, Object> output, Config config);
+       Dictionary<string, Object> receiveNotification(String jwsPayload,   Dictionary<string, Object> output, Config config);
 
     }
 }

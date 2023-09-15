@@ -45,7 +45,10 @@ namespace Io.HcxProtocol.Dto
 
         public Dictionary<string, Object> getHeaders() 
         {
-            return JSONUtils.DecodeBase64String<Dictionary<string,object>>(jwsPayload.Split('.')[0].ToString());
+            var x = jwsPayload.Split('.');
+            var j= JSONUtils.DecodeBase64String<Dictionary<string,object>>(jwsPayload.Split('.')[0].ToString());
+          
+            return j;
           }
 
     public Dictionary<string,Object> getPayload() 
@@ -91,7 +94,9 @@ public Config getConfig()
 
 public Dictionary<string, Object> notificationHeaders() 
 {
-        return (Dictionary<string, Object>) getHeaders()[Constants.NOTIFICATION_HEADERS];
+            var x = getHeaders()[Constants.NOTIFICATION_HEADERS];
+            var notificationheaders = JSONUtils.Deserialize<Dictionary<string,Object>>(x.ToString());
+            return notificationheaders;
     }
 
     public string getSenderCode() 
