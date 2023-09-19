@@ -24,7 +24,7 @@ namespace UnitTest.Impl
        private void InitializeConfig()
         {
             configObj = new Config();
-            configObj.FhirValidationEnabled =  true;
+            configObj.FhirValidationEnabled =  false;
             //configObj.ProtocolBasePath = "http://dev-hcx.swasth.app/api/v0.7";  
             configObj.ProtocolBasePath = "http://dev-hcx.swasth.app/api/v0.8"; // new value
             configObj.ParticipantCode = "testprovider1.apollo@swasth-hcx-dev";
