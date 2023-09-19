@@ -59,6 +59,18 @@ namespace Io.HcxProtocol.Init
                 //Default Nrces IG Base Path 
                 _config.NrcesIGBasePath = "https://nrces.in/ndhm/fhir/r4/";
             }
+            if(string.IsNullOrEmpty(_config.LogFileName))
+                
+            {
+              prop = "LogFileName";
+                
+            }
+            if(string.IsNullOrEmpty(_config.LogFilePath))
+                
+            {
+              prop = "LogiFilePath";
+
+            }
 
             if (prop != null)
                 throw new System.Exception(prop + " is missing or has empty value, please add to the configuration.");

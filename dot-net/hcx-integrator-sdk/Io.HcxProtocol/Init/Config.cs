@@ -26,6 +26,8 @@
         public string Secret { get; set; }
         public string ParticipantGenerateToken { get; set; }
         public string signingPrivateKey { get; set; }
+        public string LogFilePath { get; set; }  
+        public string LogFileName { get; set; }
 
         //public  string getString(string path)
         //{

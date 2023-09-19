@@ -9,6 +9,7 @@ using Io.HcxProtocol.Jwe;
 using Io.HcxProtocol.Key;
 using Io.HcxProtocol.Utils;
 using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,6 +46,9 @@ namespace Io.HcxProtocol.Impl
      
         public virtual bool Process(string jwePayload, Operations operation, Dictionary<string, object> output,Config config)
         {
+            LogManager.Configuration.Variables["mydir"] = config.LogFilePath;
+            LogManager.Configuration.Variables["logfilename"] = config.LogFileName;
+
             Dictionary<string, object> error = new Dictionary<string, object>();
             bool result = false;
             jwePayload = FormatPayload(jwePayload);
@@ -110,6 +114,7 @@ namespace Io.HcxProtocol.Impl
             bool result = false;
             try
             {
+                
                 if (error.Count == 0)
                 {
                     Dictionary<string, object> headers = (Dictionary<string, object>)output[Constants.HEADERS];
@@ -210,30 +215,39 @@ namespace Io.HcxProtocol.Impl
         }
         public Dictionary<string, object> receiveNotification(string jwsPayload, Dictionary<string, object> output, Config config)
         {
-            Dictionary<string, object> result = new Dictionary<string, object>();
+            LogManager.Configuration.Variables["mydir"] = config.LogFilePath;
+            LogManager.Configuration.Variables["logfilename"] = config.LogFileName;
+            try
+            {
+                Dictionary<string, object> result = new Dictionary<string, object>();
 
 
-            Dictionary<string, Object> payload = JSONUtils.Deserialize<Dictionary<string, object>>(getPayload(jwsPayload));
-            NotificationRequest notificationRequest = new NotificationRequest((string)payload["Item2"]);
-            if (string.IsNullOrEmpty(notificationRequest.getJwsPayload()))
-            {
-                throw new ClientException("JWS Token cannot be empty");
+                Dictionary<string, Object> payload = JSONUtils.Deserialize<Dictionary<string, object>>(getPayload(jwsPayload));
+                NotificationRequest notificationRequest = new NotificationRequest((string)payload["Item2"]);
+                if (string.IsNullOrEmpty(notificationRequest.getJwsPayload()))
+                {
+                    throw new ClientException("JWS Token cannot be empty");
+                }
+                string authToken = HcxUtils.GenerateToken(config);
+                string publicKeyUrl = (string)HcxUtils.SearchRegistry(notificationRequest.getSenderCode(), authToken, config.ProtocolBasePath)[Constants.ENCRYPTION_CERT];
+                bool isSignatureValid = HcxUtils.isValidSignature((string)payload["Item2"], publicKeyUrl, out output);
+                if (output == null)
+                {
+                    output = new Dictionary<string, Object>();
+                }
+                if (isSignatureValid == false)
+                {
+                    output.Add(Constants.HEADERS, notificationRequest.getHeaders());
+                    output.Add(Constants.PAYLOAD, notificationRequest.getPayload());
+                    output.Add(Constants.IS_SIGNATURE_VALID, isSignatureValid);
+                }
+                return output;
             }
-            string authToken = HcxUtils.GenerateToken(config);
-            string publicKeyUrl = (string)HcxUtils.SearchRegistry(notificationRequest.getSenderCode(), authToken, config.ProtocolBasePath)[Constants.ENCRYPTION_CERT];
-            bool isSignatureValid = HcxUtils.isValidSignature((string)payload["Item2"], publicKeyUrl,out output);
-            if (output == null)
+            catch(Exception ex)
             {
-                output = new Dictionary<string, Object>();
+                _logger.Error("");
+                return output;
             }
-            if (isSignatureValid == false)
-            {
-                output.Add(Constants.HEADERS, notificationRequest.getHeaders());
-                output.Add(Constants.PAYLOAD, notificationRequest.getPayload());
-                output.Add(Constants.IS_SIGNATURE_VALID, isSignatureValid);
-            }
-            return output;
-
 
         }
 

@@ -58,6 +58,8 @@ namespace Io.HcxProtocol.Impl
         public HCXOutgoingRequest()
         {
             
+
+
         }
         //public virtual bool Process(string fhirPayload, Operations operation, string recipientCode, string apiCallId, string correlationId,string actionJwe, string onActionStatus, Dictionary<string, Object> domainHeaders, Dictionary<string, Object> output, Config config)
         //{
@@ -112,11 +114,17 @@ namespace Io.HcxProtocol.Impl
 
         public  bool ProcessOutgoing(string fhirPayload, Operations operation, string recipientCode, string apiCallId, string correlationId, string workflowId, string actionJwe, string onActionStatus, Dictionary<string, Object> domainHeaders, Dictionary<string, Object> output, Config config)
         {
+
+            LogManager.Configuration.Variables["mydir"] = config.LogFilePath;
+            LogManager.Configuration.Variables["logfilename"] = config.LogFileName;
+            
+           
             bool result = false;
+           
             try
             {
-
                
+
                 Dictionary<string, Object> error = new Dictionary<string, Object>();
                 Dictionary<string, Object> response = new Dictionary<string, Object>();
                 Dictionary<string, Object> headers = new Dictionary<string, Object>(domainHeaders);
@@ -170,7 +178,7 @@ namespace Io.HcxProtocol.Impl
             try
             {
                 //Note: [ALG, A256GCM] & [ENC, RSA_OAEP] headers added by JWE-EncryptRequest Method
-
+                
                 headers.Add(Constants.HCX_TIMESTAMP, DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm:ss") + DateTime.Now.ToString("zzz").Replace(":", ""));
 
                 if (string.IsNullOrEmpty(apiCallId))
@@ -288,6 +296,9 @@ namespace Io.HcxProtocol.Impl
         {
             try
             {
+                LogManager.Configuration.Variables["mydir"] = config.LogFilePath;
+                LogManager.Configuration.Variables["logfilename"] = config.LogFileName;
+
                 NotificationRequest notificationRequest = new NotificationRequest(topicCode, message, templateParams, recipientType, recipients, correlationId, config);
                 NotificationService.validateNotificationRequest(notificationRequest);
                 Dictionary<string, Object> requestBody = NotificationService.CreateNotificationRequest(notificationRequest, output, message);
