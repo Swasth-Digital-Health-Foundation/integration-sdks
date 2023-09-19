@@ -23,7 +23,7 @@
         public string IncomingRequestClass { get; set; }
         public string OutgoingRequestClass { get; set; }
         public bool FhirValidationEnabled { get; set; }  
-        public string Secrete { get; set; }
+        public string Secret { get; set; }
         public string ParticipantGenerateToken { get; set; }
         public string signingPrivateKey { get; set; }
 

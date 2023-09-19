@@ -305,7 +305,7 @@ namespace UnitTest.Impl
             Dictionary<string, object> output = new Dictionary<string, object>();
             output =  HCXIntegrator.GetInstance(configObj).receiveNotification(payload, output);
             string topicCode = output[Constants.TOPIC_CODE].ToString();
-            string message = output[Constants.MESSAGE].ToString(); ;
+            string message = output[Constants.MESSAGE].ToString(); 
             Assert.AreEqual(decodedPayload[Constants.TOPIC_CODE], topicCode);
             Assert.AreEqual(decodedPayload[Constants.MESSAGE], message);
         }

@@ -93,9 +93,9 @@ namespace Io.HcxProtocol.Utils
             {
                 fields.Add(Constants.PASSWORD, config.Password);
             }
-            else if (!string.IsNullOrEmpty(config.Secrete))
+            else if (!string.IsNullOrEmpty(config.Secret))
             {
-                fields.Add(Constants.SECRET, config.Secrete);
+                fields.Add(Constants.SECRET, config.Secret);
                 fields.Add("participant_code", config.ParticipantCode);
             }
             HttpResponse response = HttpUtils.Post(config.ProtocolBasePath+config.ParticipantGenerateToken, headers, fields);
@@ -151,6 +151,7 @@ namespace Io.HcxProtocol.Utils
            
           var  payloadDictionary = Jose.JWT.Decode<Dictionary<string, object>>(payload, rsaPublicKey);
           var  headersDictionary = Jose.JWT.Headers<Dictionary<string, object>>(payload);
+
             output = new Dictionary<string, object>();
             if (payloadDictionary.Count > 0)
             {

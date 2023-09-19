@@ -115,6 +115,8 @@ namespace Io.HcxProtocol.Impl
             bool result = false;
             try
             {
+
+               
                 Dictionary<string, Object> error = new Dictionary<string, Object>();
                 Dictionary<string, Object> response = new Dictionary<string, Object>();
                 Dictionary<string, Object> headers = new Dictionary<string, Object>(domainHeaders);
