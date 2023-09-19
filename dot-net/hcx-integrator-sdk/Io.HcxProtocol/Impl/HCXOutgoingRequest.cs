@@ -137,7 +137,7 @@ namespace Io.HcxProtocol.Impl
                         foreach (var err in error) output.Add(err.Key, err.Value);
                     }
                 }
-                else if (!CreateHeader(config.ParticipantCode, recipientCode, apiCallId, correlationId,workflowId, actionJwe, onActionStatus, headers, error))
+                 if (!CreateHeader(config.ParticipantCode, recipientCode, apiCallId, correlationId,workflowId, actionJwe, onActionStatus, headers, error))
                 {
                     foreach (var err in headers) output.Add(err.Key, err.Value);
                 }
