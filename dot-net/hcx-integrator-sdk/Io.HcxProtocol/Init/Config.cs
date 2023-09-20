@@ -28,6 +28,7 @@
         public string signingPrivateKey { get; set; }
         public string LogFilePath { get; set; }  
         public string LogFileName { get; set; }
+        public string LogType { get; set; }
 
         //public  string getString(string path)
         //{

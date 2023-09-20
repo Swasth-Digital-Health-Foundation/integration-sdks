@@ -1,6 +1,7 @@
 ﻿using Io.HcxProtocol.Impl;
 using Io.HcxProtocol.Interfaces;
 using Io.HcxProtocol.Utils;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -59,17 +60,20 @@ namespace Io.HcxProtocol.Init
                 //Default Nrces IG Base Path 
                 _config.NrcesIGBasePath = "https://nrces.in/ndhm/fhir/r4/";
             }
-            if(string.IsNullOrEmpty(_config.LogFileName))
-                
+            if (_config.LogType.ToLower() == "file")
             {
-              prop = "LogFileName";
-                
-            }
-            if(string.IsNullOrEmpty(_config.LogFilePath))
-                
-            {
-              prop = "LogiFilePath";
+                if (string.IsNullOrEmpty(_config.LogFileName))
 
+                {
+                    prop = "LogFileName";
+
+                }
+                if (string.IsNullOrEmpty(_config.LogFilePath))
+
+                {
+                    prop = "LogiFilePath";
+
+                }
             }
 
             if (prop != null)
