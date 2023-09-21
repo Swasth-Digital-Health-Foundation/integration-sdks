@@ -19,19 +19,21 @@ It expects the below details as configuration to set the context in the integrat
 
 
 
-| Config Variable Name	 | Details               |
-| ------------ |-----------------------|
-| protocolBasePath | Base Path of the HCX Instance to access Protocol APIs. |
-| authBasePath	| Base Path of the HCX Authentication Service to generate authorization tokens. |
-| participantCode |	The participant code of the integrator in the HCX participant registry.|
-| username |	The username of the integrator in the HCX instance.|
-| password | The password of the integrator in the HCX instance.|
-| encryptionPrivateKey | The private key of the integrator to use it for encryption.|
-| igUrl	|The HCX instance FHIR IG URL to access the FHIR bundles for validation.|
-| FhirValidationEnabled| Fhir validation is done if the value is true
-| LogFilePath| This variable holds the path of the log file. 
-| LogFileName| This variable holds the Name of the log file
-| LogType| Log type can be file or console. 
+|**Config Variable Name**|**Mandatory**|**Details**|
+| :-: | :-: | :-: |
+|protocolBasePath|yes|Base Path of the HCX Instance to access Protocol APIs.|
+|participantCode|yes|The participant code of the integrator in the HCX participant registry.|
+|username|yes|The username of the integrator in the HCX instance.|
+|password|conditionally optional|The password of the integrator in the HCX instance. If password is not provided, secret should be provided|
+|secret|conditionally optional| The User secret for API access token generation. If secret is not provided, password should be provided|
+|encryptionPrivateKey|yes|The private key of the integrator to use it for encryption.|
+|signingPrivateKey|yes|The private key of the integrator to use it for signing notifications.| 
+|incomingRequestClass|no|To override any incoming request process methods, implement a custom class and provide the class name here. By default, it will use HCXIncomingRequest class.|
+|outgoingRequestClass|no|To override any outgoing request process methods, implement a custom class and provide the class name here. By default, it will use HCXOutgoingRequest class.|
+|fhirValidationEnabled|no|Flag to enable/disable FHIR validations. By default, the flag will be set to true.|
+|LogType|no|Log type can be file or console.|
+|LogFilePath|conditionally optional| This variable holds the path of the log file.|
+|LogFileName|conditionally optional| This variable holds the Name of the log file.|
 
 Please use the “getInstance” static method from HCXIntegrator class by passing the configuration to set the context. The SDK won’t work as expected without calling this method with required configuration details. It throws an exception when we access the SDK without initializing it.
 
