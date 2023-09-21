@@ -61,19 +61,18 @@ namespace Io.HcxProtocol.Impl
             {
                 SendResponse(output, output);
             }
-        
-            else if(config.FhirValidationEnabled)  //Fhirvalidation enable disabled code
-            {
-                 if (!ValidatePayload(output[Constants.FHIR_PAYLOAD].ToString(), operation, error, config))
+          else  if (config.FhirValidationEnabled)  //Fhirvalidation enable disabled code
+           {
+                  if (!ValidatePayload(output[Constants.FHIR_PAYLOAD].ToString(), operation, error, config))
                 {
                     SendResponse(error, output);
                 }
             }
-           
-            else
-            {
+
+
+         
                 if (SendResponse(error, output)) result = true;
-            }
+           
             return result;
         }
 
