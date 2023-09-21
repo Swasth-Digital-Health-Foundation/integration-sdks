@@ -1,4 +1,5 @@
 ﻿using Io.HcxProtocol.Exceptions;
+using Io.HcxProtocol.Impl;
 using Io.HcxProtocol.Interfaces;
 using Io.HcxProtocol.Utils;
 using System;
@@ -22,6 +23,7 @@ namespace Io.HcxProtocol.Dto
         private Dictionary<string, object> Payload { get; set; }
         public Dictionary<string, object> ProtocolHeaders { get; set; }
 
+      private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         public BaseRequest(Dictionary<string, object> payload)
         {
             this.Payload = payload;
@@ -121,13 +123,14 @@ namespace Io.HcxProtocol.Dto
                 return true;
             }
             // Validate Header values
-            if (ValidateCondition(!GetApiCallId().IsUUID(), error, ErrorCodes.ERR_INVALID_API_CALL_ID.ToString(), ResponseMessage.INVALID_API_CALL_ID_ERR_MSG))
+           
+            if (ValidateCondition(GetApiCallId().GetType()!= typeof(string) , error, ErrorCodes.ERR_INVALID_API_CALL_ID.ToString(), ResponseMessage.INVALID_API_CALL_ID_ERR_MSG)) //change no 5 implemented
                 return true;
-            if (ValidateCondition(!GetCorrelationId().IsUUID(), error, ErrorCodes.ERR_INVALID_CORRELATION_ID.ToString(), ResponseMessage.INVALID_CORRELATION_ID_ERR_MSG))
+            if (ValidateCondition(GetCorrelationId().GetType()!=typeof(string), error, ErrorCodes.ERR_INVALID_CORRELATION_ID.ToString(), ResponseMessage.INVALID_CORRELATION_ID_ERR_MSG)) //change no 5 implemented
                 return true;
             if (ValidateCondition(!GetTimestamp().IsValidTimestamp(), error, ErrorCodes.ERR_INVALID_TIMESTAMP.ToString(), ResponseMessage.INVALID_TIMESTAMP_ERR_MSG))
                 return true;
-            if (ValidateCondition(ProtocolHeaders.ContainsKey(Constants.WORKFLOW_ID) && !GetWorkflowId().IsUUID(), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.ToString(), ResponseMessage.INVALID_WORKFLOW_ID_ERR_MSG))
+            if (ValidateCondition(ProtocolHeaders.ContainsKey(Constants.WORKFLOW_ID) && GetWorkflowId().GetType()!=typeof(string), error, ErrorCodes.ERR_INVALID_WORKFLOW_ID.ToString(), ResponseMessage.INVALID_WORKFLOW_ID_ERR_MSG)) //change no 5 implemented
                 return true;
             //validating optional headers
             ValidateOptionalHeaders(error);
@@ -139,23 +142,38 @@ namespace Io.HcxProtocol.Dto
 
         public bool ValidateJwePayload(Dictionary<string, object> error, string[] payloadArr)
         {
-            if (payloadArr != null && payloadArr.Length != Constants.PROTOCOL_PAYLOAD_LENGTH)
+            bool status = false;
+            try
             {
-                error.Add(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ResponseMessage.INVALID_PAYLOAD_LENGTH_ERR_MSG);
-                return true;
-            }
-            if (payloadArr != null)
-            {
-                foreach (string value in payloadArr)
+                if (payloadArr != null && payloadArr.Length != Constants.PROTOCOL_PAYLOAD_LENGTH)
                 {
-                    if (string.IsNullOrEmpty(value))
+                    error.Add(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ResponseMessage.INVALID_PAYLOAD_LENGTH_ERR_MSG);
+                   _logger.Error(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ResponseMessage.INVALID_PAYLOAD_LENGTH_ERR_MSG);
+                    status = true;
+                    return status;
+                }
+                if (payloadArr != null)
+                {
+                    foreach (string value in payloadArr)
                     {
-                        error.Add(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ResponseMessage.INVALID_PAYLOAD_VALUES_ERR_MSG);
-                        return true;
+                        if (string.IsNullOrEmpty(value))
+                        {
+                            error.Add(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ResponseMessage.INVALID_PAYLOAD_VALUES_ERR_MSG);
+                          _logger.Error(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ResponseMessage.INVALID_PAYLOAD_VALUES_ERR_MSG);
+                            status = true;
+                            return status;
+                        }
                     }
                 }
+                status = false;
             }
-            return false;
+            catch(Exception ex)
+            {
+                error.Add("Some error occuured", ex.Message.ToString());
+                _logger.Error("Some error occuured", ex.Message.ToString());
+
+            }
+            return status;
         }
 
         public bool ValidateCondition(bool condition, Dictionary<string, object> error, string key, string msg)

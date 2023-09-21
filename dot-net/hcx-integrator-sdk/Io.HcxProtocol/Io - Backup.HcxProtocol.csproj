@@ -1,0 +1,107 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+
+		<RootNamespace>Io.HcxProtocol</RootNamespace>
+		<AssemblyName>Io.Hcx.Protocol</AssemblyName>
+		<Version>1.0.1</Version>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<Description>HCX Integration Library provides a simplified way to access the HCX platform and process the outgoing and incoming request.</Description>
+		<Authors>WalkingTree Technologies</Authors>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Remove="CreateResource\**" />
+		<Compile Remove="Exception\**" />
+		<Compile Remove="lib\**" />
+		<Compile Remove="Validator\**" />
+		<EmbeddedResource Remove="CreateResource\**" />
+		<EmbeddedResource Remove="Exception\**" />
+		<EmbeddedResource Remove="lib\**" />
+		<EmbeddedResource Remove="Validator\**" />
+		<None Remove="CreateResource\**" />
+		<None Remove="Exception\**" />
+		<None Remove="lib\**" />
+		<None Remove="Validator\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Remove="Helper\Certificate.cs" />
+	  <Compile Remove="Helper\CertificateFactory.cs" />
+	  <Compile Remove="Helper\CodeSource.cs" />
+	  <Compile Remove="Helper\Event.cs" />
+	  <Compile Remove="Helper\EventHelper.cs" />
+	  <Compile Remove="Helper\HashTable.cs" />
+	  <Compile Remove="Helper\JarEntry.cs" />
+	  <Compile Remove="Helper\JavaUtilJarAccess.cs" />
+	  <Compile Remove="Helper\JCAUtil.cs" />
+	  <Compile Remove="Helper\Lookup.cs" />
+	  <Compile Remove="Helper\Manifest.cs" />
+	  <Compile Remove="Helper\MethodHandles.cs" />
+	  <Compile Remove="Helper\Properties.cs" />
+	  <Compile Remove="Helper\Provider.cs" />
+	  <Compile Remove="Helper\SharedSecrets.cs" />
+	  <Compile Remove="Helper\URL.cs" />
+	  <Compile Remove="Helper\VerifyAccess.cs" />
+	  <Compile Remove="Helper\X509CertificateEvent.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Hl7.Fhir.R4" Version="4.3.0" />
+		<PackageReference Include="Hl7.Fhir.Specification.R4" Version="4.3.0" />
+		<PackageReference Include="jose-jwt" Version="4.1.0" />
+		<PackageReference Include="JWT" Version="10.0.1" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.7.0" />
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.32.2" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.32.2" />
+		<PackageReference Include="NLog" Version="5.2.3" />
+		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.2" />
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Dto\" />
+		<Folder Include="Logs\" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Include="bin\Debug\netstandard2.0\Io.Hcx.Protocol.dll" />
+		<None Include="bin\Debug\netstandard2.0\Io.Hcx.Protocol.pdb" />
+		<None Include="bin\Debug\netstandard2.0\Microsoft.CodeAnalysis.dll" />
+		<None Include="bin\Debug\netstandard2.0\Microsoft.IdentityModel.JsonWebTokens.dll" />
+		<None Include="bin\Debug\netstandard2.0\Microsoft.IdentityModel.Tokens.dll" />
+		<None Include="bin\Debug\netstandard2.0\NLog.config" />
+		<None Include="bin\Debug\netstandard2.0\NLog.dll" />
+		<None Include="bin\Debug\netstandard2.0\specification.zip" />
+		<None Include="bin\Debug\netstandard2.0\System.IdentityModel.Tokens.Jwt.dll" />
+		<None Include="Docs\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="bin\Debug\netstandard2.0\Io.Hcx.Protocol.deps.json" />
+		<Content Include="Docs\specification.zip">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<PackageCopyToOutput>true</PackageCopyToOutput>
+			<PackagePath>contentFiles\any\any</PackagePath>
+			<TargetPath>%(Filename)%(Extension)</TargetPath>
+		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Reference Include="Microsoft.IdentityModel.Abstractions">
+	    <HintPath>C:\Users\WalkingTree\source\repos\integration-sdks\dot-net\hcx-integrator-sdk\packages\Microsoft.IdentityModel.Abstractions.6.25.1\lib\netstandard2.0\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+	  </Reference>
+	  <Reference Include="Microsoft.IdentityModel.Tokens">
+	    <HintPath>C:\Users\WalkingTree\source\repos\integration-sdks\dot-net\hcx-integrator-sdk\packages\Microsoft.IdentityModel.Tokens.6.25.1\lib\netstandard2.0\Microsoft.IdentityModel.Tokens.dll</HintPath>
+	  </Reference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="NLog.config">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+	
+</Project>

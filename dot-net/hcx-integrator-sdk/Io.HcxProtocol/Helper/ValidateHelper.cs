@@ -1,5 +1,6 @@
 ﻿using Io.HcxProtocol.Dto;
 using Io.HcxProtocol.Exceptions;
+using Io.HcxProtocol.Impl;
 using Io.HcxProtocol.Utils;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,7 @@ namespace Io.HcxProtocol.Helper
     public class ValidateHelper
     {
         private static ValidateHelper validateHelper = null;
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private ValidateHelper() { }
 
         public static ValidateHelper GetInstance()
@@ -81,6 +83,7 @@ namespace Io.HcxProtocol.Helper
             catch (Exception ex)
             {
                 error.Add(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ex.ToString());
+                _logger.Error(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ex.ToString());
                 return false;
             }
             return true;

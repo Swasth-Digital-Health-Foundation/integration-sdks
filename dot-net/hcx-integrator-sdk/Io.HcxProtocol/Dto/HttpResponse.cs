@@ -20,5 +20,14 @@
             Status = status;
             Body = body;
         }
+        public int getStatus()
+        {
+            return this.Status;
+        }
+
+        public string getBody()
+        {
+            return this.Body;
+        }
     }
 }

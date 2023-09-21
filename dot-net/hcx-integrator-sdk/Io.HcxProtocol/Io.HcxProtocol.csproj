@@ -31,14 +31,18 @@
 		<PackageReference Include="Hl7.Fhir.R4" Version="4.3.0" />
 		<PackageReference Include="Hl7.Fhir.Specification.R4" Version="4.3.0" />
 		<PackageReference Include="jose-jwt" Version="4.1.0" />
+		<PackageReference Include="JWT" Version="10.1.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.7.0" />
+		<PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="6.32.2" />
+		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.32.2" />
+		<PackageReference Include="NLog" Version="5.2.4" />
 		<PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Folder Include="Dto\" />
+		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.32.2" />
+		<PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="Docs\README.md" Pack="true" PackagePath="\" />
+		<None Include="Io.HcxProtocol.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -48,6 +52,16 @@
 			<PackagePath>contentFiles\any\any</PackagePath>
 			<TargetPath>%(Filename)%(Extension)</TargetPath>
 		</Content>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Logs\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Update="NLog.config">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 	
 </Project>

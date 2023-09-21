@@ -25,6 +25,9 @@
         [OperationsAttr("/communication/request", "CommunicationRequest")] COMMUNICATION_REQUEST,
         [OperationsAttr("/communication/on_request", "Bundle")] COMMUNICATION_ON_REQUEST,
         [OperationsAttr("/predetermination/submit", "Bundle")] PREDETERMINATION_SUBMIT,
-        [OperationsAttr("/predetermination/on_submit", "Bundle")] PREDETERMINATION_ON_SUBMIT
+        [OperationsAttr("/predetermination/on_submit", "Bundle")] PREDETERMINATION_ON_SUBMIT,
+        [OperationsAttr("/notification/topic/list","")] NOTIFICATION_LIST,// cr 13 ismail
+        [OperationsAttr("/notification/notify", "")] NOTIFICATION_NOTIFY //cr 13
+
     }
 }
