@@ -1,4 +1,6 @@
-﻿using Io.HcxProtocol.Dto;
+﻿using Hl7.Fhir.ElementModel.Types;
+using ICSharpCode.SharpZipLib.Zip;
+using Io.HcxProtocol.Dto;
 using Io.HcxProtocol.Exceptions;
 using Io.HcxProtocol.Helper;
 using Io.HcxProtocol.Init;
@@ -6,10 +8,14 @@ using Io.HcxProtocol.Interfaces;
 using Io.HcxProtocol.Jwe;
 using Io.HcxProtocol.Key;
 using Io.HcxProtocol.Utils;
+using Newtonsoft.Json;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using static Org.BouncyCastle.Math.EC.ECCurve;
+using Config = Io.HcxProtocol.Init.Config;
 
 namespace Io.HcxProtocol.Impl
 {
@@ -35,81 +41,135 @@ namespace Io.HcxProtocol.Impl
     /// </remarks>
     public class HCXIncomingRequest : FhirPayload, IIncomingRequest, IDisposable
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         public HCXIncomingRequest() { }
-
-        public bool Process(string jwePayload, Operations operation, Dictionary<string, object> output)
+     
+        public virtual bool Process(string jwePayload, Operations operation, Dictionary<string, object> output,Config config)
         {
+            LogManager.Configuration.Variables["mydir"] = config.LogFilePath;
+            LogManager.Configuration.Variables["logfilename"] = config.LogFileName;
+
             Dictionary<string, object> error = new Dictionary<string, object>();
             bool result = false;
+            jwePayload = FormatPayload(jwePayload);
+
             if (!ValidateRequest(jwePayload, operation, error))
             {
                 SendResponse(error, output);
             }
-            else if (!DecryptPayload(jwePayload, output))
+            else if (!DecryptPayload(jwePayload,config.EncryptionPrivateKey ,output))
             {
                 SendResponse(output, output);
             }
-            else if (!ValidatePayload(output[Constants.FHIR_PAYLOAD].ToString(), operation, error))
-            {
-                SendResponse(error, output);
+          else  if (config.FhirValidationEnabled)  //Fhirvalidation enable disabled code
+           {
+                  if (!ValidatePayload(output[Constants.FHIR_PAYLOAD].ToString(), operation, error, config))
+                {
+                    SendResponse(error, output);
+                }
             }
-            else
-            {
+
+
+         
                 if (SendResponse(error, output)) result = true;
-            }
+           
             return result;
         }
 
-        public bool ValidateRequest(string jwePayload, Operations operation, Dictionary<string, object> error)
+        public virtual bool ValidateRequest(string jwePayload, Operations operation, Dictionary<string, object> error)
         {
             return ValidateHelper.GetInstance().ValidateRequest(jwePayload, operation, error);
-        }
+        }      
 
-        public bool DecryptPayload(string jwePayload, Dictionary<string, object> output)
+        public virtual bool DecryptPayload(string jwePayload,string privateKey, Dictionary<string, object> output)
         {
             try
             {
                 JweRequest jweRequest = new JweRequest(JSONUtils.Deserialize<Dictionary<string, object>>(jwePayload));
-                RSA rsaPublicKey = X509KeyLoader.GetRSAPrivateKeyFromPem(HCXIntegrator.config.EncryptionPrivateKey, PemMode.FileText);
+                RSA rsaPublicKey = X509KeyLoader.GetRSAPrivateKeyFromPem(privateKey, PemMode.FileText);
                 jweRequest.DecryptRequest(rsaPublicKey);
                 output.Add(Constants.HEADERS, jweRequest.GetHeaders());
                 output.Add(Constants.FHIR_PAYLOAD, JSONUtils.Serialize(jweRequest.GetPayload()));
-
+               // _logger.Info("Payload decryption is successful", JSONUtils.Serialize(jweRequest.GetPayload()));
                 return true;
             }
             catch (Exception ex)
             {
                 output.Add(ErrorCodes.ERR_INVALID_ENCRYPTION.ToString(), "[Decryption error.] " + ex.ToString());
-
+                _logger.Error(ErrorCodes.ERR_INVALID_ENCRYPTION.ToString(), "[Decryption error.] " + ex.ToString());
                 return false;
             }
         }
 
-        public bool SendResponse(Dictionary<string, object> error, Dictionary<string, object> output)
+        public  virtual bool ValidatePayload(string fhirPayload, Operations operation, Dictionary<string, object> error, Config config)
+        {
+            return ValidateFHIR(fhirPayload, operation, error, config);
+        }
+
+        public virtual bool SendResponse(Dictionary<string, object> error, Dictionary<string, object> output)
         {
             Dictionary<string, object> responseObj = new Dictionary<string, object>();
             responseObj.Add(Constants.TIMESTAMP, DateTimeUtils.TotalMillisecondsUTC());
             bool result = false;
-            if (error.Count == 0)
+            try
             {
-                Dictionary<string, object> headers = (Dictionary<string, object>)output[Constants.HEADERS];
-                responseObj.Add(Constants.API_CALL_ID, headers[Constants.HCX_API_CALL_ID]);
-                responseObj.Add(Constants.CORRELATION_ID, headers[Constants.HCX_CORRELATION_ID]);
-                result = true;
+                
+                if (error.Count == 0)
+                {
+                    Dictionary<string, object> headers = (Dictionary<string, object>)output[Constants.HEADERS];
+                    responseObj.Add(Constants.API_CALL_ID, headers[Constants.HCX_API_CALL_ID]);
+                    responseObj.Add(Constants.CORRELATION_ID, headers[Constants.HCX_CORRELATION_ID]);
+                    result = true;
+                }
+                else
+                {
+                    // Fetching only the first error and constructing the error object
+                    string code = error.First().Key;
+                    responseObj.Add(Constants.ERROR, new ResponseError(code, error[code].ToString(), ""));
+                }
+                output.Add(Constants.RESPONSE_OBJ, responseObj);
+              //  _logger.Info("Response sent successfully");
             }
-            else
+            catch(Exception ex)
             {
-                // Fetching only the first error and constructing the error object
-                string code = error.First().Key;
-                responseObj.Add(Constants.ERROR, new ResponseError(code, error[code].ToString(), ""));
+                result = false;
+                _logger.Error("Response sending failed " + ex.Message);
             }
-            output.Add(Constants.RESPONSE_OBJ, responseObj);
+           
             return result;
+        }
+
+        private  string FormatPayload(string payload)
+        {
+            string FormattedPayload = string.Empty;
+            try
+            {
+                
+                if (payload.Contains(Constants.PAYLOAD) || payload.Contains(Constants.HCX_API_CALL_ID))
+                {
+                    FormattedPayload = payload;
+                    
+                }
+                else
+                {
+                    Dictionary<string, string> payloadDict = new Dictionary<string, string>()
+                 {
+                   { Constants.PAYLOAD, payload }
+                 };
+                    FormattedPayload= JsonConvert.SerializeObject(payloadDict);
+                }
+            }
+           
+            catch(Exception ex)
+            {
+                _logger.Error(ex.Message);
+            }
+            return FormattedPayload;
         }
 
 
         private bool disposedValue;
-        protected virtual void Dispose(bool disposing)
+        protected  void Dispose(bool disposing)
         {
             // check if already disposed
             if (!disposedValue)
@@ -131,6 +191,69 @@ namespace Io.HcxProtocol.Impl
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+        private string getPayload(string payload)
+        {
+            string FinalPayload = string.Empty;
+            try
+            {
+                if (payload.Contains(Constants.PAYLOAD) || payload.Contains(Constants.HCX_API_CALL_ID))
+                {
+                    FinalPayload= payload;
+                }
+                else
+                {
+                    FinalPayload = JSONUtils.Serialize((Constants.PAYLOAD, payload));
+                }
+            }
+            catch(Exception ex)
+            {
+                _logger.Error(ex.Message);
+            }
+            return FinalPayload;
+        }
+        public Dictionary<string, object> receiveNotification(string jwsPayload, Dictionary<string, object> output, Config config)
+        {
+            LogManager.Configuration.Variables["mydir"] = config.LogFilePath;
+            LogManager.Configuration.Variables["logfilename"] = config.LogFileName;
+            try
+            {
+                Dictionary<string, object> result = new Dictionary<string, object>();
+
+
+                Dictionary<string, Object> payload = JSONUtils.Deserialize<Dictionary<string, object>>(getPayload(jwsPayload));
+                NotificationRequest notificationRequest = new NotificationRequest((string)payload["Item2"]);
+                if (string.IsNullOrEmpty(notificationRequest.getJwsPayload()))
+                {
+                    throw new ClientException("JWS Token cannot be empty");
+                }
+                string authToken = HcxUtils.GenerateToken(config);
+                string publicKeyUrl = (string)HcxUtils.SearchRegistry(notificationRequest.getSenderCode(), authToken, config.ProtocolBasePath)[Constants.ENCRYPTION_CERT];
+                bool isSignatureValid = HcxUtils.isValidSignature((string)payload["Item2"], publicKeyUrl, out output);
+                if (output == null)
+                {
+                    output = new Dictionary<string, Object>();
+                }
+                if (isSignatureValid == false)
+                {
+                    output.Add(Constants.HEADERS, notificationRequest.getHeaders());
+                    output.Add(Constants.PAYLOAD, notificationRequest.getPayload());
+                    output.Add(Constants.IS_SIGNATURE_VALID, isSignatureValid);
+                }
+                return output;
+            }
+            catch(Exception ex)
+            {
+                _logger.Error("");
+                return output;
+            }
+
+        }
+
+        //                   }
+
+
+
         ~HCXIncomingRequest() { Dispose(disposing: false); }
 
     }

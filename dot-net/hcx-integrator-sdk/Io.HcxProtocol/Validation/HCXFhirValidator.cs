@@ -1,5 +1,6 @@
 ﻿using Hl7.Fhir.Specification.Source;
 using Hl7.Fhir.Validation;
+using Io.HcxProtocol.Init;
 using Io.HcxProtocol.Utils;
 using System;
 using System.IO;
@@ -23,21 +24,27 @@ namespace Io.HcxProtocol.Validation
         private static HCXFhirValidator instance = null;
         private Validator validator = null;
 
-        private static HCXFhirValidator GetInstance()
+        private string hcxIGBasePath;
+        private string nrcesIGBasePath;
+
+        private static HCXFhirValidator GetInstance(Config config)
         {
             if (instance == null)
-                instance = new HCXFhirValidator();
+                instance = new HCXFhirValidator(config);
 
             return instance;
         }
 
-        public static Validator GetFhirValidator()
+        public static Validator GetFhirValidator(Config config)
         {
-            return GetInstance().validator;
+            return GetInstance(config).validator;
         }
 
-        private HCXFhirValidator()
+        private HCXFhirValidator(Config config)
         {
+            hcxIGBasePath = config.HcxIGBasePath;
+            nrcesIGBasePath = config.NrcesIGBasePath;
+
             // directory path containing expanded profile packages files
             string rootDir = Directory.GetCurrentDirectory();
             string profileDirectory = Path.Combine(rootDir, "profiles");
@@ -68,7 +75,7 @@ namespace Io.HcxProtocol.Validation
 
         private bool DownloadProfileDirectory(string profileDirPath)
         {
-            string fileSourceUrl = "https://ig.hcxprotocol.io/v0.7.1/definitions.json.zip";
+            string fileSourceUrl = hcxIGBasePath + "definitions.json.zip";
             string profileFileName = "definitions.json.zip";
             string fullPathToFile = Path.Combine(profileDirPath, profileFileName);
             try
@@ -95,7 +102,7 @@ namespace Io.HcxProtocol.Validation
         private bool DownloadNRCESProfileDirectory(string profileDirPath)
         {
             string profileDirPathNrces = Path.Combine(profileDirPath, "definitions_nrces");
-            string fileSourceUrl = "https://nrces.in/ndhm/fhir/r4/definitions.json.zip";
+            string fileSourceUrl = nrcesIGBasePath + "definitions.json.zip";
             string profileFileName = "definitions_nrces.json.zip";
             string fullPathToFile = Path.Combine(profileDirPathNrces, profileFileName);
             try
