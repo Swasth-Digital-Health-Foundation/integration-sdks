@@ -116,8 +116,7 @@ namespace Io.HcxProtocol.Service
 
         private static string resolveTemplate(Dictionary<string, object> notification, Dictionary<string, string> nData)
         {
-            //StringSubstitutor sub = new StringSubstitutor(nData);
-           
+          
             var serializedtemplate = JsonConvert.SerializeObject(notification[Constants.TEMPLATE]);
             var json1 = JSONUtils.Deserialize<string>((string)serializedtemplate, typeof(Dictionary<Object, Object>));
             StringBuilder  message = new StringBuilder(json1);
@@ -127,9 +126,7 @@ namespace Io.HcxProtocol.Service
             message.Replace("${version_code}",versionnumber);
             return message.ToString();
            
-            
-           // sub.Replace(JsonConvert.DeserializeObject((string)notification[Constants.TEMPLATE]), Constants.MESSAGE);
-        }
+         }
 
 
         private static Dictionary<string,Object> getNotification(List<Dictionary<string,Object>> notificationList, string code)
@@ -164,11 +161,10 @@ namespace Io.HcxProtocol.Service
         private static string getPrivateKey(Config config)
         {
             string privateKey = config.signingPrivateKey;
-           // privateKey = privateKey.Replace("-----BEGIN PRIVATE KEY-----", "").Replace("-----END PRIVATE KEY-----", "").Replace("\\s+", "");
             return privateKey;
         }
 
-        public static double GetCurrentMilli() //ismail cr13 related
+        public static double GetCurrentMilli() 
         {
             DateTime Jan1970 = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
             TimeSpan javaSpan = DateTime.UtcNow - Jan1970;

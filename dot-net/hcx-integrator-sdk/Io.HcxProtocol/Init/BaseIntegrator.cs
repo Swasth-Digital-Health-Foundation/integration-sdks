@@ -40,10 +40,7 @@ namespace Io.HcxProtocol.Init
             {
                 prop = "Password";
             }
-            //else if (string.IsNullOrEmpty(_config.Secrete)) //cr 12
-            //{
-            //    prop = "Secrete";
-            //}
+            
 
             else if (string.IsNullOrEmpty(_config.EncryptionPrivateKey))
             {
@@ -110,12 +107,10 @@ namespace Io.HcxProtocol.Init
                 {
                     Type classType = Type.GetType(className);
                     object instance = Activator.CreateInstance(classType);
-                    // logger.Info($"Request class {className} provided in the config exists.");
                     return instance as T;
                 }
                 catch (Exception ex)
                 {
-                    // logger.Error($"Request class {className} provided in the config map does not exist, hence default {defaultClass} is used.");
                 }
             }
             return Activator.CreateInstance(defaultClass) as T;

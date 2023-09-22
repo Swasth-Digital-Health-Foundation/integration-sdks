@@ -46,20 +46,8 @@ namespace Io.HcxProtocol.Impl
      
         public virtual bool Process(string jwePayload, Operations operation, Dictionary<string, object> output,Config config)
         {
-            var Logconfig = LogManager.Configuration;
-
-            if (Logconfig != null)
-            {
-                // Log a message if configuration is successfully retrieved
-                Logconfig.Variables["mydir"] = config.LogFilePath;
-                Logconfig.Variables["logfilename"] = config.LogFileName;
-                _logger.Info("NLog Configuration Successfully Loaded.");
-            }
-            else
-            {
-                // Log a message if configuration is null
-                _logger.Warn("NLog Configuration is NULL.");
-            }
+            LogManager.Configuration.Variables["mydir"] = config.LogFilePath;
+            LogManager.Configuration.Variables["logfilename"] = config.LogFileName;
 
             Dictionary<string, object> error = new Dictionary<string, object>();
             bool result = false;
@@ -74,15 +62,14 @@ namespace Io.HcxProtocol.Impl
                 SendResponse(output, output);
             }
         
-             if(config.FhirValidationEnabled)  //Fhirvalidation enable disabled code
+             if(config.FhirValidationEnabled)  
             {
                  if (!ValidatePayload(output[Constants.FHIR_PAYLOAD].ToString(), operation, error, config))
                 {
                     SendResponse(error, output);
                 }
             }
-           
-          
+               
                 if (SendResponse(error, output)) result = true;
             
             return result;
@@ -226,20 +213,8 @@ namespace Io.HcxProtocol.Impl
         }
         public Dictionary<string, object> receiveNotification(string jwsPayload, Dictionary<string, object> output, Config config)
         {
-            var Logconfig = LogManager.Configuration;
-
-            if (Logconfig != null)
-            {
-                // Log a message if configuration is successfully retrieved
-                Logconfig.Variables["mydir"] = config.LogFilePath;
-                Logconfig.Variables["logfilename"] = config.LogFileName;
-                _logger.Info("NLog Configuration Successfully Loaded.");
-            }
-            else
-            {
-                // Log a message if configuration is null
-                _logger.Warn("NLog Configuration is NULL.");
-            }
+            LogManager.Configuration.Variables["mydir"] = config.LogFilePath;
+            LogManager.Configuration.Variables["logfilename"] = config.LogFileName;
             try
             {
                 Dictionary<string, object> result = new Dictionary<string, object>();
@@ -273,11 +248,6 @@ namespace Io.HcxProtocol.Impl
             }
 
         }
-
-        //                   }
-
-
-
         ~HCXIncomingRequest() { Dispose(disposing: false); }
 
     }

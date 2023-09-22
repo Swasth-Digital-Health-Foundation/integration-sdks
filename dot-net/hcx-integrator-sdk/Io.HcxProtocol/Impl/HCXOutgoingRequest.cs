@@ -61,46 +61,7 @@ namespace Io.HcxProtocol.Impl
 
 
         }
-        //public virtual bool Process(string fhirPayload, Operations operation, string recipientCode, string apiCallId, string correlationId,string actionJwe, string onActionStatus, Dictionary<string, Object> domainHeaders, Dictionary<string, Object> output, Config config)
-        //{
-        //    bool result = false;
-        //    try
-        //    {
-        //        Dictionary<string, Object> error = new Dictionary<string, Object>();
-        //        Dictionary<string, Object> headers = new Dictionary<string, Object>(domainHeaders);
-        //        Dictionary<string, Object> response = new Dictionary<string, Object>();
-
-        //        if (config.FhirValidationEnabled)  //change ismail
-        //        {
-        //            if (!ValidatePayload(fhirPayload, operation, error, config))
-        //            {
-        //                foreach (var err in error) output.Add(err.Key, err.Value);
-        //            }
-        //        }
-        //        if (!CreateHeader(config.ParticipantCode, recipientCode, apiCallId, correlationId, actionJwe, onActionStatus, headers, error))
-        //        {
-        //            foreach (var err in headers) output.Add(err.Key, err.Value);
-        //        }
-        //        else if (!EncryptPayload(headers, fhirPayload, output, config))
-        //        {
-        //            foreach (var err in error) output.Add(err.Key, err.Value);
-        //        }
-        //        else
-        //        {
-        //            result = InitializeHCXCall(JSONUtils.Serialize(output), operation, response, config);
-        //            foreach (var err in response) output.Add(err.Key, err.Value);
-        //        }
-        //        return result;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // TODO: Exception is handled as domain processing error, we will be enhancing in next version.
-        //        output.Add(ErrorCodes.ERR_DOMAIN_PROCESSING.ToString(), ex.Message.ToString());
-        //        _logger.Error(ErrorCodes.ERR_DOMAIN_PROCESSING.ToString(), ex.Message.ToString());
-        //        return result;
-        //    }
-        //}
-
+      
         public virtual  bool Process(string fhirPayload, Operations operation, string recipientCode, string apiCallId, string correlationId, string actionJwe, string onActionStatus, Dictionary<string, Object> domainHeaders, Dictionary<string, Object> output, Config config)
         {
             return ProcessOutgoing(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", actionJwe, onActionStatus, domainHeaders, output, config);
@@ -115,33 +76,20 @@ namespace Io.HcxProtocol.Impl
         public  bool ProcessOutgoing(string fhirPayload, Operations operation, string recipientCode, string apiCallId, string correlationId, string workflowId, string actionJwe, string onActionStatus, Dictionary<string, Object> domainHeaders, Dictionary<string, Object> output, Config config)
         {
 
-            var Logconfig = LogManager.Configuration;
-
-            if (Logconfig != null)
-            {
-                // Log a message if configuration is successfully retrieved
-              Logconfig.Variables["mydir"] = config.LogFilePath;
-              Logconfig.Variables["logfilename"] = config.LogFileName;
-              _logger.Info("NLog Configuration Successfully Loaded.");
-            }
-            else
-            {
-                // Log a message if configuration is null
-                _logger.Warn("NLog Configuration is NULL.");
-            }
+            LogManager.Configuration.Variables["mydir"] = config.LogFilePath;
+            LogManager.Configuration.Variables["logfilename"] = config.LogFileName;
+            
            
             bool result = false;
            
             try
             {
                
-
                 Dictionary<string, Object> error = new Dictionary<string, Object>();
                 Dictionary<string, Object> response = new Dictionary<string, Object>();
                 Dictionary<string, Object> headers = new Dictionary<string, Object>(domainHeaders);
-               // _logger.Info("Processing outgoing request has started :: operation: {}", operation);
 
-                if (config.FhirValidationEnabled)  //change ismail
+                if (config.FhirValidationEnabled)  
                 {
                     if (!ValidatePayload(fhirPayload, operation, error, config))
                     {
@@ -234,7 +182,6 @@ namespace Io.HcxProtocol.Impl
             try
             {
                
-                //  string authToken = HcxUtils.GenerateToken(config.UserName, config.Password, config.AuthBasePath);
                 string authToken = HcxUtils.GenerateToken(config);
                 string publicKeyUrl = (string)HcxUtils.SearchRegistry((string)headers[Constants.HCX_RECIPIENT_CODE], authToken, config.ProtocolBasePath)[Constants.ENCRYPTION_CERT];
 
@@ -259,20 +206,7 @@ namespace Io.HcxProtocol.Impl
             try
             {
                 result = HcxUtils.initializeHCXCall(jwePayload, operation, response, config);
-                //Dictionary<string, string> headers = new Dictionary<string, string>();
-                //headers.Add(Constants.AUTHORIZATION, "Bearer " + HcxUtils.GenerateToken(config.UserName, config.Password, config.AuthBasePath));
-                //HttpResponse hcxResponse = HttpUtils.Post(config.ProtocolBasePath + operation.getOperation(), headers, jwePayload);
-                //response.Add(Constants.RESPONSE_OBJ, JSONUtils.Deserialize<Dictionary<string, Object>>(hcxResponse.Body));              
-
-                //if (hcxResponse.Status == 202)
-                //{
-                //    result = true;
-                //}
-                //else
-                //{
-                //    _logger.Error("Error while processing the outgoing request::status: { } ::response: { }", hcxResponse.Status, response[Constants.RESPONSE_OBJ]);
-
-                //}
+                
             }
             catch(WebException ex)
             {
@@ -307,20 +241,8 @@ namespace Io.HcxProtocol.Impl
         {
             try
             {
-                var Logconfig = LogManager.Configuration;
-
-                if (Logconfig != null)
-                {
-                    // Log a message if configuration is successfully retrieved
-                    Logconfig.Variables["mydir"] = config.LogFilePath;
-                    Logconfig.Variables["logfilename"] = config.LogFileName;
-                    _logger.Info("NLog Configuration Successfully Loaded.");
-                }
-                else
-                {
-                    // Log a message if configuration is null
-                    _logger.Warn("NLog Configuration is NULL.");
-                }
+                LogManager.Configuration.Variables["mydir"] = config.LogFilePath;
+                LogManager.Configuration.Variables["logfilename"] = config.LogFileName;
 
                 NotificationRequest notificationRequest = new NotificationRequest(topicCode, message, templateParams, recipientType, recipients, correlationId, config);
                 NotificationService.validateNotificationRequest(notificationRequest);

@@ -188,11 +188,9 @@ namespace Io.HcxProtocol.Utils
             if (status == 202 || status == 200)
             {
                 result = true;
-               // logger.info("Processing outgoing request has completed ::  response: {}", response[Constants.RESPONSE_OBJ]);
             }
             else
             {
-                //logger.error("Error while processing the outgoing request :: status: {} :: response: {}", status, response[Constants.RESPONSE_OBJ]);
             }
             return result;
         }

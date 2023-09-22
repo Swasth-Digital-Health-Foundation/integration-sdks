@@ -73,14 +73,14 @@ namespace Io.HcxProtocol.Utils
         public static readonly string INCOMING_REQUEST_CLASS = "incomingRequestClass";
         public static readonly string OUTGOING_REQUEST_CLASS = "outgoingRequestClass";
 
-        public static readonly string NOTIFICATION_HEADERS = "x-hcx-notification_headers"; //receive notification
+        public static readonly string NOTIFICATION_HEADERS = "x-hcx-notification_headers"; 
         public static readonly string SECRET = "secret";
-        public static readonly string PARTICIPANT_GENERATE_TOKEN = "/participant/auth/token/generate"; //new change cr 12
+        public static readonly string PARTICIPANT_GENERATE_TOKEN = "/participant/auth/token/generate"; 
         public static readonly string RECIPIENT_TYPE =  "recipient_type";
         public static readonly string RECIPIENTS = "recipients";
        
         public static readonly string TOPIC_CODE = "topic_code";
         public static readonly string TEMPLATE = "template";
-        public static readonly string IS_SIGNATURE_VALID = "isSignatureValid"; //receive notification
+        public static readonly string IS_SIGNATURE_VALID = "isSignatureValid"; 
     }
 }

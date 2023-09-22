@@ -42,13 +42,7 @@ namespace UnitTest.Key
             Assert.IsNotNull(privateRsaKey, "GetPrivateRsaKeyFromFile Pass");
         }
 
-        //[TestMethod]
-        //public void GetPrivateRsaKeyFromText()
-        //{
-        //    RSA privateRsaKey = X509KeyLoader.GetRSAPrivateKeyFromPem(privateKeyText, PemMode.FileText);
-
-        //    Assert.IsNotNull(privateRsaKey, "GetPrivateRsaKeyFromText Pass");
-        //}
+      
 
     }
 }

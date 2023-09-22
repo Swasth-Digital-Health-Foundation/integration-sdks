@@ -30,12 +30,7 @@
         public string LogFileName { get; set; }
         public string LogType { get; set; }
 
-        //public  string getString(string path)
-        //{
-        //    ConfigValue v = find(path, ConfigValueType.STRING);
-        //    return (string)v.unwrapped();
-        //}
-
+       
 
 
     }
