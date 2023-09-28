@@ -67,7 +67,7 @@ Below are the SDK methods which will help in executing these steps easily.
 
 ```javascript
 // Initialising a new request for a workflow
-const responseOutgoingRequest = await hcxIntegrator.processOutgoingRequest(fhirPayload, "<recipient code>", operation);
+const responseOutgoingRequest = await hcxIntegrator.processOutgoingRequest(fhirPayload, recipientCode, operation, apiCallId, correlationId, workflowId, domainHeaders);
 return responseOutgoingRequest;
 
 // Responding to the incoming request
