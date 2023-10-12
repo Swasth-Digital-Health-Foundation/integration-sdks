@@ -17,7 +17,11 @@ public enum Operations {
     COMMUNICATION_REQUEST("/communication/request","CommunicationRequest"),
     COMMUNICATION_ON_REQUEST("/communication/on_request","Bundle"),
     PREDETERMINATION_SUBMIT("/predetermination/submit","Bundle"),
-    PREDETERMINATION_ON_SUBMIT("/predetermination/on_submit","Bundle");
+    PREDETERMINATION_ON_SUBMIT("/predetermination/on_submit","Bundle"),
+    NOTIFICATION_NOTIFY("/notification/notify",""),
+    NOTIFICATION_LIST("/notification/topic/list",""),
+    EOB_FETCH( "/eob/fetch",""),
+    EOB_ON_FETCH( "/eob/on_fetch","");
 
     private final String operation;
     private final String fhirResourceType;

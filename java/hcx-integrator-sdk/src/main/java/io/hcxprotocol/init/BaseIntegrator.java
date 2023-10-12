@@ -2,6 +2,7 @@ package io.hcxprotocol.init;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
+import io.hcxprotocol.exception.ClientException;
 import io.hcxprotocol.impl.HCXIncomingRequest;
 import io.hcxprotocol.impl.HCXOutgoingRequest;
 import io.hcxprotocol.interfaces.IncomingRequest;
@@ -20,13 +21,20 @@ public class BaseIntegrator {
     private static Logger logger = LoggerFactory.getLogger(BaseIntegrator.class);
 
     private void validateConfig() throws Exception {
-        logger.debug("Integrator SDK configuration.", getConfig());
+        logger.debug("Integrator SDK configuration.{}", getConfig());
         if(config == null)
             throw new Exception("Please initialize the configuration variables, in order to initialize the SDK");
         List<String> props = config.getStringList("configKeys");
         for(String prop: props){
             if(!config.hasPathOrNull(prop) || StringUtils.isEmpty(config.getString(prop)))
                 throw new Exception(prop + " is missing or has empty value, please add to the configuration.");
+        }
+        validateOptionalFields();
+    }
+
+    private void validateOptionalFields() throws ClientException {
+        if (!config.hasPathOrNull(Constants.PASSWORD) && !config.hasPathOrNull(Constants.SECRET)) {
+            throw new ClientException("Access token generation failed. Please provide participant password or user secret in the config");
         }
     }
 

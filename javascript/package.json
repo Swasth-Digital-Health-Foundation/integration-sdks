@@ -1,0 +1,46 @@
+{
+  "name": "hcx-integrator-sdk",
+  "version": "1.0.8",
+  "description": "This is an npm package for the SDK of hcx-integrator. The Health Claim Exchange(HCX) is a communication protocol that facilitates the exchange of health claim information between payers, providers, beneficiaries, and other relevant entities. It is designed to be an interopable, machine-readable, verifiable, which helps ensure that the information being exchanged is accurate and trustworthy. It is an open standard based communication,",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.[t|j]sx?$": "babel-jest"
+    }
+  },
+  "keywords": [],
+  "author": "Mohit Kumar",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "fhir": "^4.12.0",
+    "hcx-integrator-sdk": "^1.0.0",
+    "jest-mock-extended": "^3.0.5",
+    "jose": "^4.14.4",
+    "moment": "^2.29.4",
+    "node-jose": "^2.2.0",
+    "qs": "^6.11.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.22.15",
+    "@babel/plugin-transform-modules-commonjs": "^7.22.15",
+    "@babel/preset-env": "^7.22.15",
+    "babel-jest": "^29.6.4",
+    "jest": "^29.6.4"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/claddyk/integration-sdks.git#c4gt"
+  },
+  "bugs": {
+    "url": "https://github.com/claddyk/integration-sdks/issues"
+  },
+  "homepage": "https://github.com/claddyk/integration-sdks/tree/c4gt#readme"
+}
