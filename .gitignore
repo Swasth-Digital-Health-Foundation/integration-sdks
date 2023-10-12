@@ -12,4 +12,6 @@ buildNumber.properties
 .idea
 .hcx-integrator-sdk.iml
 hcx-integrator-sdk/hcx-integrator-sdk.iml
+python/hcx-integrator/hcxintegrator/__pycache__
+python/hcx-integrator/hcxintegrator/utils/__pycache__
 javascript/node_modules/
