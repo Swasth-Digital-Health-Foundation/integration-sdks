@@ -94,6 +94,9 @@
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=5.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.5.2.4\lib\net46\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="SemVer, Version=1.2.0.0, Culture=neutral, PublicKeyToken=a89bb7dc6f7a145c, processorArchitecture=MSIL">
       <HintPath>..\packages\SemanticVersioning.1.2.0\lib\net45\SemVer.dll</HintPath>
     </Reference>
@@ -102,7 +105,9 @@
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
     <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
     </Reference>
@@ -128,6 +133,7 @@
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Dto\HttpResponseTest.cs" />
@@ -135,8 +141,9 @@
     <Compile Include="Dto\JweRequestedTest.cs" />
     <Compile Include="Dto\ResponseErrorTest.cs" />
     <Compile Include="Helper\ValidateHelperTest.cs" />
+    <Compile Include="Impl\CustomIncomingRequest.cs" />
+    <Compile Include="Impl\CustomOutgoingRequest.cs" />
     <Compile Include="Impl\HCXIncomingOutgoingRequestTest.cs" />
-    <Compile Include="Init\HCXIntegratorTest.cs" />
     <Compile Include="Jwe\JweRequestTest.cs" />
     <Compile Include="Key\X509KeyLoaderTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -144,8 +151,12 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
-    <None Include="X509FilesSampleFiles\x509-private-key.pem" />
-    <None Include="X509FilesSampleFiles\x509-self-signed-certificate.pem" />
+    <None Include="X509FilesSampleFiles\x509-private-key.pem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="X509FilesSampleFiles\x509-self-signed-certificate.pem">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Io.HcxProtocol\Io.HcxProtocol.csproj">

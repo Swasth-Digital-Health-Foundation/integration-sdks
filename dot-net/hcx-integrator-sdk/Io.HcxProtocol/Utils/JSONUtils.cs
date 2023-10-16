@@ -24,7 +24,7 @@ namespace Io.HcxProtocol.Utils
                 encodedString += new string('=', 4 - mod4);
             }
             byte[] decodedBytes = Convert.FromBase64String(encodedString);
-            string decodedString = Encoding.UTF8.GetString(decodedBytes);
+            string decodedString = Encoding.UTF8.GetString(decodedBytes);           
             return JsonConvert.DeserializeObject<T>(decodedString);
         }
 

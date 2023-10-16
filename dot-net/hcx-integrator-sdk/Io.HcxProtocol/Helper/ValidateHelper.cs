@@ -18,7 +18,9 @@ namespace Io.HcxProtocol.Helper
     /// </summary>
     public class ValidateHelper
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         private static ValidateHelper validateHelper = null;
+
         private ValidateHelper() { }
 
         public static ValidateHelper GetInstance()
@@ -81,6 +83,7 @@ namespace Io.HcxProtocol.Helper
             catch (Exception ex)
             {
                 error.Add(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ex.ToString());
+                _logger.Error(ErrorCodes.ERR_INVALID_PAYLOAD.ToString(), ex.ToString());
                 return false;
             }
             return true;
