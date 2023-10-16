@@ -59,5 +59,26 @@ namespace Io.HcxProtocol.Utils
         public static readonly string CODE = "code";
         public static readonly string MESSAGE = "message";
         public static readonly string PARTICIPANTS = "participants";
+
+        public static readonly string PROTOCOL_BASE_PATH = "protocolBasePath";
+        public static readonly string PARTICIPANT_CODE = "participantCode";
+        public static readonly string AUTH_BASE_PATH = "authBasePath";
+        public static readonly string USERNAME = "username";
+        public static readonly string PASSWORD = "password";
+        public static readonly string ENCRYPTION_PRIVATE_KEY = "encryptionPrivateKey";
+        public static readonly string HCX_IG_BASE_PATH = "hcxIGBasePath";
+        public static readonly string NRCES_IG_BASE_PATH = "nrcesIGBasePath";
+        public static readonly string INCOMING_REQUEST_CLASS = "incomingRequestClass";
+        public static readonly string OUTGOING_REQUEST_CLASS = "outgoingRequestClass";
+
+        public static readonly string NOTIFICATION_HEADERS = "x-hcx-notification_headers";
+        public static readonly string SECRET = "secret";
+        public static readonly string PARTICIPANT_GENERATE_TOKEN = "/participant/auth/token/generate";
+        public static readonly string RECIPIENT_TYPE = "recipient_type";
+        public static readonly string RECIPIENTS = "recipients";
+
+        public static readonly string TOPIC_CODE = "topic_code";
+        public static readonly string TEMPLATE = "template";
+        public static readonly string IS_SIGNATURE_VALID = "isSignatureValid";
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Io.HcxProtocol.Init
+﻿using Io.HcxProtocol.Impl;
+
+namespace Io.HcxProtocol.Init
 {
     /**
      * Library  : Io.Hcx.Protocol
@@ -18,6 +20,16 @@
         public string UserName { get; set; }
         public string Password { get; set; }
         public string EncryptionPrivateKey { get; set; }
-        public string IgUrl { get; set; }
+        public string HcxIGBasePath { get; set; }
+        public string NrcesIGBasePath { get; set; }
+        public HCXIncomingRequest IncomingRequestClass { get; set; }
+        public HCXOutgoingRequest OutgoingRequestClass { get; set; }
+        public bool FhirValidationEnabled { get; set; } = true;
+        public string Secret { get; set; }
+        public string ParticipantGenerateToken { get; set; }
+        public string SigningPrivateKey { get; set; }
+        public string LogType { get; set; }
+        public string LogFilePath { get; set; }
+        public string LogFileName { get; set; }
     }
 }
