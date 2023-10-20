@@ -1,4 +1,6 @@
-﻿using Io.HcxProtocol.Utils;
+﻿using Io.HcxProtocol.Init;
+using Io.HcxProtocol.Utils;
+using System;
 using System.Collections.Generic;
 
 namespace Io.HcxProtocol.Interfaces
@@ -77,7 +79,7 @@ namespace Io.HcxProtocol.Interfaces
         ///     </item>
         ///     </list>
         /// </returns>
-        bool Process(string jwePayload, Operations operation, Dictionary<string, object> output);
+        bool Process(string jwePayload, Operations operation, Dictionary<string, object> output, Config config);
 
         /// <summary>
         ///  Validates the HCX Protocol Headers from the JWE Payload.
@@ -136,7 +138,7 @@ namespace Io.HcxProtocol.Interfaces
         ///         <item>false - Decryption is failure.</item>
         ///     </list>
         /// </returns>
-        bool DecryptPayload(string jwePayload, Dictionary<string, object> output);
+        bool DecryptPayload(string jwePayload, string privateKey, Dictionary<string, object> output);
 
         /// <summary>
         ///     Validates the FHIR Object structure and required attributes using HCX FHIR IG.
@@ -158,7 +160,7 @@ namespace Io.HcxProtocol.Interfaces
         ///         <item>false - Validation is failure.</item>
         ///     </list>
         /// </returns>
-        bool ValidatePayload(string fhirPayload, Operations operation, Dictionary<string, object> error);
+        bool ValidatePayload(string fhirPayload, Operations operation, Dictionary<string, object> error, Config config);
 
         /// <summary>
         ///     Generates the HCX Protocol API response using validation errors and the output object.
@@ -206,5 +208,24 @@ namespace Io.HcxProtocol.Interfaces
         /// </returns>
         bool SendResponse(Dictionary<string, object> error, Dictionary<string, object> output);
 
+        /// <summary>
+        /// Validates and decodes the jws payload. </summary>
+        /// <param name="jwsPayload"> The JWS payload from the incoming API notification request body. </param>
+        /// <param name="output"> A wrapper map to collect the outcome (errors or response) of the JWS Payload after decoding.
+        /// <ol>
+        ///    <li>output -
+        ///    </li>
+        ///    <li>success response object -
+        ///    <pre>
+        ///    {@code {
+        ///       "headers": "" - fetched from incoming request
+        ///       "payload": "" - fetched from incoming request
+        ///       "isSignatureValid" : "" - jws signature is valid or not
+        ///    }}</pre>
+        ///    </li>
+        ///  </ol> </param>
+        /// <returns> It is a map object value to get the output of decoded jws payload.
+        ///     </returns>
+        Dictionary<string, object> ReceiveNotification(String jwsPayload, Dictionary<string, object> output, Config config);
     }
 }

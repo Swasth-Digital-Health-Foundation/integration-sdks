@@ -5,6 +5,7 @@ using Io.HcxProtocol.Init;
 using Io.HcxProtocol.Interfaces;
 using Io.HcxProtocol.Jwe;
 using Io.HcxProtocol.Key;
+using Io.HcxProtocol.Service;
 using Io.HcxProtocol.Utils;
 using System;
 using System.Collections.Generic;
@@ -47,67 +48,96 @@ namespace Io.HcxProtocol.Impl
     /// </remarks>
     public class HCXOutgoingRequest : FhirPayload, IOutgoingRequest, IDisposable
     {
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
+
         public HCXOutgoingRequest() { }
 
-        public bool Generate(string fhirPayload, Operations operation, string recipientCode, Dictionary<string, object> output)
+        public virtual bool Process(string fhirPayload, Operations operation, string recipientCode, string apiCallId, string correlationId, string actionJwe, string onActionStatus, Dictionary<string, object> domainHeaders, Dictionary<string, object> output, Config config)
         {
-            return Process(fhirPayload, operation, recipientCode, "", "", output);
+            return ProcessOutgoing(fhirPayload, operation, recipientCode, apiCallId, correlationId, "", actionJwe, onActionStatus, domainHeaders, output, config);
         }
 
-        public bool Generate(string fhirPayload, Operations operation, string actionJwe, string onActionStatus, Dictionary<string, object> output)
+        public virtual bool Process(string fhirPayload, Operations operation, string recipientCode, string apiCallId, string correlationId, string workflowId, string actionJwe, string onActionStatus, Dictionary<string, object> domainHeaders, Dictionary<string, object> output, Config config)
         {
-            return Process(fhirPayload, operation, "", actionJwe, onActionStatus, output);
+            return ProcessOutgoing(fhirPayload, operation, recipientCode, apiCallId, correlationId, workflowId, actionJwe, onActionStatus, domainHeaders, output, config);
         }
 
-        private bool Process(string fhirPayload, Operations operation, string recipientCode, string actionJwe, string onActionStatus, Dictionary<string, object> output)
+        public bool ProcessOutgoing(string fhirPayload, Operations operation, string recipientCode, string apiCallId, string correlationId, string workflowId, string actionJwe, string onActionStatus, Dictionary<string, object> domainHeaders, Dictionary<string, object> output, Config config)
         {
+            NlogUtils.SetNlogConfig(config.LogFilePath, config.LogFileName);
+
             bool result = false;
             try
             {
                 Dictionary<string, object> error = new Dictionary<string, object>();
-                Dictionary<string, object> headers = new Dictionary<string, object>();
                 Dictionary<string, object> response = new Dictionary<string, object>();
+                Dictionary<string, object> headers = new Dictionary<string, object>(domainHeaders);
+                // _logger.Info("Processing outgoing request has started :: operation: {}", operation);
 
-
-                if (!ValidatePayload(fhirPayload, operation, error))
+                if (!ValidatePayload(fhirPayload, operation, error, config))
                 {
                     foreach (var err in error) output.Add(err.Key, err.Value);
                 }
-                else if (!CreateHeader(recipientCode, actionJwe, onActionStatus, headers))
+                else if (!CreateHeader(config.ParticipantCode, recipientCode, apiCallId, correlationId, workflowId, actionJwe, onActionStatus, headers, error))
                 {
                     foreach (var err in headers) output.Add(err.Key, err.Value);
                 }
-                else if (!EncryptPayload(headers, fhirPayload, output))
+                else if (!EncryptPayload(headers, fhirPayload, output, config))
                 {
                     foreach (var err in error) output.Add(err.Key, err.Value);
                 }
                 else
                 {
-                    result = InitializeHCXCall(JSONUtils.Serialize(output), operation, response);
-                    foreach (var err in response) output.Add(err.Key, err.Value);
+                    result = InitializeHCXCall(JSONUtils.Serialize(output), operation, response, config);
+                    foreach (var res in response) output.Add(res.Key, res.Value);
+                }
+
+                if (output.ContainsKey(Constants.ERROR) || output.ContainsKey(ErrorCodes.ERR_DOMAIN_PROCESSING.ToString()))
+                {
+                    _logger.Error("Error while processing the outgoing request: {}", output);
                 }
                 return result;
             }
             catch (Exception ex)
             {
                 // TODO: Exception is handled as domain processing error, we will be enhancing in next version.
-                output.Add(ErrorCodes.ERR_DOMAIN_PROCESSING.ToString(), ex.Message.ToString());
+                Console.WriteLine(ex.ToString());
+                Console.Write(ex.StackTrace);
+                output[ErrorCodes.ERR_DOMAIN_PROCESSING.ToString()] = ex.Message;
+                _logger.Error("Error while processing the outgoing request: {}", ex.Message);
                 return result;
             }
         }
 
-        public bool CreateHeader(string recipientCode, string actionJwe, string onActionStatus, Dictionary<string, object> headers)
+        public virtual bool ValidatePayload(string fhirPayload, Operations operation, Dictionary<string, object> error, Config config)
+        {
+            if (config.FhirValidationEnabled)
+                return ValidateFHIR(fhirPayload, operation, error, config);
+            else
+                return true;
+        }
+
+        public virtual bool CreateHeader(string senderCode, string recipientCode, string apiCallId, string correlationId, string workflowId, string actionJwe, string onActionStatus, Dictionary<string, object> headers, Dictionary<string, object> error)
         {
             try
             {
                 //Note: [ALG, A256GCM] & [ENC, RSA_OAEP] headers added by JWE-EncryptRequest Method
-                headers.Add(Constants.HCX_API_CALL_ID, Guid.NewGuid().ToString());
                 headers.Add(Constants.HCX_TIMESTAMP, DateTime.Now.ToString("yyyy-MM-dd'T'HH:mm:ss") + DateTime.Now.ToString("zzz").Replace(":", ""));
+
+                if (string.IsNullOrEmpty(apiCallId))
+                    apiCallId = Guid.NewGuid().ToString();
+                headers.Add(Constants.HCX_API_CALL_ID, apiCallId);
+
                 if (!string.IsNullOrEmpty(recipientCode))
                 {
-                    headers.Add(Constants.HCX_SENDER_CODE, HCXIntegrator.config.ParticipantCode);
+                    headers.Add(Constants.HCX_SENDER_CODE, senderCode);
                     headers.Add(Constants.HCX_RECIPIENT_CODE, recipientCode);
-                    headers.Add(Constants.HCX_CORRELATION_ID, Guid.NewGuid().ToString());
+                    if (string.IsNullOrEmpty(correlationId))
+                        correlationId = Guid.NewGuid().ToString();
+                    headers.Add(Constants.HCX_CORRELATION_ID, correlationId);
+
+                    if (!string.IsNullOrEmpty(workflowId))    //ismail CR No9
+                        headers.Add(Constants.WORKFLOW_ID, workflowId);
                 }
                 else
                 {
@@ -116,7 +146,7 @@ namespace Io.HcxProtocol.Impl
                     headers.Add(Constants.HCX_RECIPIENT_CODE, actionHeaders[Constants.HCX_SENDER_CODE]);
                     headers.Add(Constants.HCX_CORRELATION_ID, actionHeaders[Constants.HCX_CORRELATION_ID]);
                     headers.Add(Constants.STATUS, onActionStatus);
-                    if (headers.ContainsKey(Constants.WORKFLOW_ID))
+                    if (actionHeaders.ContainsKey(Constants.WORKFLOW_ID))
                         headers.Add(Constants.WORKFLOW_ID, actionHeaders[Constants.WORKFLOW_ID].ToString());
                 }
                 return true;
@@ -124,15 +154,18 @@ namespace Io.HcxProtocol.Impl
             catch (Exception ex)
             {
                 headers.Add(Constants.ERROR, "Error while creating headers: " + ex.Message.ToString());
+                _logger.Error("Error while creating headers: " + ex.Message.ToString());
                 return false;
             }
         }
 
-        public bool EncryptPayload(Dictionary<string, object> headers, string fhirPayload, Dictionary<string, object> encryptPayload)
+        public virtual bool EncryptPayload(Dictionary<string, object> headers, string fhirPayload, Dictionary<string, object> encryptPayload, Config config)
         {
             try
             {
-                string publicKeyUrl = (string)HcxUtils.SearchRegistry(headers[Constants.HCX_RECIPIENT_CODE])[Constants.ENCRYPTION_CERT];
+                string authToken = HcxUtils.GenerateToken(config);
+                string publicKeyUrl = (string)HcxUtils.SearchRegistry((string)headers[Constants.HCX_RECIPIENT_CODE], authToken, config.ProtocolBasePath)[Constants.ENCRYPTION_CERT];
+
                 RSA rsaPublicKey = X509KeyLoader.GetRSAPublicKeyFromPem(publicKeyUrl, PemMode.Url);
                 JweRequest jweRequest = new JweRequest(headers, JSONUtils.Deserialize<Dictionary<string, object>>(fhirPayload));
                 jweRequest.EncryptRequest(rsaPublicKey);
@@ -142,33 +175,56 @@ namespace Io.HcxProtocol.Impl
             catch (Exception ex)
             {
                 encryptPayload.Add(Constants.ERROR, ex.Message.ToString());
+                _logger.Error("Error while encrypting the payload: {}" + ex.Message.ToString());
                 return false;
             }
         }
 
-        // we are handling the Exception in Process method
-        public bool InitializeHCXCall(string jwePayload, Operations operation, Dictionary<string, object> response)
+        // Exception is handled in Process method
+        public virtual bool InitializeHCXCall(string jwePayload, Operations operation, Dictionary<string, object> response, Config config)
         {
-            Dictionary<string, string> headers = new Dictionary<string, string>();
-            headers.Add(Constants.AUTHORIZATION, "Bearer " + HcxUtils.GenerateToken());
-            HttpResponse hcxResponse = HttpUtils.Post(HCXIntegrator.config.ProtocolBasePath + operation.getOperation(), headers, jwePayload);
-            response.Add(Constants.RESPONSE_OBJ, JSONUtils.Deserialize<Dictionary<string, object>>(hcxResponse.Body));
-            return hcxResponse.Status == 202;
+            bool result = false;
+            try
+            {
+                result = HcxUtils.InitializeHCXCall(jwePayload, operation, response, config);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error(ex.Message);
+            }
+            return result;
+        }
+
+        public bool SendNotification(string topicCode, string recipientType, List<string> recipients, string message, Dictionary<string, string> templateParams, string correlationId, Dictionary<string, object> output, Config config)
+        {
+            try
+            {
+                NlogUtils.SetNlogConfig(config.LogFilePath, config.LogFileName);
+
+                NotificationRequest notificationRequest = new NotificationRequest(topicCode, message, templateParams, recipientType, recipients, correlationId, config);
+                NotificationService.ValidateNotificationRequest(notificationRequest);
+                Dictionary<string, object> requestBody = NotificationService.CreateNotificationRequest(notificationRequest, output, message);
+                return InitializeHCXCall(JSONUtils.Serialize(requestBody), Operations.NOTIFICATION_NOTIFY, output, config);
+            }
+            catch (Exception e)
+            {
+                _logger.Error("Error while sending the notification: {}", e.Message);
+                output.Add(Constants.ERROR, "Error while sending the notifications: " + e.Message);
+                return false;
+            }
         }
 
         private bool disposedValue;
-        protected virtual void Dispose(bool disposing)
+        protected void Dispose(bool disposing)
         {
             // check if already disposed
             if (!disposedValue)
             {
                 if (disposing)
                 {
-                    // free managed objects here
+                    // free managed Objects here
                 }
-
-                // free unmanaged objects here
-
+                // free unmanaged Objects here
                 // set the bool value to true
                 disposedValue = true;
             }

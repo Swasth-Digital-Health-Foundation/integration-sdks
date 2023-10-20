@@ -29,6 +29,8 @@ namespace Io.HcxProtocol.Key
         /// <param name="pem">It is the source of x509 certificate data.</param>
         /// <param name="pemDataMode">Provide the mode of certificate data as File, Text or Url.</param>
         /// <returns>return Public RSA Key</returns>
+
+        private static NLog.Logger _logger = NLog.LogManager.GetCurrentClassLogger();
         public static RSA GetRSAPublicKeyFromPem(string pem, PemMode pemDataMode)
         {
             try
@@ -62,10 +64,12 @@ namespace Io.HcxProtocol.Key
                 {
                     errMessage += errInner.ToString() + "\n";
                 }
+                _logger.Error("[PublicKey reading error] " + errMessage);
                 throw new System.Exception("[PublicKey reading error] " + errMessage);
             }
             catch (System.Exception ex)
             {
+                _logger.Error("[PublicKey reading error] " + ex.Message);
                 throw new System.Exception("[PublicKey reading error] " + ex.Message.ToString());
             }
         }
@@ -109,11 +113,13 @@ namespace Io.HcxProtocol.Key
                 {
                     errMessage += errInner.ToString() + "\n";
                 }
+                _logger.Error("[PrivateKey reading error]" + errMessage);
                 throw new System.Exception("[PrivateKey reading error] " + errMessage);
             }
             catch (System.Exception ex)
             {
-                throw new System.Exception("[PrivateKey reading error] " + ex.Message.ToString());
+                _logger.Error("[PrivateKey reading error]" + ex.Message);
+                throw new System.Exception("[PrivateKey reading error] " + ex.Message);
             }
         }
     }
