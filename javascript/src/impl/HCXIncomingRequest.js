@@ -11,6 +11,7 @@ export class HCXIncomingRequest {
     authBasePath,
     username,
     password,
+    secret,
     encryptionPrivateKeyURL,
     igURL
   ) {
@@ -19,6 +20,7 @@ export class HCXIncomingRequest {
     this.authBasePath = authBasePath;
     this.username = username;
     this.password = password;
+    this.secret = secret;
     this.encryptionPrivateKeyURL = encryptionPrivateKeyURL;
     this.igURL = igURL;
     this.headers = null;
