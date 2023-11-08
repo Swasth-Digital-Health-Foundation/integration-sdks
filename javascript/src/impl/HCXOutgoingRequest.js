@@ -149,7 +149,6 @@ export class HCXOutgoingRequest {
         response,
       };
     } catch (error) {
-      console.log(error.response)
       console.error(`Error in process: ${error}`);
       this.error = {
         [ErrorCodes.ERR_DOMAIN_PROCESSING]: ResponseMessage.INVALID_STATUS_ERR_MSG
