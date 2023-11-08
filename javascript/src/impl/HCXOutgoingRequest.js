@@ -8,18 +8,20 @@ import { ErrorCodes, ResponseMessage } from "../utils/Errors.js";
 export class HCXOutgoingRequest {
   constructor(
     protocolBasePath,
-    participantCode,
+    participant_code,
     authBasePath,
     username,
     password,
+    secret,
     encryptionPrivateKeyURL,
     igURL
   ) {
     this.protocolBasePath = protocolBasePath;
-    this.participantCode = participantCode;
+    this.participant_code = participant_code;
     this.authBasePath = authBasePath;
     this.username = username;
     this.password = password;
+    this.secret = secret;
     this.encryptionPrivateKeyURL = encryptionPrivateKeyURL; // not needed in outgoing
     this.igURL = igURL;
     this.hcxToken = null;
@@ -43,7 +45,7 @@ export class HCXOutgoingRequest {
       [this.Constants.HCX_TIMESTAMP]: new Date().toISOString(),
     }
     if (recipientCode.length != 0) {
-      headers[this.Constants.HCX_SENDER_CODE] = this.participantCode;
+      headers[this.Constants.HCX_SENDER_CODE] = this.participant_code;
       headers[this.Constants.HCX_RECIPIENT_CODE] = recipientCode;
       headers[this.Constants.HCX_CORRELATION_ID] = correlationId || uuidv4();
       headers[this.Constants.WORKFLOW_ID] = workflowId || uuidv4();
@@ -69,10 +71,14 @@ export class HCXOutgoingRequest {
         throw new Error("Fhir payload must be an object");
       }
       if (!this.hcxToken) {
+        const payload = {}
+        if(this.username) payload[this.Constants.USERNAME] = this.username;
+        if(this.password) payload[this.Constants.PASSWORD] = this.password;
+        if(this.secret) payload[this.Constants.SECRET] = this.secret;
+        if(this.participant_code) payload[this.Constants.PARTICIPANT_CODE] = this.participant_code;
         this.hcxToken = await generateToken(
           this.authBasePath,
-          this.username,
-          this.password
+          payload
         );
       }
       const registryData = await searchRegistry(
@@ -89,6 +95,7 @@ export class HCXOutgoingRequest {
       });
       return encrypted;
     } catch (error) {
+      console.log(error.response.data);
       console.error(`Error in encryptPayload: ${error.message}\n${error.stack}`);
       this.error = {
         [ErrorCodes.ERR_INVALID_ENCRYPTION]: ResponseMessage.INVALID_PAYLOAD_VALUES_ERR_MSG
@@ -101,10 +108,14 @@ export class HCXOutgoingRequest {
     try {
       const url = `${this.protocolBasePath}${operation}`;
       if (!this.hcxToken) {
-        this.hcxToken = await generateHcxToken(
+        const payload = {}
+        if(this.username) payload[this.Constants.USERNAME] = this.username;
+        if(this.password) payload[this.Constants.PASSWORD] = this.password;
+        if(this.secret) payload[this.Constants.SECRET] = this.secret;
+        if(this.participant_code) payload[this.Constants.PARTICIPANT_CODE] = this.participant_code;
+        this.hcxToken = await generateToken(
           this.authBasePath,
-          this.username,
-          this.password
+          payload
         );
       }
       const payload = JSON.stringify({ payload: jwePayload, });
@@ -116,7 +127,7 @@ export class HCXOutgoingRequest {
         const response = await axios.post(url, payload, { headers });
         return response.data;
       } catch (e) {
-        console.error(`Initialize HCX: ${e}`);
+        console.error(`Initialize HCX: ${e.response.data}`);
       }
     } catch (error) {
       console.error(`Initialize HCX: ${error}`);
@@ -138,6 +149,7 @@ export class HCXOutgoingRequest {
         response,
       };
     } catch (error) {
+      console.log(error.response)
       console.error(`Error in process: ${error}`);
       this.error = {
         [ErrorCodes.ERR_DOMAIN_PROCESSING]: ResponseMessage.INVALID_STATUS_ERR_MSG

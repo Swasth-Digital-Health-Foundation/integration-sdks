@@ -7,18 +7,20 @@ import { ErrorCodes, ResponseMessage } from "../utils/Errors.js"
 export class HCXIncomingRequest {
   constructor(
     protocolBasePath,
-    participantCode,
+    participant_code,
     authBasePath,
     username,
     password,
+    secret,
     encryptionPrivateKeyURL,
     igURL
   ) {
     this.protocolBasePath = protocolBasePath;
-    this.participantCode = participantCode;
+    this.participant_code = participant_code;
     this.authBasePath = authBasePath;
     this.username = username;
     this.password = password;
+    this.secret = secret;
     this.encryptionPrivateKeyURL = encryptionPrivateKeyURL;
     this.igURL = igURL;
     this.headers = null;

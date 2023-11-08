@@ -6,10 +6,11 @@ export class HCXIntegrator {
   constructor(config) {
     this.config = config;
     this.protocolBasePath = null;
-    this.participantCode = null;
+    this.participant_code = null;
     this.authBasePath = null;
     this.username = null;
     this.password = null;
+    this.secret = null;
     this.encryptionPrivateKeyURL = null;
     this.igURL = null;
     this.validateConfig();
@@ -17,10 +18,11 @@ export class HCXIntegrator {
 
   validateConfig() {
     this.protocolBasePath = this.config.protocolBasePath;
-    this.participantCode = this.config.participantCode;
+    this.participant_code = this.config.participant_code;
     this.authBasePath = this.config.authBasePath;
     this.username = this.config.username;
     this.password = this.config.password;
+    this.secret = this.config.secret;
     this.encryptionPrivateKeyURL = this.config.encryptionPrivateKeyURL;
     this.igURL = this.config.igURL;
   }
@@ -29,10 +31,11 @@ export class HCXIntegrator {
     try {
       const outgoing = new HCXOutgoingRequest(
         this.protocolBasePath,
-        this.participantCode,
+        this.participant_code,
         this.authBasePath,
         this.username,
         this.password,
+        this.secret,
         this.encryptionPrivateKeyURL,
         this.igURL
       );
@@ -54,10 +57,11 @@ export class HCXIntegrator {
     try {
       const outgoing = new HCXOutgoingRequest(
         this.protocolBasePath,
-        this.participantCode,
+        this.participant_code,
         this.authBasePath,
         this.username,
         this.password,
+        this.secret,
         this.encryptionPrivateKeyURL,
         this.igURL
       );
@@ -80,10 +84,11 @@ export class HCXIntegrator {
     try {
       let incoming = new HCXIncomingRequest(
         this.protocolBasePath,
-        this.participantCode,
+        this.participant_code,
         this.authBasePath,
         this.username,
         this.password,
+        this.secret,
         this.encryptionPrivateKeyURL,
         this.igURL
       );
