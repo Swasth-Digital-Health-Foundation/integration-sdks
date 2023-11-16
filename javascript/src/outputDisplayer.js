@@ -34,7 +34,7 @@ const config3 = {
   encryptionPrivateKeyURL:
     "https://raw.githubusercontent.com/Swasth-Digital-Health-Foundation/hcx-platform/main/hcx-apis/src/test/resources/examples/x509-private-key.pem",
   username: "testprovider1@swasthmock.com",
-  password: "Opensaber@123",
+  secret: "Opensaber@123",
   igUrl: "https://ig.hcxprotocol.io/v0.7.1",
 };
 
@@ -46,7 +46,7 @@ const config4 = {
   encryptionPrivateKeyURL:
     "https://raw.githubusercontent.com/Swasth-Digital-Health-Foundation/hcx-platform/main/hcx-apis/src/test/resources/examples/x509-private-key.pem",
   username: "testpayor1@swasthmock.com",
-  password: "Opensaber@123",
+  secret: "Opensaber@123",
   igUrl: "https://ig.hcxprotocol.io/v0.7.1",
 };
 
