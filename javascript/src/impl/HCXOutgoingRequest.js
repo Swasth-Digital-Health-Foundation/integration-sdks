@@ -8,7 +8,7 @@ import { ErrorCodes, ResponseMessage } from "../utils/Errors.js";
 export class HCXOutgoingRequest {
   constructor(
     protocolBasePath,
-    participant_code,
+    participantCode,
     authBasePath,
     username,
     password,
@@ -17,7 +17,7 @@ export class HCXOutgoingRequest {
     igURL
   ) {
     this.protocolBasePath = protocolBasePath;
-    this.participant_code = participant_code;
+    this.participantCode = participantCode;
     this.authBasePath = authBasePath;
     this.username = username;
     this.password = password;
@@ -45,7 +45,7 @@ export class HCXOutgoingRequest {
       [this.Constants.HCX_TIMESTAMP]: new Date().toISOString(),
     }
     if (recipientCode.length != 0) {
-      headers[this.Constants.HCX_SENDER_CODE] = this.participant_code;
+      headers[this.Constants.HCX_SENDER_CODE] = this.participantCode;
       headers[this.Constants.HCX_RECIPIENT_CODE] = recipientCode;
       headers[this.Constants.HCX_CORRELATION_ID] = correlationId || uuidv4();
       headers[this.Constants.WORKFLOW_ID] = workflowId || uuidv4();
@@ -75,7 +75,7 @@ export class HCXOutgoingRequest {
         if(this.username) payload[this.Constants.USERNAME] = this.username;
         if(this.password) payload[this.Constants.PASSWORD] = this.password;
         if(this.secret) payload[this.Constants.SECRET] = this.secret;
-        if(this.participant_code) payload[this.Constants.PARTICIPANT_CODE] = this.participant_code;
+        if("participant_code") payload["participant_code"] = this.participantCode;
         this.hcxToken = await generateToken(
           this.authBasePath,
           payload
@@ -112,7 +112,7 @@ export class HCXOutgoingRequest {
         if(this.username) payload[this.Constants.USERNAME] = this.username;
         if(this.password) payload[this.Constants.PASSWORD] = this.password;
         if(this.secret) payload[this.Constants.SECRET] = this.secret;
-        if(this.participant_code) payload[this.Constants.PARTICIPANT_CODE] = this.participant_code;
+        if("participant_code") payload["participant_code"] = this.participantCode;
         this.hcxToken = await generateToken(
           this.authBasePath,
           payload

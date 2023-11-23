@@ -6,7 +6,7 @@ export class HCXIntegrator {
   constructor(config) {
     this.config = config;
     this.protocolBasePath = null;
-    this.participant_code = null;
+    this.participantCode = null;
     this.authBasePath = null;
     this.username = null;
     this.password = null;
@@ -18,7 +18,7 @@ export class HCXIntegrator {
 
   validateConfig() {
     this.protocolBasePath = this.config.protocolBasePath;
-    this.participant_code = this.config.participant_code;
+    this.participantCode = this.config.participant_code;
     this.authBasePath = this.config.authBasePath;
     this.username = this.config.username;
     this.password = this.config.password;
@@ -31,7 +31,7 @@ export class HCXIntegrator {
     try {
       const outgoing = new HCXOutgoingRequest(
         this.protocolBasePath,
-        this.participant_code,
+        this.participantCode,
         this.authBasePath,
         this.username,
         this.password,
@@ -57,7 +57,7 @@ export class HCXIntegrator {
     try {
       const outgoing = new HCXOutgoingRequest(
         this.protocolBasePath,
-        this.participant_code,
+        this.participantCode,
         this.authBasePath,
         this.username,
         this.password,
@@ -84,7 +84,7 @@ export class HCXIntegrator {
     try {
       let incoming = new HCXIncomingRequest(
         this.protocolBasePath,
-        this.participant_code,
+        this.participantCode,
         this.authBasePath,
         this.username,
         this.password,

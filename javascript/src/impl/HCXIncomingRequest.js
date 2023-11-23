@@ -7,7 +7,7 @@ import { ErrorCodes, ResponseMessage } from "../utils/Errors.js"
 export class HCXIncomingRequest {
   constructor(
     protocolBasePath,
-    participant_code,
+    participantCode,
     authBasePath,
     username,
     password,
@@ -16,7 +16,7 @@ export class HCXIncomingRequest {
     igURL
   ) {
     this.protocolBasePath = protocolBasePath;
-    this.participant_code = participant_code;
+    this.participantCode = participantCode;
     this.authBasePath = authBasePath;
     this.username = username;
     this.password = password;

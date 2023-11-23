@@ -63,7 +63,7 @@ export class Constants {
   MESSAGE = "message";
   PARTICIPANTS = "participants";
   PROTOCOL_BASE_PATH = "protocolBasePath";
-  PARTICIPANT_CODE = "participant_code";
+  PARTICIPANT_CODE = "participantCode";
   AUTH_BASE_PATH = "authBasePath";
   USERNAME = "username";
   PASSWORD = "password";
