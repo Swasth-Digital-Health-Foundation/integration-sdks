@@ -95,7 +95,7 @@ namespace Io.HcxProtocol.Impl
             if (config.FhirValidationEnabled)
                 return ValidateFHIR(fhirPayload, operation, error, config);
             else
-                return true;            
+                return true;
         }
 
         public virtual bool SendResponse(Dictionary<string, object> error, Dictionary<string, object> output)
@@ -197,12 +197,9 @@ namespace Io.HcxProtocol.Impl
                 {
                     output = new Dictionary<string, object>();
                 }
-                if (isSignatureValid == false)
-                {
-                    output.Add(Constants.HEADERS, notificationRequest.GetHeaders());
-                    output.Add(Constants.PAYLOAD, notificationRequest.GetPayload());
-                    output.Add(Constants.IS_SIGNATURE_VALID, isSignatureValid);
-                }
+                output.Add(Constants.HEADERS, notificationRequest.GetHeaders());
+                output.Add(Constants.PAYLOAD, notificationRequest.GetPayload());
+                output.Add(Constants.IS_SIGNATURE_VALID, isSignatureValid);
                 return output;
             }
             catch (Exception ex)
