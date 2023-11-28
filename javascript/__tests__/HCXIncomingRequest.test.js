@@ -7,7 +7,7 @@ jest.mock("../src/impl/HCXIncomingRequest.js");
 
 describe("HCXIntegrator Integration Tests", () => {
   const mockConfig = {
-    participant_code: "testprovider1.swasthmock@swasth-hcx-staging",
+    participantCode: "testprovider1.swasthmock@swasth-hcx-staging",
   authBasePath:
     "http://staging-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
   protocolBasePath: "https://staging-hcx.swasth.app/api/v0.8",
@@ -19,7 +19,7 @@ describe("HCXIntegrator Integration Tests", () => {
   };
 
   const mockConfig2 = {
-    participant_code: "testpayor1.swasthmock@swasth-hcx-staging",
+    participantCode: "testpayor1.swasthmock@swasth-hcx-staging",
     authBasePath:
       "http://staging-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
     protocolBasePath: "https://staging-hcx.swasth.app/api/v0.8",

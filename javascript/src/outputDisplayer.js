@@ -2,7 +2,7 @@ import { HCXIntegrator } from "./hcx_integrator.js";
 import { HcxOperations } from "./utils/hcx_operations.js";
 
 const config = {
-  participant_code: "testprovider1.swasthmock@swasth-hcx-staging",
+  participantCode: "testprovider1.swasthmock@swasth-hcx-staging",
   authBasePath:
     "http://staging-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
   protocolBasePath: "https://staging-hcx.swasth.app/api/v0.8",
@@ -15,7 +15,7 @@ const config = {
 
 
 const config2 = {
-  participant_code: "testpayor1.swasthmock@swasth-hcx-staging",
+  participantCode: "testpayor1.swasthmock@swasth-hcx-staging",
   authBasePath:
     "http://staging-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
   protocolBasePath: "https://staging-hcx.swasth.app/api/v0.8",
@@ -27,7 +27,7 @@ const config2 = {
 };
 
 const config3 = {
-  participant_code: "testprovider1.swasthmock@swasth-hcx-staging",
+  participantCode: "testprovider1.swasthmock@swasth-hcx-staging",
   authBasePath:
     "http://staging-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
   protocolBasePath: "https://staging-hcx.swasth.app/api/v0.8",
@@ -39,7 +39,7 @@ const config3 = {
 };
 
 const config4 = {
-  participant_code: "testpayor1.swasthmock@swasth-hcx-staging",
+  participantCode: "testpayor1.swasthmock@swasth-hcx-staging",
   authBasePath:
     "http://staging-hcx.swasth.app/api/v0.8/participant/auth/token/generate",
   protocolBasePath: "https://staging-hcx.swasth.app/api/v0.8",

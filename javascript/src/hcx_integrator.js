@@ -18,7 +18,7 @@ export class HCXIntegrator {
 
   validateConfig() {
     this.protocolBasePath = this.config.protocolBasePath;
-    this.participantCode = this.config.participant_code;
+    this.participantCode = this.config.participantCode;
     this.authBasePath = this.config.authBasePath;
     this.username = this.config.username;
     this.password = this.config.password;

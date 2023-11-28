@@ -75,7 +75,7 @@ export class HCXOutgoingRequest {
         if(this.username) payload[this.Constants.USERNAME] = this.username;
         if(this.password) payload[this.Constants.PASSWORD] = this.password;
         if(this.secret) payload[this.Constants.SECRET] = this.secret;
-        if("participant_code") payload["participant_code"] = this.participantCode;
+        if(this.participantCode) payload["participant_code"] = this.participantCode;
         this.hcxToken = await generateToken(
           this.authBasePath,
           payload
@@ -112,7 +112,7 @@ export class HCXOutgoingRequest {
         if(this.username) payload[this.Constants.USERNAME] = this.username;
         if(this.password) payload[this.Constants.PASSWORD] = this.password;
         if(this.secret) payload[this.Constants.SECRET] = this.secret;
-        if("participant_code") payload["participant_code"] = this.participantCode;
+        if(this.participantCode) payload["participant_code"] = this.participantCode;
         this.hcxToken = await generateToken(
           this.authBasePath,
           payload
