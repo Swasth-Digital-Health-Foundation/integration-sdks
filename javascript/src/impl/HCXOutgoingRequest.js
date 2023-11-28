@@ -12,6 +12,7 @@ export class HCXOutgoingRequest {
     authBasePath,
     username,
     password,
+    secret,
     encryptionPrivateKeyURL,
     igURL
   ) {
@@ -20,6 +21,7 @@ export class HCXOutgoingRequest {
     this.authBasePath = authBasePath;
     this.username = username;
     this.password = password;
+    this.secret = secret;
     this.encryptionPrivateKeyURL = encryptionPrivateKeyURL; // not needed in outgoing
     this.igURL = igURL;
     this.hcxToken = null;
@@ -69,10 +71,14 @@ export class HCXOutgoingRequest {
         throw new Error("Fhir payload must be an object");
       }
       if (!this.hcxToken) {
+        const payload = {}
+        if(this.username) payload[this.Constants.USERNAME] = this.username;
+        if(this.password) payload[this.Constants.PASSWORD] = this.password;
+        if(this.secret) payload[this.Constants.SECRET] = this.secret;
+        if(this.participantCode) payload["participant_code"] = this.participantCode;
         this.hcxToken = await generateToken(
           this.authBasePath,
-          this.username,
-          this.password
+          payload
         );
       }
       const registryData = await searchRegistry(
@@ -89,6 +95,7 @@ export class HCXOutgoingRequest {
       });
       return encrypted;
     } catch (error) {
+      console.log(error.response.data);
       console.error(`Error in encryptPayload: ${error.message}\n${error.stack}`);
       this.error = {
         [ErrorCodes.ERR_INVALID_ENCRYPTION]: ResponseMessage.INVALID_PAYLOAD_VALUES_ERR_MSG
@@ -101,10 +108,14 @@ export class HCXOutgoingRequest {
     try {
       const url = `${this.protocolBasePath}${operation}`;
       if (!this.hcxToken) {
-        this.hcxToken = await generateHcxToken(
+        const payload = {}
+        if(this.username) payload[this.Constants.USERNAME] = this.username;
+        if(this.password) payload[this.Constants.PASSWORD] = this.password;
+        if(this.secret) payload[this.Constants.SECRET] = this.secret;
+        if(this.participantCode) payload["participant_code"] = this.participantCode;
+        this.hcxToken = await generateToken(
           this.authBasePath,
-          this.username,
-          this.password
+          payload
         );
       }
       const payload = JSON.stringify({ payload: jwePayload, });
@@ -116,7 +127,7 @@ export class HCXOutgoingRequest {
         const response = await axios.post(url, payload, { headers });
         return response.data;
       } catch (e) {
-        console.error(`Initialize HCX: ${e}`);
+        console.error(`Initialize HCX: ${e.response.data}`);
       }
     } catch (error) {
       console.error(`Initialize HCX: ${error}`);

@@ -2,13 +2,10 @@ import { stringify } from "qs";
 import { base64url } from "jose";
 import axios from "axios";
 
-export async function generateToken(authBasePath, username, password) {
+export async function generateToken(authBasePath, config) {
   const url = authBasePath;
   const payload = {
-    client_id: "registry-frontend",
-    username: username,
-    password: password,
-    grant_type: "password",
+    ...config
   };
   const payloadUrlencoded = stringify(payload);
   const headers = {
