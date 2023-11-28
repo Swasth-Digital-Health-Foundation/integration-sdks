@@ -26,7 +26,7 @@ export async function searchRegistry(
   protocolBasePath,
   token,
   searchValue,
-  searchField = "participantCode"
+  searchField = "participant_code"
 ) {
   const url = protocolBasePath + "/participant/search";
   const payload = JSON.stringify({
