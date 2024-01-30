@@ -1,8 +1,8 @@
-import { HCXOutgoingRequest } from "../src/impl/HCXOutgoingRequest.js";
-import { HCXIncomingRequest } from "../src/impl/HCXIncomingRequest.js";
-import { ErrorCodes, ResponseMessage } from "../src/utils/Errors.js";
+import { HCXOutgoingRequest } from "./impl/HCXOutgoingRequest.js";
+import { HCXIncomingRequest } from "./impl/HCXIncomingRequest.js";
+import { ErrorCodes, ResponseMessage } from "/utils/Errors.js";
 
-export class HCXIntegrator {
+export default class HCXIntegrator {
   constructor(config) {
     this.config = config;
     this.protocolBasePath = null;
