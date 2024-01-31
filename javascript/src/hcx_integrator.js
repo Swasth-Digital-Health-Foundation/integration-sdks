@@ -1,6 +1,6 @@
 import { HCXOutgoingRequest } from "./impl/HCXOutgoingRequest.js";
 import { HCXIncomingRequest } from "./impl/HCXIncomingRequest.js";
-import { ErrorCodes, ResponseMessage } from "/utils/Errors.js";
+import { ErrorCodes, ResponseMessage } from "./utils/Errors.js";
 
 export default class HCXIntegrator {
   constructor(config) {

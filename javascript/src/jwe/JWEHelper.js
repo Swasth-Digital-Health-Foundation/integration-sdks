@@ -39,8 +39,8 @@ export class JWEHelper {
       keyData = await (await axios.default.get(cert)).data;
     }
     if (!(keyData && payload)) throw new Error("Invalid Input");
-    let keystore = JWK.createKeyStore();
-    await keystore.add(await JWK.asKey(keyData, "pem"));
+    const keyMeta = await JWK.asKey(keyData, "pem")
+    const keystore = await JWK.createKeyStore().add(keyMeta);
     let parsedPayload = parse.compact(payload);
     let decrypted = await parsedPayload.perform(keystore);
     const payloadString = decrypted.payload.toString();
