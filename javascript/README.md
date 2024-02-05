@@ -4,14 +4,14 @@ The HCX Platform provides a REST API interface to integrate and access the platf
 The HCX Integration SDK abstracts most of these operations making it easier for the participants to work with the HCX Platform.
 
 ### **About HCX Integration SDK:**
-The HCX Integration SDK is now also implemented in Javascript and is available as a [npm package](https://www.npmjs.com/package/hcx-integrator-sdk). The GitHub repository also includes docs, which provide detailed information about each function of the SDK.
+The HCX Integration SDK is now also implemented in Javascript and is available as a [npm package](https://www.npmjs.com/package/hcx-integrator-sdk-js). The GitHub repository also includes docs, which provide detailed information about each function of the SDK.
 
 ### **How to use:**
 To use the SDK, use command 
 ```bash
-npm install hcx-integrator-sdk
+npm install hcx-integrator-sdk-js
 ```
-The hcx-integrator-sdk will now be available in your node-modules.
+The hcx-integrator-sdk-js will now be available in your node-modules.
 The SDK expects configuration of the HCX Instance and participant details to initialize and set the context for usage. The configuration can be provided as an object.
 
 The following configuration details are required to set the context in the integration environment for using the SDK:

@@ -1,8 +1,8 @@
-import { HCXOutgoingRequest } from "../src/impl/HCXOutgoingRequest.js";
-import { HCXIncomingRequest } from "../src/impl/HCXIncomingRequest.js";
-import { ErrorCodes, ResponseMessage } from "../src/utils/Errors.js";
+import { HCXOutgoingRequest } from "./impl/HCXOutgoingRequest.js";
+import { HCXIncomingRequest } from "./impl/HCXIncomingRequest.js";
+import { ErrorCodes, ResponseMessage } from "./utils/Errors.js";
 
-export class HCXIntegrator {
+export default class HCXIntegrator {
   constructor(config) {
     this.config = config;
     this.protocolBasePath = null;
@@ -10,6 +10,7 @@ export class HCXIntegrator {
     this.authBasePath = null;
     this.username = null;
     this.password = null;
+    this.secret = null;
     this.encryptionPrivateKeyURL = null;
     this.igURL = null;
     this.validateConfig();
@@ -21,6 +22,7 @@ export class HCXIntegrator {
     this.authBasePath = this.config.authBasePath;
     this.username = this.config.username;
     this.password = this.config.password;
+    this.secret = this.config.secret;
     this.encryptionPrivateKeyURL = this.config.encryptionPrivateKeyURL;
     this.igURL = this.config.igURL;
   }
@@ -33,6 +35,7 @@ export class HCXIntegrator {
         this.authBasePath,
         this.username,
         this.password,
+        this.secret,
         this.encryptionPrivateKeyURL,
         this.igURL
       );
@@ -58,6 +61,7 @@ export class HCXIntegrator {
         this.authBasePath,
         this.username,
         this.password,
+        this.secret,
         this.encryptionPrivateKeyURL,
         this.igURL
       );
@@ -84,6 +88,7 @@ export class HCXIntegrator {
         this.authBasePath,
         this.username,
         this.password,
+        this.secret,
         this.encryptionPrivateKeyURL,
         this.igURL
       );

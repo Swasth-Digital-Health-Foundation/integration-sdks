@@ -1,6 +1,6 @@
 {
-  "name": "hcx-integrator-sdk",
-  "version": "1.0.8",
+  "name": "hcx-integrator-sdk-js",
+  "version": "1.0.7",
   "description": "This is an npm package for the SDK of hcx-integrator. The Health Claim Exchange(HCX) is a communication protocol that facilitates the exchange of health claim information between payers, providers, beneficiaries, and other relevant entities. It is designed to be an interopable, machine-readable, verifiable, which helps ensure that the information being exchanged is accurate and trustworthy. It is an open standard based communication,",
   "main": "index.js",
   "type": "module",
@@ -13,12 +13,11 @@
     }
   },
   "keywords": [],
-  "author": "Mohit Kumar",
+  "author": "Swasth",
   "license": "MIT",
   "dependencies": {
     "axios": "^1.4.0",
     "fhir": "^4.12.0",
-    "hcx-integrator-sdk": "^1.0.0",
     "jest-mock-extended": "^3.0.5",
     "jose": "^4.14.4",
     "moment": "^2.29.4",
@@ -37,10 +36,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/claddyk/integration-sdks.git#c4gt"
+    "url": "git+https://github.com/Swasth-Digital-Health-Foundation/integration-sdks.git"
   },
   "bugs": {
-    "url": "https://github.com/claddyk/integration-sdks/issues"
+    "url": "https://github.com/Swasth-Digital-Health-Foundation/integration-sdks/issues"
   },
-  "homepage": "https://github.com/claddyk/integration-sdks/tree/c4gt#readme"
+  "homepage": "https://github.com/Swasth-Digital-Health-Foundation"
 }
