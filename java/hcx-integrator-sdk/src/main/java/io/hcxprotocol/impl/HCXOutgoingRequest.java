@@ -156,7 +156,8 @@ public class HCXOutgoingRequest extends FhirPayload implements OutgoingRequest {
         } catch (Exception e) {
             logger.error("Error while encrypting the payload: {}", e.getMessage());
             e.printStackTrace();
-            throw new Exception("Error while encrypting the payload: " + e.getMessage());
+            output.put(Constants.ERROR,"Error while encrypting the payload: "+ e.getMessage());
+            return false;
         }
     }
 

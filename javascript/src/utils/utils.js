@@ -1,26 +1,39 @@
 import { stringify } from "qs";
 import { base64url } from "jose";
 import axios from "axios";
+import { Constants } from "../utils/Constants.js";
 
-export async function generateToken(authBasePath, username, password) {
+// {
+//   username: this.username,
+//   password: null,
+//   secret: this.secret,
+//   partic
+// }
+export async function generateToken(authBasePath, config) {
   const url = authBasePath;
   const payload = {
-    client_id: "registry-frontend",
-    username: username,
-    password: password,
-    grant_type: "password",
+    // grant_type: "password",
+    // grant_type: "secret",
+    ...config
   };
+  console.log(payload)
   const payloadUrlencoded = stringify(payload);
   const headers = {
     "content-type": "application/x-www-form-urlencoded",
   };
   try {
+    console.log(url)
+    console.log(payloadUrlencoded);
     const response = await axios.post(url, payloadUrlencoded, { headers });
+    console.log("generation token successful");
+    console.log('=========================END')
     return response.data.access_token;
   } catch (error) {
     const serverErrorMessage = error.response && error.response.data && error.response.data.message ? 
       error.response.data.message : 
       error.message;
+      console.log(error);
+      console.log('-----------------------------------------------------')
     console.error(`Generate HCX Token Error: ${serverErrorMessage}`);
     throw new Error(`Generate HCX Token Error: ${serverErrorMessage}`);
   }
