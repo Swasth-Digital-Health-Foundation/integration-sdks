@@ -65,27 +65,32 @@ export class HCXIncomingRequest {
       this.output[this.Constants.PAYLOAD] = decryptedPayload.payload;
       return this.output;
     } catch (e) {
-      console.log(e.message);
-      return this.send_response(e)
+      console.log(e);
     }
   }
 
-  send_response(outputData) {
+  send_response() {
     let response_obj = {};
     let presentDate = moment();
     let unix_timestamp = presentDate.unix() * 1000;
     response_obj[this.Constants.TIMESTAMP] = unix_timestamp;
     let result = false;
 
-    if (!outputData) {
+    if (!this.error) {
       response_obj[this.Constants.API_CALL_ID] = this.Constants.HCX_API_CALL_ID;
       response_obj[this.Constants.CORRELATION_ID] =
         this.Constants.HCX_CORRELATION_ID;
       result = true;
     } else {
-      console.error(`Error while decrypting the payload: ${outputData}`);
-      response_obj[this.Constants.ERROR] = outputData.message
+      console.error(`Error while processing the request: ${this.error}`);
+      let code = Object.keys(this.error)[0];
+      let message = Object.values(this.error)[0];
+      response_obj[this.Constants.ERROR] = JSON.stringify({
+        [code]: message,
+      });
     }
-    return this.output[this.Constants.RESPONSE_OBJ] = response_obj;
+
+    this.output[this.Constants.RESPONSE_OBJ] = response_obj;
+    return result;
   }
 }
