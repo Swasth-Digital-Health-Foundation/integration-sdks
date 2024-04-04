@@ -4,6 +4,7 @@ import { JWEHelper } from "../jwe/JWEHelper.js";
 import { generateToken, searchRegistry, decodeBase64String } from "../utils/utils.js";
 import { Constants } from "../utils/Constants.js";
 import { ErrorCodes, ResponseMessage } from "../utils/Errors.js";
+import { HCXIncomingRequest } from "./HCXIncomingRequest.js";
 
 export class HCXOutgoingRequest {
   constructor(
@@ -21,7 +22,7 @@ export class HCXOutgoingRequest {
     this.authBasePath = authBasePath;
     this.username = username;
     this.password = password;
-    this.secret = secret;
+    this.secret =secret
     this.encryptionPrivateKeyURL = encryptionPrivateKeyURL; // not needed in outgoing
     this.igURL = igURL;
     this.hcxToken = null;
@@ -75,7 +76,7 @@ export class HCXOutgoingRequest {
         if(this.username) payload[this.Constants.USERNAME] = this.username;
         if(this.password) payload[this.Constants.PASSWORD] = this.password;
         if(this.secret) payload[this.Constants.SECRET] = this.secret;
-        if(this.participantCode) payload["participant_code"] = this.participantCode;
+        if(this.participantCode) payload[this.Constants.PARTICIPANT_CODE] = this.participantCode;
         this.hcxToken = await generateToken(
           this.authBasePath,
           payload
@@ -127,7 +128,8 @@ export class HCXOutgoingRequest {
         const response = await axios.post(url, payload, { headers });
         return response.data;
       } catch (e) {
-        console.error(`Initialize HCX: ${e.response.data}`);
+        console.log(e)
+        console.error(`Initialize HCX: ${e}`);
       }
     } catch (error) {
       console.error(`Initialize HCX: ${error}`);
@@ -150,10 +152,12 @@ export class HCXOutgoingRequest {
       };
     } catch (error) {
       console.error(`Error in process: ${error}`);
-      this.error = {
-        [ErrorCodes.ERR_DOMAIN_PROCESSING]: ResponseMessage.INVALID_STATUS_ERR_MSG
-      };
-      throw new Error("Processing failed.");
+      return HCXIncomingRequest.send_response(error)
+   
+      // this.error = {
+      //   [ErrorCodes.ERR_DOMAIN_PROCESSING]: ResponseMessage.INVALID_STATUS_ERR_MSG
+      // };
+      // throw new Error("Processing failed.");
     }
   }
 }

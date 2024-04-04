@@ -538,26 +538,36 @@ const hcxIntegrator2 = new HCXIntegrator(config2);
 const hcxIntegrator3 = new HCXIntegrator(config3);
 const hcxIntegrator4 = new HCXIntegrator(config4);
 
+const init = async() =>{
+  try {
 const operation = HcxOperations.CLAIM_SUBMIT;
 const operation2 = HcxOperations.CLAIM_ON_SUBMIT;
 const responseOutgoing = await hcxIntegrator.processOutgoingRequest(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", operation);
-const responseOutgoingCallback =  await hcxIntegrator2.processOutgoingCallback(fhirPayload, "", operation2, responseOutgoing.payload, "", "", "", "response.complete");
-const responseIncoming = await hcxIntegrator.processIncoming(
-  responseOutgoing.payload,
-  operation
-);
+// const responseOutgoingCallback =  await hcxIntegrator2.processOutgoingCallback(fhirPayload, "", operation2, responseOutgoing.payload, "", "", "", "response.complete");
+// const responseIncoming = await hcxIntegrator.processIncoming(
+//   responseOutgoing.payload,
+//   operation
+// );
 
 console.log(responseOutgoing);
-console.log(responseIncoming);
-console.log(responseOutgoingCallback)
+// console.log(responseIncoming);
+// console.log(responseOutgoingCallback)
 
-const responseOutgoing1 = await hcxIntegrator3.processOutgoingRequest(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", operation);
-const responseOutgoingCallback1 =  await hcxIntegrator4.processOutgoingCallback(fhirPayload, "", operation2, responseOutgoing1.payload, "", "", "", "response.complete");
-const responseIncoming1 = await hcxIntegrator3.processIncoming(
-  responseOutgoing1.payload,
-  operation
-);
+// const responseOutgoing1 = await hcxIntegrator3.processOutgoingRequest(fhirPayload, "testpayor1.swasthmock@swasth-hcx-staging", operation);
+// const responseOutgoingCallback1 =  await hcxIntegrator4.processOutgoingCallback(fhirPayload, "", operation2, responseOutgoing1.payload, "", "", "", "response.complete");
+// const responseIncoming1 = await hcxIntegrator3.processIncoming(
+//   responseOutgoing1.payload,
+//   operation
+// );
 
-console.log(responseOutgoing1);
-console.log(responseIncoming1);
-console.log(responseOutgoingCallback1);
+// console.log(responseOutgoing1);
+// console.log(responseIncoming1);
+// console.log(responseOutgoingCallback1);
+
+}catch(e){
+  console.log(e)
+}
+}
+
+init()
+
