@@ -153,7 +153,26 @@ export class HCXOutgoingRequest {
       this.error = {
         [ErrorCodes.ERR_DOMAIN_PROCESSING]: ResponseMessage.INVALID_STATUS_ERR_MSG
       };
-      throw new Error("Processing failed.");
+      return this.send_response(error)
     }
+  }
+   
+  send_response(outputData) {
+    let response_obj = {};
+    let presentDate = moment();
+    let unix_timestamp = presentDate.unix() * 1000;
+    response_obj[this.Constants.TIMESTAMP] = unix_timestamp;
+    let result = false;
+
+    if (!outputData) {
+      response_obj[this.Constants.API_CALL_ID] = this.Constants.HCX_API_CALL_ID;
+      response_obj[this.Constants.CORRELATION_ID] =
+        this.Constants.HCX_CORRELATION_ID;
+      result = true;
+    } else {
+      console.error(`Error while encrypting the payload: ${outputData}`);
+      response_obj[this.Constants.ERROR] = (`Error while encrypting the payload: ${outputData}`)
+    }
+    return this.output[this.Constants.RESPONSE_OBJ] = response_obj;
   }
 }
