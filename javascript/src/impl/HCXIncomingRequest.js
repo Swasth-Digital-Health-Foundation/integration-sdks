@@ -48,24 +48,61 @@ export class HCXIncomingRequest {
     return true;
   }
 
+  // async process(payload, operation) {
+  //   try {
+  //     var cert;
+  //     if (this.encryptionPrivateKeyURL.startsWith("https://")) {
+  //       let response = await axios.get(this.encryptionPrivateKeyURL, {
+  //         verify: false,
+  //       });
+  //       cert = response.data;
+  //     }
+  //     let decryptedPayload = await JWEHelper.decrypt({ cert, payload });
+  //     let header = decryptedPayload.header;
+  //     this.output[this.Constants.HEADERS] = header;
+  //     this.output[this.Constants.PAYLOAD] = decryptedPayload.payload;
+  //     return this.output;
+  //   } catch (e) {
+  //     console.log(e);
+  //   }
+  // }
+
   async process(payload, operation) {
     try {
-      var cert;
-      if (this.encryptionPrivateKeyURL.startsWith("https://")) {
-        let response = await axios.get(this.encryptionPrivateKeyURL, {
-          verify: false,
-        });
-        cert = response.data;
+      let cert;
+      
+      // If encryptionPrivateKeyURL is provided
+      if (this.encryptionPrivateKeyURL) {
+        if (this.encryptionPrivateKeyURL.startsWith("https://") || this.encryptionPrivateKeyURL.startsWith("http://")) {
+          // Fetch the certificate from the URL
+          let response = await axios.get(this.encryptionPrivateKeyURL, {
+            verify: false, // This should be used with caution, as it disables SSL certificate verification
+          });
+          cert = response.data;
+        } else {
+          // If the URL does not start with http/https, assume it is the direct key string
+          cert = this.encryptionPrivateKeyURL;
+        }
+      } else {
+        // If encryptionPrivateKeyURL is not provided, throw an error or handle accordingly
+        throw new Error("Encryption private key URL or key string is required");
       }
+  
+      // Decrypt the payload
       let decryptedPayload = await JWEHelper.decrypt({ cert, payload });
+  
+      // Extract and store headers and payload
       let header = decryptedPayload.header;
       this.output[this.Constants.HEADERS] = header;
       this.output[this.Constants.PAYLOAD] = decryptedPayload.payload;
+      
       return this.output;
     } catch (e) {
       console.log(e);
+      throw e; // Rethrow the error to handle it further up the call stack if needed
     }
   }
+  
 
   send_response() {
     let response_obj = {};
