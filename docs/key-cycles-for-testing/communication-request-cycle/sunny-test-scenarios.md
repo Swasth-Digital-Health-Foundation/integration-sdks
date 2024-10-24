@@ -1,0 +1,5 @@
+# Sunny test scenarios
+
+1. **Scenario 1 (Supporting info)** : Payer initiates the communication request to the provider through HCX to get more details on the claim and pre-auth requests and the provider responds using the communication on\_request with the relevant documents or the support information.
+2. **Scenario 2 (Consent):** Payer initiates the communication request to the provider through HCX to get beneficiary consent on the claim and pre-auth requests and the provider responds using the communication on\_request with the consent token shared by the beneficiary. This scenario may be used in case f cashless claims from non-network hospitals.
+3. **Scenario 3 (Account information):** Payer initiates the communication request to the provider through HCX to get provider bank account before the claim processing starts and the provider responds with bank account details using the communication on\_request. This scenario may be used in case of cashless claims from non-network hospitals.

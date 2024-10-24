@@ -4,9 +4,10 @@ description: >-
   subdivided into tech/domain
 ---
 
-# Key Concepts
+# Healthcare Providers
 
-1. FHIR&#x20;
-2. Microservices
-3. Asynchronous APIs
-4. JSON Web Encryption (RFC7156) &#x20;
+Hospitals, Clinics, Individual Practitioners, Diagnostic Labs, Pharmacies: If you deliver healthcare services to patients, HCX allows you to:
+
+* Submit claims electronically (coverage checks, pre-authorizations, claims).
+* Receive timely responses and updates from payers regarding claim status.
+* Reduce administrative burden and improve operational efficiency.

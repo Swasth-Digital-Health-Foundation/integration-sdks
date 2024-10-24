@@ -1,2 +1,0 @@
-# Bringing it all together
-

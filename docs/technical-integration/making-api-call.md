@@ -1,5 +1,5 @@
-# Making API call
+# Self-Service Portal: Streamlining Onboarding
 
-1. How to use client\_key/Secret to make API call
-2. Testing the connectivity
-3. Suggestions and code exampels on first API
+The HCX onboarding process leverages a self-service portal to empower participants to take an active role in joining the network. This user-friendly interface works on a simple principle:&#x20;
+
+* Simplified Navigation: Participants can easily navigate the onboarding journey at their own pace, following clear instructions and prompts.
