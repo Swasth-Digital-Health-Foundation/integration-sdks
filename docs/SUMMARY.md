@@ -1,6 +1,7 @@
 # Table of contents
 
 * [HCX Integrations Participants Guide](README.md)
+* [Glossary](glossary.md)
 * [Overview](hcx-overview/README.md)
 * [HCX Participants](reading-this-guide/README.md)
   * [Healthcare Providers](reading-this-guide/key-concepts.md)

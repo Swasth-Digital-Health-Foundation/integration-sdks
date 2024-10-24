@@ -11,11 +11,7 @@ This system offers several benefits:
 * **Improved transparency:** Gains real-time visibility into the claim lifecycle, fostering better communication and collaboration among stakeholders.
 * **Superior patient experiences:** Offers patients faster claim processing, improved access to information, and a more streamlined healthcare experience
 
-For more information kindly visit- [v0.9 HCX protocol](https://docs.hcxprotocol.io/)
-
-**How this guide can help you**
-
-By following the detailed instructions and leveraging the resources provided within this guide, you will gain the necessary knowledge and tools to seamlessly integrate with HCX, enabling you to contribute to building a more efficient and interconnected healthcare ecosystem.\
+For more information kindly visit- [v0.9 HCX protocol](https://docs.hcxprotocol.io/)\
 
 
 \
