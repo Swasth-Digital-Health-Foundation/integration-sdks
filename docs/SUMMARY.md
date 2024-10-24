@@ -43,7 +43,6 @@
     * [Testing via HCX sandbox](testing-the-integration/testing-outgoing-apis/testing-via-hcx-sandbox.md)
     * [With mock counterparty](testing-the-integration/testing-outgoing-apis/with-mock-counterparty.md)
     * [With actual counterparty](testing-the-integration/testing-outgoing-apis/with-actual-counterparty.md)
-* [Page](page.md)
 * [Key cycles for testing](key-cycles-for-testing/README.md)
   * [Test scenarios and data requirements](key-cycles-for-testing/test-scenarios-and-data-requirements.md)
   * [Coverage eligibility check cycle](key-cycles-for-testing/coverage-eligibility-check-cycle/README.md)
