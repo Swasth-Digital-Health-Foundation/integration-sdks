@@ -75,7 +75,8 @@ public class HCXIncomingRequest extends FhirPayload implements IncomingRequest {
         } catch (Exception e) {
             logger.error("Error while decrypting the payload: {}", e.getMessage());
             e.printStackTrace();
-            throw new Exception("Error while decrypting the payload: " + e.getMessage());
+            output.put(Constants.ERROR, "Error while decrypting the payload: " + e.getMessage());
+            return false;
         }
     }
 
