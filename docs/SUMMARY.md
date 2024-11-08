@@ -73,4 +73,5 @@
 * [Resources](resources/README.md)
   * [HCX Integration SDK Repository](resources/hcx-integration-sdk-repository.md)
   * [Postman Collection](resources/postman-collection.md)
+  * [Reference Applications](resources/reference-applications.md)
   * [Seeking help](resources/seeking-help.md)
