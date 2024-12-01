@@ -54,10 +54,10 @@ class OutgoingRequest:
             print(actionHeaders)
             actionHeaders = base64.b64decode(actionHeaders, validate=False)
             actionHeaders = json.loads(actionHeaders.decode('utf-8'))
-            headers[Constants.HCX_SENDER_CODE] = actionHeaders.get(Constants.HCX_SENDER_CODE)
-            self.recipientCode = actionHeaders.get(Constants.HCX_RECIPIENT_CODE)
+            headers[Constants.HCX_SENDER_CODE] = actionHeaders.get(Constants.HCX_RECIPIENT_CODE)
+            self.recipientCode = actionHeaders.get(Constants.HCX_SENDER_CODE)
             headers[Constants.HCX_RECIPIENT_CODE] = self.recipientCode
-            headers[Constants.CORRELATION_ID] = actionHeaders.get(Constants.CORRELATION_ID)
+            headers[Constants.HCX_CORRELATION_ID] = actionHeaders.get(Constants.HCX_CORRELATION_ID)
             headers[Constants.STATUS] = onActionStatus
             print(headers)
             if Constants.WORKFLOW_ID in headers:
