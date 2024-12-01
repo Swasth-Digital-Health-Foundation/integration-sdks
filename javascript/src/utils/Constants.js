@@ -67,6 +67,7 @@ export class Constants {
   AUTH_BASE_PATH = "authBasePath";
   USERNAME = "username";
   PASSWORD = "password";
+  SECRET = "secret";
   ENCRYPTION_PRIVATE_KEY = "encryptionPrivateKey";
   HCX_IG_BASE_PATH = "hcxIGBasePath";
   NRCES_IG_BASE_PATH = "nrcesIGBasePath";
